@@ -3,41 +3,72 @@
 
 var LearnBlock = {};
 LearnBlock.Blocks = Object.create(null);
+
 LearnBlock.utils = {};
+//Reference to the global object
 LearnBlock.utils.global = function () {
-    return "object" === typeof self ? self : "object" === typeof window ? window : "object" === typeof global ? global : this
+    if (typeof self === 'object') {
+        return self;
+    }
+    if (typeof window === 'object') {
+        return window;
+    }
+    if (typeof global === 'object') {
+        return global;
+    }
+    return this;
 }();
 LearnBlock.Msg = {};
 LearnBlock.utils.global.Blockly || (LearnBlock.utils.global.Blockly = {});
 LearnBlock.utils.global.Blockly.Msg || (LearnBlock.utils.global.Blockly.Msg = LearnBlock.Msg);
+
+//Represents coordinates and positions
 LearnBlock.utils.Coordinate = function (a, b) {
+    //x: left
     this.x = a;
+    //y: top
     this.y = b
 };
+//Compares if equal
 LearnBlock.utils.Coordinate.equals = function (a, b) {
-    return a == b ? !0 : a && b ? a.x == b.x && a.y == b.y : !1
+    if (a == b) {
+        return true;
+    }
+    if (!a || !b) {
+        return false;
+    }
+    return a.x == b.x && a.y == b.y;
 };
+//Returns distance between two coordinates
 LearnBlock.utils.Coordinate.distance = function (a, b) {
     var c = a.x - b.x,
         d = a.y - b.y;
     return Math.sqrt(c * c + d * d)
 };
+//Returns magnitude
 LearnBlock.utils.Coordinate.magnitude = function (a) {
     return Math.sqrt(a.x * a.x + a.y * a.y)
 };
+//Returns difference between two coordenates
 LearnBlock.utils.Coordinate.difference = function (a, b) {
     return new LearnBlock.utils.Coordinate(a.x - b.x, a.y - b.y)
 };
+//Returns sum between two coordenates
 LearnBlock.utils.Coordinate.sum = function (a, b) {
     return new LearnBlock.utils.Coordinate(a.x + b.x, a.y + b.y)
 };
+//Scales the coordinate by the given factor
 LearnBlock.utils.Coordinate.prototype.scale = function (a) {
+    //a is the factor
     this.x *= a;
     this.y *= a;
     return this
 };
+//Translates the coordinate by the given offsets
 LearnBlock.utils.Coordinate.prototype.translate = function (a, b) {
+    //a is the value to translate x by
     this.x += a;
+    //b is the value to translate y by
     this.y += b;
     return this
 };
@@ -5367,7 +5398,7 @@ LearnBlock.utils.uiMenu.adjustBBoxesForRTL = function (a, b, c) {
 };
 
 
-//Funciones del menu que aparece al hacer click derecho (contextmenu.js)
+//Context menu (right click)
 LearnBlock.ContextMenu = {};
 LearnBlock.ContextMenu.currentBlock = null;
 LearnBlock.ContextMenu.eventWrapper_ = null;
@@ -7373,7 +7404,6 @@ LearnBlock.Options = function (a) {
     this.hasCategories = d;
     this.moveOptions = LearnBlock.Options.parseMoveOptions(a, d);
     this.hasScrollbars = this.moveOptions.scrollbars;
-    this.hasTrashcan = e;
     this.maxTrashcanContents = l;
     this.hasSounds = k;
     this.hasCss = q;
@@ -7731,7 +7761,6 @@ LearnBlock.WorkspaceSvg.prototype.startScrollX = 0;
 LearnBlock.WorkspaceSvg.prototype.startScrollY = 0;
 LearnBlock.WorkspaceSvg.prototype.dragDeltaXY_ = null;
 LearnBlock.WorkspaceSvg.prototype.scale = 1;
-LearnBlock.WorkspaceSvg.prototype.trashcan = null;
 LearnBlock.WorkspaceSvg.prototype.scrollbar = null;
 LearnBlock.WorkspaceSvg.prototype.flyout_ = null;
 LearnBlock.WorkspaceSvg.prototype.toolbox_ = null;
@@ -7830,7 +7859,6 @@ LearnBlock.WorkspaceSvg.prototype.createDom = function (a) {
         this.toolbox_ = new LearnBlock.Toolbox(this)
     }
     this.grid_ && this.grid_.update(this.scale);
-    this.recordDeleteAreas();
     this.cursor_.setDrawer(this.getRenderer().makeCursorDrawer(this, !1));
     a = this.cursor_.getDrawer().createDom();
     this.svgGroup_.appendChild(a);
@@ -7846,7 +7874,6 @@ LearnBlock.WorkspaceSvg.prototype.dispose = function () {
     this.svgBubbleCanvas_ = this.svgBlockCanvas_ = null;
     this.toolbox_ && (this.toolbox_.dispose(), this.toolbox_ = null);
     this.flyout_ && (this.flyout_.dispose(), this.flyout_ = null);
-    this.trashcan && (this.trashcan.dispose(), this.trashcan = null);
     this.scrollbar && (this.scrollbar.dispose(), this.scrollbar = null);
     this.zoomControls_ &&
         (this.zoomControls_.dispose(), this.zoomControls_ = null);
@@ -7867,12 +7894,7 @@ LearnBlock.WorkspaceSvg.prototype.dispose = function () {
 LearnBlock.WorkspaceSvg.prototype.newBlock = function (a, b) {
     return new LearnBlock.BlockSvg(this, a, b)
 };
-LearnBlock.WorkspaceSvg.prototype.addTrashcan = function () {
-    if (!LearnBlock.Trashcan) throw Error("Missing require for LearnBlock.Trashcan");
-    this.trashcan = new LearnBlock.Trashcan(this);
-    var a = this.trashcan.createDom();
-    this.svgGroup_.insertBefore(a, this.svgBlockCanvas_)
-};
+
 LearnBlock.WorkspaceSvg.prototype.addZoomControls = function () {
     if (!LearnBlock.ZoomControls) throw Error("Missing require for LearnBlock.ZoomControls");
     this.zoomControls_ = new LearnBlock.ZoomControls(this);
@@ -7906,8 +7928,7 @@ LearnBlock.WorkspaceSvg.prototype.getToolbox = function () {
     return this.toolbox_
 };
 LearnBlock.WorkspaceSvg.prototype.updateScreenCalculations_ = function () {
-    this.updateInverseScreenCTM();
-    this.recordDeleteAreas()
+    this.updateInverseScreenCTM()
 };
 LearnBlock.WorkspaceSvg.prototype.resizeContents = function () {
     if (this.resizesEnabled_ && this.rendered) {
@@ -7922,7 +7943,6 @@ LearnBlock.WorkspaceSvg.prototype.resizeContents = function () {
 LearnBlock.WorkspaceSvg.prototype.resize = function () {
     this.toolbox_ && this.toolbox_.position();
     this.flyout_ && this.flyout_.position();
-    this.trashcan && this.trashcan.position();
     this.zoomControls_ && this.zoomControls_.position();
     this.scrollbar && this.scrollbar.resize();
     this.updateScreenCalculations_()
@@ -8087,12 +8107,9 @@ LearnBlock.WorkspaceSvg.prototype.createVariable = function (a, b, c) {
     this.refreshToolboxSelection();
     return a
 };
-LearnBlock.WorkspaceSvg.prototype.recordDeleteAreas = function () {
-    this.deleteAreaTrash_ = this.trashcan && this.svgGroup_.parentNode ? this.trashcan.getClientRect() : null;
-    this.deleteAreaToolbox_ = this.flyout_ ? this.flyout_.getClientRect() : this.toolbox_ ? this.toolbox_.getClientRect() : null
-};
+
 LearnBlock.WorkspaceSvg.prototype.isDeleteArea = function (a) {
-    return this.deleteAreaTrash_ && this.deleteAreaTrash_.contains(a.clientX, a.clientY) ? LearnBlock.DELETE_AREA_TRASH : this.deleteAreaToolbox_ && this.deleteAreaToolbox_.contains(a.clientX, a.clientY) ? LearnBlock.DELETE_AREA_TOOLBOX : LearnBlock.DELETE_AREA_NONE
+    return false
 };
 LearnBlock.WorkspaceSvg.prototype.onMouseDown_ = function (a) {
     var b = this.getGesture(a);
@@ -8344,7 +8361,7 @@ LearnBlock.WorkspaceSvg.prototype.setScale = function (a) {
     this.options.zoomOptions.maxScale && a > this.options.zoomOptions.maxScale ? a = this.options.zoomOptions.maxScale : this.options.zoomOptions.minScale && a < this.options.zoomOptions.minScale && (a = this.options.zoomOptions.minScale);
     this.scale = a;
     LearnBlock.hideChaff(!1);
-    this.flyout_ && (this.flyout_.reflow(), this.recordDeleteAreas());
+    this.flyout_ && (this.flyout_.reflow());
     this.grid_ && this.grid_.update(this.scale);
     a = this.getMetrics();
     this.scrollX -= a.absoluteLeft;
@@ -8609,7 +8626,6 @@ LearnBlock.createMainWorkspace_ = function (a, b, c, d) {
     e.scale = b.zoomOptions.startScale;
     a.appendChild(e.createDom("blocklyMainBackground"));
     !b.hasCategories && b.languageTree && (c = e.addFlyout_("svg"), LearnBlock.utils.dom.insertAfter(c, a));
-    b.hasTrashcan && e.addTrashcan();
     b.zoomOptions && b.zoomOptions.controls && e.addZoomControls();
     e.getThemeManager().subscribe(a, "workspace", "background-color");
     e.translate(0, 0);
@@ -8679,7 +8695,6 @@ LearnBlock.init_ = function (a) {
     LearnBlock.inject.bindDocumentEvents_();
     b.languageTree && (a.toolbox_ ? a.toolbox_.init(a) : a.flyout_ && (a.flyout_.init(a), a.flyout_.show(b.languageTree.childNodes), a.flyout_.scrollToStart()));
     c = LearnBlock.Scrollbar.scrollbarThickness;
-    b.hasTrashcan && (c = a.trashcan.init(c));
     b.zoomOptions && b.zoomOptions.controls && a.zoomControls_.init(c);
     b.moveOptions && b.moveOptions.scrollbars ? (a.scrollbar = new LearnBlock.ScrollbarPair(a), a.scrollbar.resize()) : a.setMetrics({
         x: .5,
@@ -9877,8 +9892,7 @@ LearnBlock.onContextMenu_ = function (a) {
 LearnBlock.hideChaff = function (a) {
     LearnBlock.Tooltip.hide();
     LearnBlock.WidgetDiv.hide();
-    LearnBlock.DropDownDiv.hideWithoutAnimation();
-    a || (a = LearnBlock.getMainWorkspace(), a.trashcan && a.trashcan.flyout_ && a.trashcan.flyout_.hide(), a.toolbox_ && a.toolbox_.flyout_ && a.toolbox_.flyout_.autoClose && a.toolbox_.clearSelection())
+    LearnBlock.DropDownDiv.hideWithoutAnimation()
 };
 LearnBlock.getMainWorkspace = function () {
     return LearnBlock.mainWorkspace
@@ -14476,169 +14490,6 @@ LearnBlock.Css.register([
 ]);
 
 
-
-LearnBlock.Trashcan = function (a) {
-    this.workspace_ = a;
-    this.contents_ = [];
-    if (!(0 >= this.workspace_.options.maxTrashcanContents)) {
-        a = {
-            scrollbars: !0,
-            disabledPatternId: this.workspace_.options.disabledPatternId,
-            parentWorkspace: this.workspace_,
-            RTL: this.workspace_.RTL,
-            oneBasedIndex: this.workspace_.options.oneBasedIndex,
-            renderer: this.workspace_.options.renderer
-        };
-        if (this.workspace_.horizontalLayout) {
-            a.toolboxPosition = this.workspace_.toolboxPosition == LearnBlock.TOOLBOX_AT_TOP ? LearnBlock.TOOLBOX_AT_BOTTOM : LearnBlock.TOOLBOX_AT_TOP;
-            if (!LearnBlock.HorizontalFlyout) throw Error("Missing require for LearnBlock.HorizontalFlyout");
-            this.flyout_ = new LearnBlock.HorizontalFlyout(a)
-        } else {
-            a.toolboxPosition = this.workspace_.toolboxPosition == LearnBlock.TOOLBOX_AT_RIGHT ? LearnBlock.TOOLBOX_AT_LEFT : LearnBlock.TOOLBOX_AT_RIGHT;
-            if (!LearnBlock.VerticalFlyout) throw Error("Missing require for LearnBlock.VerticalFlyout");
-            this.flyout_ = new LearnBlock.VerticalFlyout(a)
-        }
-        this.workspace_.addChangeListener(this.onDelete_.bind(this))
-    }
-};
-LearnBlock.Trashcan.prototype.WIDTH_ = 47;
-LearnBlock.Trashcan.prototype.BODY_HEIGHT_ = 44;
-LearnBlock.Trashcan.prototype.LID_HEIGHT_ = 16;
-LearnBlock.Trashcan.prototype.MARGIN_BOTTOM_ = 20;
-LearnBlock.Trashcan.prototype.MARGIN_SIDE_ = 20;
-LearnBlock.Trashcan.prototype.MARGIN_HOTSPOT_ = 10;
-LearnBlock.Trashcan.prototype.SPRITE_LEFT_ = 0;
-LearnBlock.Trashcan.prototype.SPRITE_TOP_ = 32;
-LearnBlock.Trashcan.prototype.HAS_BLOCKS_LID_ANGLE = .1;
-LearnBlock.Trashcan.prototype.isOpen = !1;
-LearnBlock.Trashcan.prototype.minOpenness_ = 0;
-LearnBlock.Trashcan.prototype.svgGroup_ = null;
-LearnBlock.Trashcan.prototype.svgLid_ = null;
-LearnBlock.Trashcan.prototype.lidTask_ = 0;
-LearnBlock.Trashcan.prototype.lidOpen_ = 0;
-LearnBlock.Trashcan.prototype.left_ = 0;
-LearnBlock.Trashcan.prototype.top_ = 0;
-LearnBlock.Trashcan.prototype.createDom = function () {
-    this.svgGroup_ = LearnBlock.utils.dom.createSvgElement("g", {
-        "class": "blocklyTrash"
-    }, null);
-    var a = String(Math.random()).substring(2);
-    var b = LearnBlock.utils.dom.createSvgElement("clipPath", {
-        id: "blocklyTrashBodyClipPath" + a
-    }, this.svgGroup_);
-    LearnBlock.utils.dom.createSvgElement("rect", {
-        width: this.WIDTH_,
-        height: this.BODY_HEIGHT_,
-        y: this.LID_HEIGHT_
-    }, b);
-    var c = LearnBlock.utils.dom.createSvgElement("image", {
-        width: LearnBlock.SPRITE.width,
-        x: -this.SPRITE_LEFT_,
-        height: LearnBlock.SPRITE.height,
-        y: -this.SPRITE_TOP_,
-        "clip-path": "url(#blocklyTrashBodyClipPath" + a + ")"
-    }, this.svgGroup_);
-    c.setAttributeNS(LearnBlock.utils.dom.XLINK_NS, "xlink:href", this.workspace_.options.pathToMedia + LearnBlock.SPRITE.url);
-    b = LearnBlock.utils.dom.createSvgElement("clipPath", {
-        id: "blocklyTrashLidClipPath" + a
-    }, this.svgGroup_);
-    LearnBlock.utils.dom.createSvgElement("rect", {
-        width: this.WIDTH_,
-        height: this.LID_HEIGHT_
-    }, b);
-    this.svgLid_ = LearnBlock.utils.dom.createSvgElement("image", {
-        width: LearnBlock.SPRITE.width,
-        x: -this.SPRITE_LEFT_,
-        height: LearnBlock.SPRITE.height,
-        y: -this.SPRITE_TOP_,
-        "clip-path": "url(#blocklyTrashLidClipPath" + a + ")"
-    }, this.svgGroup_);
-    this.svgLid_.setAttributeNS(LearnBlock.utils.dom.XLINK_NS, "xlink:href", this.workspace_.options.pathToMedia + LearnBlock.SPRITE.url);
-    LearnBlock.bindEventWithChecks_(this.svgGroup_, "mouseup", this, this.click);
-    LearnBlock.bindEvent_(c, "mouseover", this, this.mouseOver_);
-    LearnBlock.bindEvent_(c, "mouseout", this, this.mouseOut_);
-    this.animateLid_();
-    return this.svgGroup_
-};
-LearnBlock.Trashcan.prototype.init = function (a) {
-    0 < this.workspace_.options.maxTrashcanContents && (LearnBlock.utils.dom.insertAfter(this.flyout_.createDom("svg"), this.workspace_.getParentSvg()), this.flyout_.init(this.workspace_), this.flyout_.isBlockCreatable_ = function () {
-        return !0
-    });
-    this.verticalSpacing_ = this.MARGIN_BOTTOM_ + a;
-    this.setOpen_(!1);
-    return this.verticalSpacing_ + this.BODY_HEIGHT_ + this.LID_HEIGHT_
-};
-LearnBlock.Trashcan.prototype.dispose = function () {
-    this.svgGroup_ && (LearnBlock.utils.dom.removeNode(this.svgGroup_), this.svgGroup_ = null);
-    this.workspace_ = this.svgLid_ = null;
-    clearTimeout(this.lidTask_)
-};
-LearnBlock.Trashcan.prototype.position = function () {
-    if (this.verticalSpacing_) {
-        var a = this.workspace_.getMetrics();
-        a && (this.left_ = a.toolboxPosition == LearnBlock.TOOLBOX_AT_LEFT || this.workspace_.horizontalLayout && !this.workspace_.RTL ? a.viewWidth + a.absoluteLeft - this.WIDTH_ - this.MARGIN_SIDE_ - LearnBlock.Scrollbar.scrollbarThickness : this.MARGIN_SIDE_ + LearnBlock.Scrollbar.scrollbarThickness, this.top_ = a.toolboxPosition == LearnBlock.TOOLBOX_AT_BOTTOM ? this.verticalSpacing_ : a.viewHeight + a.absoluteTop - (this.BODY_HEIGHT_ + this.LID_HEIGHT_) -
-            this.verticalSpacing_, this.svgGroup_.setAttribute("transform", "translate(" + this.left_ + "," + this.top_ + ")"))
-    }
-};
-LearnBlock.Trashcan.prototype.getClientRect = function () {
-    if (!this.svgGroup_) return null;
-    var a = this.svgGroup_.getBoundingClientRect(),
-        b = a.top + this.SPRITE_TOP_ - this.MARGIN_HOTSPOT_;
-    a = a.left + this.SPRITE_LEFT_ - this.MARGIN_HOTSPOT_;
-    return new LearnBlock.utils.Rect(b, b + this.LID_HEIGHT_ + this.BODY_HEIGHT_ + 2 * this.MARGIN_HOTSPOT_, a, a + this.WIDTH_ + 2 * this.MARGIN_HOTSPOT_)
-};
-LearnBlock.Trashcan.prototype.setOpen_ = function (a) {
-    this.isOpen != a && (clearTimeout(this.lidTask_), this.isOpen = a, this.animateLid_())
-};
-LearnBlock.Trashcan.prototype.animateLid_ = function () {
-    this.lidOpen_ += this.isOpen ? .2 : -.2;
-    this.lidOpen_ = Math.min(Math.max(this.lidOpen_, this.minOpenness_), 1);
-    this.setLidAngle_(45 * this.lidOpen_);
-    this.svgGroup_.style.opacity = .4 + .4 * this.lidOpen_;
-    this.lidOpen_ > this.minOpenness_ && 1 > this.lidOpen_ && (this.lidTask_ = setTimeout(this.animateLid_.bind(this), 20))
-};
-LearnBlock.Trashcan.prototype.setLidAngle_ = function (a) {
-    var b = this.workspace_.toolboxPosition == LearnBlock.TOOLBOX_AT_RIGHT || this.workspace_.horizontalLayout && this.workspace_.RTL;
-    this.svgLid_.setAttribute("transform", "rotate(" + (b ? -a : a) + "," + (b ? 4 : this.WIDTH_ - 4) + "," + (this.LID_HEIGHT_ - 2) + ")")
-};
-LearnBlock.Trashcan.prototype.close = function () {
-    this.setOpen_(!1)
-};
-LearnBlock.Trashcan.prototype.click = function () {
-    if (this.contents_.length) {
-        for (var a = [], b = 0, c; c = this.contents_[b]; b++) a[b] = LearnBlock.Xml.textToDom(c);
-        this.flyout_.show(a)
-    }
-};
-LearnBlock.Trashcan.prototype.mouseOver_ = function () {
-    this.contents_.length && this.setOpen_(!0)
-};
-LearnBlock.Trashcan.prototype.mouseOut_ = function () {
-    this.setOpen_(!1)
-};
-LearnBlock.Trashcan.prototype.onDelete_ = function (a) {
-    if (!(0 >= this.workspace_.options.maxTrashcanContents) && a.type == LearnBlock.Events.BLOCK_DELETE && "shadow" != a.oldXml.tagName.toLowerCase() && (a = this.cleanBlockXML_(a.oldXml), -1 == this.contents_.indexOf(a))) {
-        for (this.contents_.unshift(a); this.contents_.length > this.workspace_.options.maxTrashcanContents;) this.contents_.pop();
-        this.minOpenness_ = this.HAS_BLOCKS_LID_ANGLE;
-        this.setLidAngle_(45 * this.minOpenness_)
-    }
-};
-LearnBlock.Trashcan.prototype.cleanBlockXML_ = function (a) {
-    for (var b = a = a.cloneNode(!0); b;) {
-        b.removeAttribute && (b.removeAttribute("x"), b.removeAttribute("y"), b.removeAttribute("id"));
-        var c = b.firstChild || b.nextSibling;
-        if (!c)
-            for (c = b.parentNode; c;) {
-                if (c.nextSibling) {
-                    c = c.nextSibling;
-                    break
-                }
-                c = c.parentNode
-            }
-        b = c
-    }
-    return LearnBlock.Xml.domToText(a)
-};
 LearnBlock.VariablesDynamic = {};
 LearnBlock.VariablesDynamic.onCreateVariableButtonClick_String = function (a) {
     LearnBlock.Variables.createVariableButtonHandler(a.getTargetWorkspace(), null, "String")

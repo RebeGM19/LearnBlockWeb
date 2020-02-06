@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="scripts.js"></script>
+    <script src="translations.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="blockly_compressed2.js"></script>
+    <script src="blocks_compressed2.js"></script>
+    <script src="en.js"></script>
+
+</head>
+
+<body>
+    <!--
+    <button id="es" class="translate">Español</button>
+    <button id="en" class="translate">English</button>
+    -->
+
+    <div class="row mb-5">
+        <div class="col-lg-4 col-md-12" id="downleft">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="dropdown">
+                    <a class="dropdown-toggle lang" data-toggle="dropdown" href="#tBlock" key="blockTypes">Tipos de bloques</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#bCont" role="tab" data-toggle="tab" class="lang" key="bCont">Control</a></li>
+                        <li><a href="#bOp" role="tab" data-toggle="tab" class="lang" key="bOp">Operadores</a></li>
+                        <li><a href="#bVar" role="tab" data-toggle="tab" class="lang" key="bVar">Variables</a></li>
+                        <li><a href="#bFunc" role="tab" data-toggle="tab" class="lang" key="bFunc">Funciones de usuario</a></li>
+                        <li><a href="#bEmo" role="tab" data-toggle="tab" class="lang" key="bEmo">Emociones</a></li>
+                        <li><a href="#bSpe" role="tab" data-toggle="tab" class="lang" key="bSpe">Speaker</a></li>
+                        <li><a href="#bBase" role="tab" data-toggle="tab" class="lang" key="bBase">Base</a></li>
+                        <li><a href="#bMot" role="tab" data-toggle="tab" class="lang" key="bMot">Motor</a></li>
+                        <li><a href="#bCam" role="tab" data-toggle="tab" class="lang" key="bCam">Cámara</a></li>
+                        <li><a href="#bDis" role="tab" data-toggle="tab" class="lang" key="bDis">Distancias</a></li>
+                        <li><a href="#bGro" role="tab" data-toggle="tab" class="lang" key="bGro">Suelo</a></li>
+                        <li><a href="#bSear" role="tab" data-toggle="tab" class="lang" key="bSear">Buscar</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="bCont">
+                    <h5 class="lang" key="lCont">Lista Control</h5>
+                    <div id="div1" ondrop="drop(event)">
+                        <div id="blockCont" onclick="duplicateBlock('Cont')"></div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="bOp">
+                    <h5 class="lang" key="lOp">Lista Operadores</h5>
+                    <div id="div1" ondrop="drop(event)">
+                        <div id="blockOp" onclick="duplicateBlock('Op')"></div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="bVar">
+                    <h5 class="lang" key="lVar">Lista Variables</h5>
+                    <div id="div1" ondrop="drop(event)">
+                        <div id="blockVar" onclick="duplicateBlock('Var')"></div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="bFunc">
+                    <h5 class="lang" key="lFunc">Lista Funciones de usuario</h5>
+                    <div id="div1" ondrop="drop(event)">
+                        <div id="blockFunc" onclick="duplicateBlock('Func')"></div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="bEmo">
+                    <h5 class="lang" key="lEmo">Lista Emociones</h5>
+                    <div id="div1" ondrop="drop(event)">
+                        <div id="blockEmo" onclick="duplicateBlock('Emo')"></div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="bSpe">
+                    <h5 class="lang" key="lSpe">Lista Speaker</h5>
+                    <div id="div1" ondrop="drop(event)">
+                        <div id="blockSpe" onclick="duplicateBlock('Spe')"></div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="bBase">
+                    <h5 class="lang" key="lBase">Lista Base</h5>
+                    <div id="div1" ondrop="drop(event)">
+                        <div id="blockBase" onclick="duplicateBlock('Base')"></div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="bMot">
+                    <h5 class="lang" key="lMot">Lista Motor</h5>
+                    <div id="div1" ondrop="drop(event)">
+                        <div id="blockMot" onclick="duplicateBlock('Mot')"></div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="bCam">
+                    <h5 class="lang" key="lCam">Lista Cámara</h5>
+                    <div id="div1" ondrop="drop(event)">
+                        <div id="blockCam" onclick="duplicateBlock('Cam')"></div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="bDis">
+                    <h5 class="lang" key="lDis">Lista Distancias</h5>
+                    <div id="div1" ondrop="drop(event)">
+                        <div id="blockDis" onclick="duplicateBlock('Dis')"></div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="bGro">
+                    <h5 class="lang" key="lGro">Lista Suelo</h5>
+                    <div id="div1" ondrop="drop(event)">
+                        <div id="blockGro" onclick="duplicateBlock('Gro')"></div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="bSear">
+                    <h5 class="lang" key="lSear">Lista Buscar</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6" id="downright">
+            <!--<button type="button" onclick="alert('Código generado')" class="lang" key="bGenerate">Generar código</button>
+            <div id="div2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>-->
+
+            <div id="blocklyDiv" style="height: 600px; width: 800px;"></div>
+            <div id="toolbox" style="display: none">
+                    <category name="If">
+                        <block type="controls_if"></block>
+                        <block type="controls_if">
+                            <mutation else="1"></mutation>
+                        </block>
+                        <block type="controls_if">
+                            <mutation elseif="1" else="1"></mutation>
+                        </block>
+                    </category>
+                    <category name="Boolean" colour="%{BKY_LOGIC_HUE}">
+                        <block type="logic_compare"></block>
+                        <block type="logic_operation"></block>
+                        <block type="logic_negate"></block>
+                        <block type="logic_boolean"></block>
+                        <block type="logic_null"></block>
+                    </category>
+                <category name="Loops" colour="%{BKY_LOOPS_HUE}">
+                    <block type="controls_repeat_ext">
+                        <value name="TIMES">
+                            <block type="math_number">
+                                <field name="NUM">10</field>
+                            </block>
+                        </value>
+                    </block>
+                    <block type="controls_whileUntil"></block>
+                    <block type="controls_for">
+                        <field name="VAR">i</field>
+                        <value name="FROM">
+                            <block type="math_number">
+                                <field name="NUM">1</field>
+                            </block>
+                        </value>
+                        <value name="TO">
+                            <block type="math_number">
+                                <field name="NUM">10</field>
+                            </block>
+                        </value>
+                        <value name="BY">
+                            <block type="math_number">
+                                <field name="NUM">1</field>
+                            </block>
+                        </value>
+                    </block>
+                    <block type="controls_forEach"></block>
+                    <block type="controls_flow_statements"></block>
+                </category>
+                <category name="Math" colour="%{BKY_MATH_HUE}">
+                    <block type="math_number">
+                        <field name="NUM">123</field>
+                    </block>
+                    <block type="math_arithmetic"></block>
+                    <block type="math_single"></block>
+                    <block type="math_trig"></block>
+                    <block type="math_constant"></block>
+                    <block type="math_number_property"></block>
+                    <block type="math_round"></block>
+                    <block type="math_on_list"></block>
+                    <block type="math_modulo"></block>
+                    <block type="math_constrain">
+                        <value name="LOW">
+                            <block type="math_number">
+                                <field name="NUM">1</field>
+                            </block>
+                        </value>
+                        <value name="HIGH">
+                            <block type="math_number">
+                                <field name="NUM">100</field>
+                            </block>
+                        </value>
+                    </block>
+                    <block type="math_random_int">
+                        <value name="FROM">
+                            <block type="math_number">
+                                <field name="NUM">1</field>
+                            </block>
+                        </value>
+                        <value name="TO">
+                            <block type="math_number">
+                                <field name="NUM">100</field>
+                            </block>
+                        </value>
+                    </block>
+                    <block type="math_random_float"></block>
+                    <block type="math_atan2"></block>
+                </category>
+                <category name="Variables" custom="VARIABLE" colour="%{BKY_VARIABLES_HUE}">
+                </category>
+                <category name="Functions" custom="PROCEDURE" colour="%{BKY_PROCEDURES_HUE}">
+                </category>
+                <category class="cat" name="Text">
+                    <block type="text_print">
+                        <value name="TEXT">
+                            <block type="text">
+                                <field name="TEXT">Hello World!</field>
+                            </block>
+                        </value>
+                    </block>
+                </category>
+                <category name="Operators">
+                    <block type="operator_add"></block>
+                    <block type="operator_minus"></block>
+                    <block type="operator_mult"></block>
+                    <block type="operator_div"></block>
+                </category>
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+    <script>
+        var workspace = Blockly.inject('blocklyDiv', {
+            toolbox: document.getElementById('toolbox'),
+            horizontalLayout: false,
+            scrollbars: true
+        });
+
+    </script>
+
+    <!-- Scripts Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+
+</html>

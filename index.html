@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="scripts.js"></script>
+    <script src="translations.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="blockly_compressed2.js"></script>
+    <script src="blocks_compressed2.js"></script>
+    <script src="en.js"></script>
+</head>
+
+<body>
+
+    <table class="table" id="mainstructure">
+        <tr>
+            <td>
+                <h1>Zona superior</h1>
+                <div class="row mb-5">
+                    <button type="button" onclick="alert('Crear nuevo bloque')" class="lang" key="bCreateBlock">Crear Nuevo Bloque</button>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle lang" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" key="selectLang">Idioma</button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">
+                                <div id="es" class="translate">Español</div>
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <div id="en" class="translate">English</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </td>
+        </tr>
+
+
+
+        <tr>
+            <table class="table table-bordered" id="innertable">
+
+                <tr>
+                    <ul class="nav nav-tabs">
+                        <li><button type="button" href="#python" data-toggle="tab">Python</button></li>
+                        <li><button type="button" href="#blocktext" data-toggle="tab">Block-Text</button></li>
+                        <li><button type="button" href="#learnblock" data-toggle="tab">LearnBlock</button></li>
+                    </ul>
+                </tr>
+
+
+                <tr>
+                    <div class="tab-content">
+
+                        <div class="tab-pane" id="python">
+                            <iframe id="mainiframe" src="./python.html"></iframe>
+                        </div>
+
+                        <div class="tab-pane" id="blocktext">
+                            <iframe id="mainiframe" src="./blocktext.html"></iframe>
+                        </div>
+
+                        <div class="tab-pane active" id="learnblock">
+                            <!--
+                            <iframe id="mainiframe" src="./learnblock.html">
+                                <div id="blocklyArea"></div>
+                            </iframe>
+                            -->
+                            <div id="blocklyDiv"></div>
+                            <div id="toolbox" style="display: none">
+
+                                <category name="Control" expanded="true">
+                                    <block type="control_main"></block>
+                                    <block type="control_if"></block>
+                                    <block type="control_elseif"></block>
+                                    <block type="control_else"></block>
+                                    <block type="control_while"></block>
+                                    <block type="control_forever"></block>
+                                    <block type="control_time1"></block>
+                                    <block type="control_time2"></block>
+                                    <block type="control_wait"></block>
+                                </category>
+
+                                <category name="Operators">
+                                    <block type="operator_add"></block>
+                                    <block type="operator_minus"></block>
+                                    <block type="operator_mult"></block>
+                                    <block type="operator_div"></block>
+                                    <block type="operator_eq"></block>
+                                    <block type="operator_booleq"></block>
+                                    <block type="operator_sumeq"></block>
+                                    <block type="operator_minuseq"></block>
+                                    <block type="operator_multeq"></block>
+                                    <block type="operator_diveq"></block>
+                                    <block type="operator_true"></block>
+                                    <block type="operator_false"></block>
+                                    <block type="operator_lessthan"></block>
+                                    <block type="operator_morethan"></block>
+                                    <block type="operator_and"></block>
+                                    <block type="operator_or"></block>
+                                    <block type="operator_not"></block>
+                                    <block type="operator_parenthesisr"></block>
+                                    <block type="operator_parenthesisl"></block>
+                                </category>
+
+                                <category name="Values">
+                                    <block type="val_num1"></block>
+                                    <block type="val_num2"></block>
+                                    <block type="val_text1"></block>
+                                    <block type="val_text2"></block>
+                                </category>
+
+                                <category name="Variables" custom="VARIABLE_DYNAMIC"></category>
+
+                                <category name="Functions" custom="PROCEDURE"></category>
+
+                                <category name="Emotions">
+                                    <block type="emotion_neutral"></block>
+                                    <block type="emotion_joy"></block>
+                                    <block type="emotion_fear"></block>
+                                    <block type="emotion_sadness"></block>
+                                    <block type="emotion_anger"></block>
+                                    <block type="emotion_disgust"></block>
+                                    <block type="emotion_surprise"></block>
+                                    <block type="emotion_isNeutral1"></block>
+                                    <block type="emotion_isNeutral2"></block>
+                                    <block type="emotion_isJoy1"></block>
+                                    <block type="emotion_isJoy2"></block>
+                                    <block type="emotion_isScared1"></block>
+                                    <block type="emotion_isScared2"></block>
+                                    <block type="emotion_isSad1"></block>
+                                    <block type="emotion_isSad2"></block>
+                                    <block type="emotion_isAngry1"></block>
+                                    <block type="emotion_isAngry2"></block>
+                                    <block type="emotion_isDisgust1"></block>
+                                    <block type="emotion_isDisgust2"></block>
+                                    <block type="emotion_isSurprised1"></block>
+                                    <block type="emotion_isSurprised2"></block>
+                                </category>
+
+                                <category name="Speaker">
+                                    <block type="speaker_text"></block>
+                                </category>
+
+                                <category name="Base">
+                                    <block type="base_slowdown"></block>
+                                    <block type="base_turnright"></block>
+                                    <block type="base_turnleft"></block>
+                                    <block type="base_turnback"></block>
+                                    <block type="base_turn"></block>
+                                    <block type="base_setorientation"></block>
+                                    <block type="base_resetorientation"></block>
+                                    <block type="base_stopbot"></block>
+                                    <block type="base_setmove"></block>
+                                    <block type="base_movestraight"></block>
+                                    <block type="base_moveright"></block>
+                                    <block type="base_moveleft"></block>
+                                    <block type="base_moveleft1"></block>
+                                    <block type="base_moveleft2"></block>
+                                    <block type="base_moveright1"></block>
+                                    <block type="base_moveright2"></block>
+                                    <block type="base_movestraight1"></block>
+                                    <block type="base_movestraight2"></block>
+                                    <block type="base_turnleft1"></block>
+                                    <block type="base_turnleft2"></block>
+                                    <block type="base_turnright1"></block>
+                                    <block type="base_turnright2"></block>
+                                    <block type="base_turn1"></block>
+                                    <block type="base_turn2"></block>
+                                </category>
+
+                                <category name="Motor">
+                                    <block type="motor_floor"></block>
+                                    <block type="motor_up"></block>
+                                    <block type="motor_front"></block>
+                                    <block type="motor_anglecamera"></block>
+                                    <block type="motor_anglemotor"></block>
+                                </category>
+
+                                <category name="Camera">
+                                    <block type="cam_centerred1"></block>
+                                    <block type="cam_centerred2"></block>
+                                    <block type="cam_leftred1"></block>
+                                    <block type="cam_leftred2"></block>
+                                    <block type="cam_rightred1"></block>
+                                    <block type="cam_rightred2"></block>
+                                    <block type="cam_isred1"></block>
+                                    <block type="cam_isred2"></block>
+                                    <block type="cam_centerblack1"></block>
+                                    <block type="cam_centerblack2"></block>
+                                    <block type="cam_leftblack1"></block>
+                                    <block type="cam_leftblack2"></block>
+                                    <block type="cam_rightblack1"></block>
+                                    <block type="cam_rightblack2"></block>
+                                    <block type="cam_isblack1"></block>
+                                    <block type="cam_isblack2"></block>
+                                    <block type="cam_centerblue1"></block>
+                                    <block type="cam_centerblue2"></block>
+                                    <block type="cam_leftblue1"></block>
+                                    <block type="cam_leftblue2"></block>
+                                    <block type="cam_rightblue1"></block>
+                                    <block type="cam_rightblue2"></block>
+                                    <block type="cam_isblue1"></block>
+                                    <block type="cam_isblue2"></block>
+                                    <block type="cam_faceleft1"></block>
+                                    <block type="cam_faceleft2"></block>
+                                    <block type="cam_faceright1"></block>
+                                    <block type="cam_faceright2"></block>
+                                    <block type="cam_faceup1"></block>
+                                    <block type="cam_faceup2"></block>
+                                    <block type="cam_facedown1"></block>
+                                    <block type="cam_facedown2"></block>
+                                    <block type="cam_facecenter1"></block>
+                                    <block type="cam_facecenter2"></block>
+                                    <block type="cam_isface1"></block>
+                                    <block type="cam_isface2"></block>
+                                    <block type="cam_linecross1"></block>
+                                    <block type="cam_linecross2"></block>
+                                    <block type="cam_facehappy1"></block>
+                                    <block type="cam_facehappy2"></block>
+                                    <block type="cam_faceangry1"></block>
+                                    <block type="cam_faceangry2"></block>
+                                    <block type="cam_faceneutral1"></block>
+                                    <block type="cam_faceneutral2"></block>
+                                    <block type="cam_facesad1"></block>
+                                    <block type="cam_facesad2"></block>
+                                    <block type="cam_facesurprised1"></block>
+                                    <block type="cam_facesurprised2"></block>
+                                    <block type="cam_istag1"></block>
+                                    <block type="cam_istag2"></block>
+                                    <block type="cam_isanytag1"></block>
+                                    <block type="cam_isanytag2"></block>
+                                    <block type="cam_tagleft1"></block>
+                                    <block type="cam_tagleft2"></block>
+                                    <block type="cam_tagright1"></block>
+                                    <block type="cam_tagright2"></block>
+                                    <block type="cam_tagcenter1"></block>
+                                    <block type="cam_tagcenter2"></block>
+                                    <block type="cam_image1"></block>
+                                    <block type="cam_image2"></block>
+                                </category>
+
+                                <category name="Distances">
+                                    <block type="dist_front1"></block>
+                                    <block type="dist_front2"></block>
+                                    <block type="dist_left1"></block>
+                                    <block type="dist_left2"></block>
+                                    <block type="dist_right1"></block>
+                                    <block type="dist_right2"></block>
+                                    <block type="dist_free1"></block>
+                                    <block type="dist_free2"></block>
+                                    <block type="dist_mindist1"></block>
+                                    <block type="dist_mindist2"></block>
+                                </category>
+
+                                <category name="Ground">
+                                    <block type="ground_thereis1"></block>
+                                    <block type="ground_thereis2"></block>
+                                    <block type="ground_center1"></block>
+                                    <block type="ground_center2"></block>
+                                    <block type="ground_right1"></block>
+                                    <block type="ground_right2"></block>
+                                    <block type="ground_left1"></block>
+                                    <block type="ground_left2"></block>
+                                </category>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </tr>
+            </table>
+
+        </tr>
+    </table>
+
+
+    <script>
+        var workspace = LearnBlock.inject('blocklyDiv', {
+            toolbox: document.getElementById('toolbox'),
+            horizontalLayout: false,
+            scrollbars: true
+        });
+
+    </script>
+    <!-- Scripts Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+</body>
+
+</html>

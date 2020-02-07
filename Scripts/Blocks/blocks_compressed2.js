@@ -1,6 +1,6 @@
 'use strict';
 
-//Bloques control
+//Control blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "control_main",
     message0: "main",
@@ -119,7 +119,7 @@ LearnBlock.defineBlocksWithJsonArray([{
 
 
 
-//Bloques operadores
+//Operators blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "operator_add",
     message0: "+ %1",
@@ -304,7 +304,7 @@ LearnBlock.defineBlocksWithJsonArray([{
 
 
 
-//Bloques valores
+//Values blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "val_num1",
     message0: "%1",
@@ -357,7 +357,7 @@ LearnBlock.defineBlocksWithJsonArray([{
 
 
 
-//Bloques variables
+//Variables blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "variables_set_dynamic",
     message0: "%{BKY_VARIABLES_SET}",
@@ -415,7 +415,7 @@ LearnBlock.defineBlocksWithJsonArray([{
 
 
 
-//Bloques emociones
+//Emotions blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "emotion_neutral",
     message0: "express_Neutral()",
@@ -567,7 +567,7 @@ LearnBlock.defineBlocksWithJsonArray([{
 
 
 
-//Bloques speaker
+//Speaker blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "speaker_text",
     message0: "say_text(%1)",
@@ -583,7 +583,7 @@ LearnBlock.defineBlocksWithJsonArray([{
 
 
 
-//Bloques base
+//Base blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "base_slowdown",
     message0: "slow_down()",
@@ -769,7 +769,7 @@ LearnBlock.defineBlocksWithJsonArray([{
 
 
 
-//Bloques motor
+//Motor blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "motor_floor",
     message0: "look_floor()",
@@ -818,7 +818,7 @@ LearnBlock.defineBlocksWithJsonArray([{
 
 
 
-//Bloques camara
+//Camera blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "cam_centerred1",
     message0: "is_center_red_line()",
@@ -1300,7 +1300,7 @@ LearnBlock.defineBlocksWithJsonArray([{
 
 
 
-//Bloques distancia
+//Distance blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "dist_front1",
     message0: "is_front_obstacle(%1)",
@@ -1441,7 +1441,7 @@ LearnBlock.defineBlocksWithJsonArray([{
 
 
 
-//Bloques suelo
+//Ground blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "ground_thereis1",
     message0: "is_there_ground()",
@@ -1506,7 +1506,7 @@ LearnBlock.defineBlocksWithJsonArray([{
 
 
 
-//Funciones procedimientos
+//Procedures functions
 LearnBlock.Blocks.procedures = {};
 LearnBlock.Blocks.procedures_defnoreturn = {
     init: function () {

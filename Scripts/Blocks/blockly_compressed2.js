@@ -550,19 +550,6 @@ LearnBlock.Events.fromJson = function (a, b) {
         b.id;
     return c
 };
-LearnBlock.Events.disableOrphans = function (a) {
-    if ((a.type == LearnBlock.Events.MOVE || a.type == LearnBlock.Events.CREATE) && a.workspaceId) {
-        var b = LearnBlock.Workspace.getById(a.workspaceId);
-        if (a = b.getBlockById(a.blockId)) {
-            var c = a.getParent();
-            if (c && c.isEnabled())
-                for (b = a.getDescendants(!1), a = 0; c = b[a]; a++) c.setEnabled(!0);
-            else if ((a.outputConnection || a.previousConnection) && !b.isDragging()) {
-                do a.setEnabled(!1), a = a.getNextBlock(); while (a)
-            }
-        }
-    }
-};
 LearnBlock.Events.Abstract = function () {
     this.workspaceId = void 0;
     this.group = LearnBlock.Events.getGroup();
@@ -660,15 +647,6 @@ LearnBlock.Events.Change.prototype.run = function (a) {
     if (b) switch (b.mutator && b.mutator.setVisible(!1), a = a ? this.newValue : this.oldValue, this.element) {
         case "field":
             (b = b.getField(this.name)) ? b.setValue(a): console.warn("Can't set non-existent field: " + this.name);
-            break;
-        case "comment":
-            b.setCommentText(a || null);
-            break;
-        case "collapsed":
-            b.setCollapsed(!!a);
-            break;
-        case "disabled":
-            b.setEnabled(!a);
             break;
         case "inline":
             b.setInputsInline(!!a);
@@ -1025,19 +1003,9 @@ LearnBlock.Xml.blockToDom = function (a, b) {
         d && (d.hasChildNodes() || d.hasAttributes()) && c.appendChild(d)
     }
     LearnBlock.Xml.allFieldsToDom_(a, c);
-    if (d = a.getCommentText()) {
-        var e = a.commentModel.size,
-            f = a.commentModel.pinned,
-            g = LearnBlock.utils.xml.createElement("comment");
-        g.appendChild(LearnBlock.utils.xml.createTextNode(d));
-        g.setAttribute("pinned", f);
-        g.setAttribute("h",
-            e.height);
-        g.setAttribute("w", e.width);
-        c.appendChild(g)
-    }
     a.data && (d = LearnBlock.utils.xml.createElement("data"), d.appendChild(LearnBlock.utils.xml.createTextNode(a.data)), c.appendChild(d));
-    for (e = 0; f = a.inputList[e]; e++) {
+    var f, g;
+    for (var e = 0; f = a.inputList[e]; e++) {
         var h;
         g = !0;
         if (f.type != LearnBlock.DUMMY_INPUT) {
@@ -1052,10 +1020,8 @@ LearnBlock.Xml.blockToDom = function (a, b) {
         }
     }
     void 0 != a.inputsInline && a.inputsInline != a.inputsInlineDefault && c.setAttribute("inline", a.inputsInline);
-    a.isCollapsed() && c.setAttribute("collapsed", !0);
-    a.isEnabled() || c.setAttribute("disabled", !0);
-    a.isDeletable() || a.isShadow() || c.setAttribute("deletable", !1);
-    a.isMovable() || a.isShadow() || c.setAttribute("movable", !1);
+    a.isDeletable() || c.setAttribute("deletable", !1);
+    a.isMovable()|| c.setAttribute("movable", !1);
     a.isEditable() || c.setAttribute("editable", !1);
     if (e = a.getNextBlock()) h = LearnBlock.utils.xml.createElement("next"),
         h.appendChild(LearnBlock.Xml.blockToDom(e, b)), c.appendChild(h);
@@ -1199,7 +1165,6 @@ LearnBlock.Xml.domToBlock = function (a, b) {
             setTimeout(function () {
                 d.workspace && d.setConnectionsHidden(!1)
             }, 1);
-            d.updateDisabled();
             b.resizeContents()
         } else
             for (f =
@@ -1240,22 +1205,6 @@ LearnBlock.Xml.domToBlockHeadless_ = function (a, b) {
                     c.domToMutation &&
                         (c.domToMutation(g), c.initSvg && c.initSvg());
                     break;
-                case "comment":
-                    if (!LearnBlock.Comment) {
-                        console.warn("Missing require for LearnBlock.Comment, ignoring block comment.");
-                        break
-                    }
-                    f = g.textContent;
-                    h = "true" == g.getAttribute("pinned");
-                    k = parseInt(g.getAttribute("w"), 10);
-                    g = parseInt(g.getAttribute("h"), 10);
-                    c.setCommentText(f);
-                    c.commentModel.pinned = h;
-                    isNaN(k) || isNaN(g) || (c.commentModel.size = new LearnBlock.utils.Size(k, g));
-                    h && c.getCommentIcon && !c.isInFlyout && setTimeout(function () {
-                        c.getCommentIcon().setVisible(!0)
-                    }, 1);
-                    break;
                 case "data":
                     c.data = g.textContent;
                     break;
@@ -1290,17 +1239,14 @@ LearnBlock.Xml.domToBlockHeadless_ = function (a, b) {
                     console.warn("Ignoring unknown tag: " + g.nodeName)
             }
         }(e = a.getAttribute("inline")) && c.setInputsInline("true" == e);
-    (e = a.getAttribute("disabled")) && c.setEnabled("true" != e && "disabled" != e);
     (e = a.getAttribute("deletable")) && c.setDeletable("true" == e);
     (e = a.getAttribute("movable")) && c.setMovable("true" == e);
     (e = a.getAttribute("editable")) && c.setEditable("true" == e);
-    (e = a.getAttribute("collapsed")) && c.setCollapsed("true" == e);
     if ("shadow" == a.nodeName.toLowerCase()) {
         d = c.getChildren(!1);
         for (e = 0; g = d[e]; e++)
             if (!g.isShadow()) throw TypeError("Shadow block not allowed non-shadow child.");
         if (c.getVarModels().length) throw TypeError("Shadow blocks cannot have variable references.");
-        c.setShadow(!0)
     }
     return c
 };
@@ -1574,21 +1520,6 @@ LearnBlock.Extensions.registerMixin = function (a, b) {
         this.mixin(b)
     })
 };
-LearnBlock.Extensions.registerMutator = function (a, b, c, d) {
-    var e = 'Error when registering mutator "' + a + '": ';
-    LearnBlock.Extensions.checkHasFunction_(e, b.domToMutation, "domToMutation");
-    LearnBlock.Extensions.checkHasFunction_(e, b.mutationToDom, "mutationToDom");
-    var f = LearnBlock.Extensions.checkMutatorDialog_(b, e);
-    if (c && "function" != typeof c) throw Error('Extension "' + a + '" is not a function');
-    LearnBlock.Extensions.register(a, function () {
-        if (f) {
-            if (!LearnBlock.Mutator) throw Error(e + "Missing require for LearnBlock.Mutator");
-            this.setMutator(new LearnBlock.Mutator(d))
-        }
-        this.mixin(b);
-        c && c.apply(this)
-    })
-};
 LearnBlock.Extensions.unregister = function (a) {
     LearnBlock.Extensions.ALL_[a] ? delete LearnBlock.Extensions.ALL_[a] : console.warn('No extension mapping for name "' + a + '" found to unregister')
 };
@@ -1796,7 +1727,6 @@ LearnBlock.InsertionMarkerManager.prototype.createMarkerBlock_ = function (a) {
     try {
         var c = this.workspace_.newBlock(b);
         c.setInsertionMarker(!0, a.width);
-        c.setCollapsed(a.isCollapsed());
         if (a.mutationToDom) {
             var d = a.mutationToDom();
             d && c.domToMutation(d)
@@ -1935,28 +1865,11 @@ LearnBlock.BlockDragger = function (a, b) {
     this.draggedConnectionManager_ = new LearnBlock.InsertionMarkerManager(this.draggingBlock_);
     this.deleteArea_ = null;
     this.wouldDeleteBlock_ = !1;
-    this.startXY_ = this.draggingBlock_.getRelativeToSurfaceXY();
-    this.dragIconData_ = LearnBlock.BlockDragger.initIconData_(a)
+    this.startXY_ = this.draggingBlock_.getRelativeToSurfaceXY()
 };
 LearnBlock.BlockDragger.prototype.dispose = function () {
     this.startWorkspace_ = this.workspace_ = this.draggingBlock_ = null;
-    this.dragIconData_.length = 0;
     this.draggedConnectionManager_ && (this.draggedConnectionManager_.dispose(), this.draggedConnectionManager_ = null)
-};
-LearnBlock.BlockDragger.initIconData_ = function (a) {
-    var b = [];
-    a = a.getDescendants(!1);
-    for (var c = 0, d; d = a[c]; c++) {
-        d = d.getIcons();
-        for (var e = 0; e < d.length; e++) {
-            var f = {
-                location: d[e].getIconLocation(),
-                icon: d[e]
-            };
-            b.push(f)
-        }
-    }
-    return b
 };
 LearnBlock.BlockDragger.prototype.startBlockDrag = function (a, b) {
     LearnBlock.Events.getGroup() || LearnBlock.Events.setGroup(!0);
@@ -1983,14 +1896,12 @@ LearnBlock.BlockDragger.prototype.dragBlock = function (a, b) {
     var c = this.pixelsToWorkspaceUnits_(b),
         d = LearnBlock.utils.Coordinate.sum(this.startXY_, c);
     this.draggingBlock_.moveDuringDrag(d);
-    this.dragIcons_(c);
     this.deleteArea_ = this.workspace_.isDeleteArea(a);
     this.draggedConnectionManager_.update(c, this.deleteArea_);
     this.updateCursorDuringBlockDrag_()
 };
 LearnBlock.BlockDragger.prototype.endBlockDrag = function (a, b) {
     this.dragBlock(a, b);
-    this.dragIconData_ = [];
     LearnBlock.utils.dom.stopTextWidthCache();
     LearnBlock.blockAnimations.disconnectUiStop();
     var c = this.pixelsToWorkspaceUnits_(b),
@@ -2022,12 +1933,6 @@ LearnBlock.BlockDragger.prototype.pixelsToWorkspaceUnits_ = function (a) {
     a = new LearnBlock.utils.Coordinate(a.x / this.workspace_.scale, a.y / this.workspace_.scale);
     this.workspace_.isMutator && a.scale(1 / this.workspace_.options.parentWorkspace.scale);
     return a
-};
-LearnBlock.BlockDragger.prototype.dragIcons_ = function (a) {
-    for (var b = 0; b < this.dragIconData_.length; b++) {
-        var c = this.dragIconData_[b];
-        c.icon.setIconLocation(LearnBlock.utils.Coordinate.sum(c.location, a))
-    }
 };
 LearnBlock.BlockDragger.prototype.getInsertionMarkers = function () {
     return this.draggedConnectionManager_ && this.draggedConnectionManager_.getInsertionMarkers ? this.draggedConnectionManager_.getInsertionMarkers() : []
@@ -4435,9 +4340,6 @@ LearnBlock.Block.prototype.isDuplicatable = function () {
 LearnBlock.Block.prototype.isShadow = function () {
     return this.isShadow_
 };
-LearnBlock.Block.prototype.setShadow = function (a) {
-    this.isShadow_ = a
-};
 LearnBlock.Block.prototype.isInsertionMarker = function () {
     return this.isInsertionMarker_
 };
@@ -4598,16 +4500,6 @@ LearnBlock.Block.prototype.getInputsInline = function () {
         if (this.inputList[a - 1].type == LearnBlock.INPUT_VALUE && this.inputList[a].type == LearnBlock.DUMMY_INPUT) return !0;
     return !1
 };
-LearnBlock.Block.prototype.setDisabled = function (a) {
-    console.warn("Deprecated call to LearnBlock.Block.prototype.setDisabled, use LearnBlock.Block.prototype.setEnabled instead.");
-    this.setEnabled(!a)
-};
-LearnBlock.Block.prototype.isEnabled = function () {
-    return !this.disabled
-};
-LearnBlock.Block.prototype.setEnabled = function (a) {
-    this.isEnabled() != a && (LearnBlock.Events.fire(new LearnBlock.Events.BlockChange(this, "disabled", null, this.disabled, !a)), this.disabled = !a)
-};
 LearnBlock.Block.prototype.getInheritedDisabled = function () {
     for (var a = this.getSurroundParent(); a;) {
         if (a.disabled) return !0;
@@ -4617,9 +4509,6 @@ LearnBlock.Block.prototype.getInheritedDisabled = function () {
 };
 LearnBlock.Block.prototype.isCollapsed = function () {
     return this.collapsed_
-};
-LearnBlock.Block.prototype.setCollapsed = function (a) {
-    this.collapsed_ != a && (LearnBlock.Events.fire(new LearnBlock.Events.BlockChange(this, "collapsed", null, this.collapsed_, a)), this.collapsed_ = a)
 };
 LearnBlock.Block.prototype.toString = function (a, b) {
     var c = [],
@@ -4790,14 +4679,6 @@ LearnBlock.Block.prototype.getInput = function (a) {
 LearnBlock.Block.prototype.getInputTargetBlock = function (a) {
     return (a = this.getInput(a)) && a.connection && a.connection.targetBlock()
 };
-LearnBlock.Block.prototype.getCommentText = function () {
-    return this.commentModel.text
-};
-LearnBlock.Block.prototype.setCommentText = function (a) {
-    this.commentModel.text != a && (LearnBlock.Events.fire(new LearnBlock.Events.BlockChange(this, "comment", null, this.commentModel.text, a)), this.comment = this.commentModel.text = a)
-};
-LearnBlock.Block.prototype.setWarningText = function (a, b) {};
-LearnBlock.Block.prototype.setMutator = function (a) {};
 LearnBlock.Block.prototype.getRelativeToSurfaceXY = function () {
     return this.xy_
 };
@@ -5264,10 +5145,10 @@ LearnBlock.Menu.prototype.highlightHelper = function (a, b) {
     return !1
 };
 LearnBlock.Menu.prototype.canHighlightItem = function (a) {
-    return a.isEnabled()
+    return true
 };
 LearnBlock.Menu.prototype.handleMouseOver_ = function (a) {
-    (a = this.getMenuItem(a.target)) && a.isEnabled() && this.getHighlighted() !== a && (this.unhighlightCurrent(), this.setHighlighted(a))
+    (a = this.getMenuItem(a.target)) && this.getHighlighted() !== a && (this.unhighlightCurrent(), this.setHighlighted(a))
 };
 LearnBlock.Menu.prototype.handleClick_ = function (a) {
     var b = this.getMenuItem(a.target);
@@ -5357,13 +5238,13 @@ LearnBlock.MenuItem.prototype.setChecked = function (a) {
     if (this.checkable_) {
         this.checked_ = a;
         var b = this.getElement();
-        b && this.isEnabled() && (a ? (LearnBlock.utils.dom.addClass(b, "goog-option-selected"), LearnBlock.utils.aria.setState(b, LearnBlock.utils.aria.State.SELECTED, !0)) : (LearnBlock.utils.dom.removeClass(b, "goog-option-selected"), LearnBlock.utils.aria.setState(b, LearnBlock.utils.aria.State.SELECTED, !1)))
+        b && (a ? (LearnBlock.utils.dom.addClass(b, "goog-option-selected"), LearnBlock.utils.aria.setState(b, LearnBlock.utils.aria.State.SELECTED, !0)) : (LearnBlock.utils.dom.removeClass(b, "goog-option-selected"), LearnBlock.utils.aria.setState(b, LearnBlock.utils.aria.State.SELECTED, !1)))
     }
 };
 LearnBlock.MenuItem.prototype.setHighlighted = function (a) {
     this.highlight_ = a;
     var b = this.getElement();
-    b && this.isEnabled() && (a ? LearnBlock.utils.dom.addClass(b, "goog-menuitem-highlight") : LearnBlock.utils.dom.removeClass(b, "goog-menuitem-highlight"))
+    b && (a ? LearnBlock.utils.dom.addClass(b, "goog-menuitem-highlight") : LearnBlock.utils.dom.removeClass(b, "goog-menuitem-highlight"))
 };
 LearnBlock.MenuItem.prototype.isEnabled = function () {
     return this.enabled_
@@ -5373,7 +5254,8 @@ LearnBlock.MenuItem.prototype.setEnabled = function (a) {
     (a = this.getElement()) && (this.enabled_ ? LearnBlock.utils.dom.removeClass(a, "goog-menuitem-disabled") : LearnBlock.utils.dom.addClass(a, "goog-menuitem-disabled"))
 };
 LearnBlock.MenuItem.prototype.handleClick = function (a) {
-    this.isEnabled() && (this.setHighlighted(!0), this.performActionInternal())
+    this.setHighlighted(!0);
+    this.performActionInternal()
 };
 LearnBlock.MenuItem.prototype.performActionInternal = function () {
     this.checkable_ && this.setChecked(!this.checked_);
@@ -5402,6 +5284,7 @@ LearnBlock.utils.uiMenu.adjustBBoxesForRTL = function (a, b, c) {
 LearnBlock.ContextMenu = {};
 LearnBlock.ContextMenu.currentBlock = null;
 LearnBlock.ContextMenu.eventWrapper_ = null;
+//Constructs and shows the menu
 LearnBlock.ContextMenu.show = function (a, b, c) {
     LearnBlock.WidgetDiv.show(LearnBlock.ContextMenu, c, null);
     if (b.length) {
@@ -5413,6 +5296,7 @@ LearnBlock.ContextMenu.show = function (a, b, c) {
         LearnBlock.ContextMenu.currentBlock = null
     } else LearnBlock.ContextMenu.hide()
 };
+//Inserts the options in the menu
 LearnBlock.ContextMenu.populate_ = function (a, b) {
     var c = new LearnBlock.Menu;
     c.setRightToLeft(b);
@@ -5420,14 +5304,14 @@ LearnBlock.ContextMenu.populate_ = function (a, b) {
         var f = new LearnBlock.MenuItem(e.text);
         f.setRightToLeft(b);
         c.addChild(f, !0);
-        f.setEnabled(e.enabled);
-        if (e.enabled) f.onAction(function () {
+        f.onAction(function () {
             LearnBlock.ContextMenu.hide();
             this.callback()
         }, e)
     }
     return c
 };
+//Adds the menu and positions it
 LearnBlock.ContextMenu.position_ = function (a, b, c) {
     var d = LearnBlock.utils.getViewportBBox();
     b = {
@@ -5442,6 +5326,7 @@ LearnBlock.ContextMenu.position_ = function (a, b, c) {
     LearnBlock.WidgetDiv.positionWithAnchor(d, b, e, c);
     a.getElement().focus()
 };
+//Creates and renders the widget
 LearnBlock.ContextMenu.createWidget_ = function (a) {
     a.render(LearnBlock.WidgetDiv.DIV);
     var b = a.getElement();
@@ -5449,11 +5334,13 @@ LearnBlock.ContextMenu.createWidget_ = function (a) {
     LearnBlock.bindEventWithChecks_(b, "contextmenu", null, LearnBlock.utils.noEvent);
     a.focus()
 };
+//Hides the menu
 LearnBlock.ContextMenu.hide = function () {
     LearnBlock.WidgetDiv.hideIfOwner(LearnBlock.ContextMenu);
     LearnBlock.ContextMenu.currentBlock = null;
     LearnBlock.ContextMenu.eventWrapper_ && LearnBlock.unbindEvent_(LearnBlock.ContextMenu.eventWrapper_)
 };
+//Callback functions that creates and configures a block. Places it next to the original block
 LearnBlock.ContextMenu.callbackFactory = function (a, b) {
     return function () {
         LearnBlock.Events.disable();
@@ -5470,7 +5357,9 @@ LearnBlock.ContextMenu.callbackFactory = function (a, b) {
         c.select()
     }
 };
+//Deletes the block
 LearnBlock.ContextMenu.blockDeleteOption = function (a) {
+    //Counts the number of blocks attached to the current block
     var b = a.getDescendants(!1).length,
         c = a.getNextBlock();
     c && (b -= c.getDescendants(!1).length);
@@ -5484,15 +5373,7 @@ LearnBlock.ContextMenu.blockDeleteOption = function (a) {
         }
     }
 };
-LearnBlock.ContextMenu.blockHelpOption = function (a) {
-    return {
-        enabled: !("function" == typeof a.helpUrl ? !a.helpUrl() : !a.helpUrl),
-        text: LearnBlock.Msg.HELP,
-        callback: function () {
-            a.showHelp_()
-        }
-    }
-};
+//Duplicates the block
 LearnBlock.ContextMenu.blockDuplicateOption = function (a) {
     var b = a.isDuplicatable();
     return {
@@ -5502,56 +5383,6 @@ LearnBlock.ContextMenu.blockDuplicateOption = function (a) {
             LearnBlock.duplicate_(a)
         }
     }
-};
-LearnBlock.ContextMenu.blockCommentOption = function (a) {
-    var b = {
-        enabled: !LearnBlock.utils.userAgent.IE
-    };
-    a.comment ? (b.text = LearnBlock.Msg.REMOVE_COMMENT, b.callback = function () {
-        a.setCommentText(null)
-    }) : (b.text = LearnBlock.Msg.ADD_COMMENT, b.callback = function () {
-        a.setCommentText("")
-    });
-    return b
-};
-LearnBlock.ContextMenu.commentDeleteOption = function (a) {
-    return {
-        text: LearnBlock.Msg.REMOVE_COMMENT,
-        enabled: !0,
-        callback: function () {
-            LearnBlock.Events.setGroup(!0);
-            a.dispose(!0, !0);
-            LearnBlock.Events.setGroup(!1)
-        }
-    }
-};
-LearnBlock.ContextMenu.commentDuplicateOption = function (a) {
-    return {
-        text: LearnBlock.Msg.DUPLICATE_COMMENT,
-        enabled: !0,
-        callback: function () {
-            LearnBlock.duplicate_(a)
-        }
-    }
-};
-LearnBlock.ContextMenu.workspaceCommentOption = function (a, b) {
-    if (!LearnBlock.WorkspaceCommentSvg) throw Error("Missing require for LearnBlock.WorkspaceCommentSvg");
-    var c = {
-        enabled: !LearnBlock.utils.userAgent.IE
-    };
-    c.text = LearnBlock.Msg.ADD_COMMENT;
-    c.callback = function () {
-        var c = new LearnBlock.WorkspaceCommentSvg(a, LearnBlock.Msg.WORKSPACE_COMMENT_DEFAULT_TEXT, LearnBlock.WorkspaceCommentSvg.DEFAULT_SIZE, LearnBlock.WorkspaceCommentSvg.DEFAULT_SIZE),
-            e = a.getInjectionDiv().getBoundingClientRect();
-        e = new LearnBlock.utils.Coordinate(b.clientX -
-            e.left, b.clientY - e.top);
-        var f = a.getOriginOffsetInPixels();
-        e = LearnBlock.utils.Coordinate.difference(e, f);
-        e.scale(1 / a.scale);
-        c.moveBy(e.x, e.y);
-        a.rendered && (c.initSvg(), c.render(), c.select())
-    };
-    return c
 };
 
 
@@ -5669,8 +5500,6 @@ LearnBlock.RenderedConnection.prototype.hideAll = function () {
     if (this.targetConnection)
         for (var a = this.targetBlock().getDescendants(!1), b = 0; b < a.length; b++) {
             for (var c = a[b], d = c.getConnections_(!0), e = 0; e < d.length; e++) d[e].setHidden(!0);
-            c = c.getIcons();
-            for (e = 0; e < c.length; e++) c[e].setVisible(!1)
         }
 };
 LearnBlock.RenderedConnection.prototype.isConnectionAllowed = function (a, b) {
@@ -5682,7 +5511,7 @@ LearnBlock.RenderedConnection.prototype.onFailedConnect = function (a) {
 LearnBlock.RenderedConnection.prototype.disconnectInternal_ = function (a, b) {
     LearnBlock.RenderedConnection.superClass_.disconnectInternal_.call(this, a, b);
     a.rendered && a.render();
-    b.rendered && (b.updateDisabled(), b.render())
+    b.rendered && b.render()
 };
 LearnBlock.RenderedConnection.prototype.respawnShadow_ = function () {
     var a = this.getSourceBlock(),
@@ -5703,8 +5532,6 @@ LearnBlock.RenderedConnection.prototype.connect_ = function (a) {
     LearnBlock.RenderedConnection.superClass_.connect_.call(this, a);
     var b = this.getSourceBlock();
     a = a.getSourceBlock();
-    b.rendered && b.updateDisabled();
-    a.rendered && a.updateDisabled();
     b.rendered && a.rendered && (this.type == LearnBlock.NEXT_STATEMENT || this.type == LearnBlock.PREVIOUS_STATEMENT ? a.render() : b.render())
 };
 LearnBlock.RenderedConnection.prototype.onCheckChanged_ = function () {
@@ -5834,6 +5661,9 @@ LearnBlock.Warning.prototype.dispose = function () {
     this.block_.warning = null;
     LearnBlock.Icon.prototype.dispose.call(this)
 };
+
+
+//Block_svg
 LearnBlock.BlockSvg = function (a, b, c) {
     this.svgGroup_ = LearnBlock.utils.dom.createSvgElement("g", {}, null);
     this.svgGroup_.translate_ = "";
@@ -5860,20 +5690,19 @@ LearnBlock.BlockSvg.SEP_SPACE_Y = 10;
 LearnBlock.BlockSvg.MIN_BLOCK_Y = 25;
 LearnBlock.BlockSvg.TAB_WIDTH = 8;
 LearnBlock.BlockSvg.START_HAT = !1;
+//Creates the svg representation of the block
 LearnBlock.BlockSvg.prototype.initSvg = function () {
     if (!this.workspace.rendered) throw TypeError("Workspace is headless.");
     for (var a = 0, b; b = this.inputList[a]; a++) b.init();
-    b = this.getIcons();
-    for (a = 0; a < b.length; a++) b[a].createIcon();
     this.updateColour();
     this.updateMovable();
     this.workspace.options.readOnly || this.eventsInit_ || LearnBlock.bindEventWithChecks_(this.getSvgRoot(), "mousedown", this, this.onMouseDown_);
     this.eventsInit_ = !0;
     this.getSvgRoot().parentNode || this.workspace.getCanvas().appendChild(this.getSvgRoot())
 };
+//Selects the block
 LearnBlock.BlockSvg.prototype.select = function () {
-    if (this.isShadow() && this.getParent()) this.getParent().select();
-    else if (LearnBlock.selected != this) {
+    if (LearnBlock.selected != this) {
         var a = null;
         if (LearnBlock.selected) {
             a = LearnBlock.selected.id;
@@ -5891,6 +5720,7 @@ LearnBlock.BlockSvg.prototype.select = function () {
         this.addSelect()
     }
 };
+//Unselects the block
 LearnBlock.BlockSvg.prototype.unselect = function () {
     if (LearnBlock.selected == this) {
         var a = new LearnBlock.Events.Ui(null, "selected", this.id, null);
@@ -5900,17 +5730,7 @@ LearnBlock.BlockSvg.prototype.unselect = function () {
         this.removeSelect()
     }
 };
-LearnBlock.BlockSvg.prototype.mutator = null;
-LearnBlock.BlockSvg.prototype.comment = null;
-LearnBlock.BlockSvg.prototype.commentIcon_ = null;
-LearnBlock.BlockSvg.prototype.warning = null;
-LearnBlock.BlockSvg.prototype.getIcons = function () {
-    var a = [];
-    this.mutator && a.push(this.mutator);
-    this.commentIcon_ && a.push(this.commentIcon_);
-    this.warning && a.push(this.warning);
-    return a
-};
+//Sets parent of the current block
 LearnBlock.BlockSvg.prototype.setParent = function (a) {
     var b = this.parentBlock_;
     if (a != b) {
@@ -5924,6 +5744,7 @@ LearnBlock.BlockSvg.prototype.setParent = function (a) {
         }
     }
 };
+//Returns coordinates of the top-left corner of the current block
 LearnBlock.BlockSvg.prototype.getRelativeToSurfaceXY = function () {
     var a = 0,
         b = 0,
@@ -5940,7 +5761,10 @@ LearnBlock.BlockSvg.prototype.getRelativeToSurfaceXY = function () {
     }
     return new LearnBlock.utils.Coordinate(a, b)
 };
+//Moves block by a relative offset
 LearnBlock.BlockSvg.prototype.moveBy = function (a, b) {
+    //a: horizontal offset
+    //b: vertical offset
     if (this.parentBlock_) throw Error("Block has parent.");
     var c = LearnBlock.Events.isEnabled();
     if (c) var d = new LearnBlock.Events.BlockMove(this);
@@ -5950,9 +5774,11 @@ LearnBlock.BlockSvg.prototype.moveBy = function (a, b) {
     c && (d.recordNew(), LearnBlock.Events.fire(d));
     this.workspace.resizeContents()
 };
+//Transforms the block
 LearnBlock.BlockSvg.prototype.translate = function (a, b) {
     this.getSvgRoot().setAttribute("transform", "translate(" + a + "," + b + ")")
 };
+//Moves the block to the workspace's drag surface
 LearnBlock.BlockSvg.prototype.moveToDragSurface_ = function () {
     if (this.useDragSurface_) {
         var a = this.getRelativeToSurfaceXY();
@@ -5961,20 +5787,26 @@ LearnBlock.BlockSvg.prototype.moveToDragSurface_ = function () {
         this.workspace.blockDragSurface_.setBlocksAndShow(this.getSvgRoot())
     }
 };
+//Moves a block to a position
 LearnBlock.BlockSvg.prototype.moveTo = function (a) {
     var b = this.getRelativeToSurfaceXY();
     this.moveBy(a.x - b.x, a.y - b.y)
 };
+//Moves the block back to the workspace block canvas
 LearnBlock.BlockSvg.prototype.moveOffDragSurface_ = function (a) {
     this.useDragSurface_ && (this.translate(a.x, a.y), this.workspace.blockDragSurface_.clearAndHide(this.workspace.getCanvas()))
 };
+//Moves the block during a drag
 LearnBlock.BlockSvg.prototype.moveDuringDrag = function (a) {
     this.useDragSurface_ ? this.workspace.blockDragSurface_.translateSurface(a.x, a.y) : (this.svgGroup_.translate_ = "translate(" + a.x + "," + a.y + ")", this.svgGroup_.setAttribute("transform", this.svgGroup_.translate_ + this.svgGroup_.skew_))
 };
+//Clears the block of "transform" attributes
 LearnBlock.BlockSvg.prototype.clearTransformAttributes_ = function () {
     this.getSvgRoot().removeAttribute("transform")
 };
+//Snaps the block to the nearest grid point
 LearnBlock.BlockSvg.prototype.snapToGrid = function () {
+    //Not deleted blocks, don't bump blocks during a drag, only top-level blocks, don't move blocks around in a flyout
     if (this.workspace && !this.workspace.isDragging() && !this.getParent() && !this.isInFlyout) {
         var a = this.workspace.getGrid();
         if (a && a.shouldSnap()) {
@@ -5989,6 +5821,7 @@ LearnBlock.BlockSvg.prototype.snapToGrid = function () {
         }
     }
 };
+//Returns the coordinates of a bounding box describing the dimensions of the block
 LearnBlock.BlockSvg.prototype.getBoundingRectangle = function () {
     var a = this.getRelativeToSurfaceXY(this),
         b = this.outputConnection ? LearnBlock.BlockSvg.TAB_WIDTH : 0,
@@ -6001,38 +5834,17 @@ LearnBlock.BlockSvg.prototype.getBoundingRectangle = function () {
     } else f = a.x - b, a = a.x + c.width - b;
     return new LearnBlock.utils.Rect(d, e, f, a)
 };
+//Notifies every input on the block
 LearnBlock.BlockSvg.prototype.markDirty = function () {
     for (var a = 0, b; b = this.inputList[a]; a++) b.markDirty()
 };
-LearnBlock.BlockSvg.prototype.setCollapsed = function (a) {
-    if (this.collapsed_ != a) {
-        for (var b = [], c = 0, d; d = this.inputList[c]; c++) b.push.apply(b, d.setVisible(!a));
-        if (a) {
-            d = this.getIcons();
-            for (c = 0; c < d.length; c++) d[c].setVisible(!1);
-            c = this.toString(LearnBlock.COLLAPSE_CHARS);
-            this.appendDummyInput("_TEMP_COLLAPSED_INPUT").appendField(c).init();
-            d = this.getDescendants(!0);
-            if (c = this.getNextBlock()) c = d.indexOf(c), d.splice(c, d.length - c);
-            c = 1;
-            for (var e; e = d[c]; c++)
-                if (e.warning) {
-                    this.setWarningText(LearnBlock.Msg.COLLAPSED_WARNINGS_WARNING,
-                        LearnBlock.BlockSvg.COLLAPSED_WARNING_ID);
-                    break
-                }
-        } else this.removeInput("_TEMP_COLLAPSED_INPUT"), this.warning && (this.warning.setText("", LearnBlock.BlockSvg.COLLAPSED_WARNING_ID), Object.keys(this.warning.text_).length || this.setWarningText(null));
-        LearnBlock.BlockSvg.superClass_.setCollapsed.call(this, a);
-        b.length || (b[0] = this);
-        if (this.rendered)
-            for (c = 0; e = b[c]; c++) e.render()
-    }
-};
+//Opens the text input ????
 LearnBlock.BlockSvg.prototype.tab = function (a, b) {
     var c = this.createTabList_(),
         d = c.indexOf(a); - 1 == d && (d = b ? -1 : c.length);
     (c = c[b ? d + 1 : d - 1]) ? c instanceof LearnBlock.Field ? c.showEditor_() : c.tab(null, b): (c = this.getParent()) && c.tab(this, b)
 };
+//Creates a list of all text fields and connected inputs ????
 LearnBlock.BlockSvg.prototype.createTabList_ = function () {
     for (var a = [], b = 0, c; c = this.inputList[b]; b++) {
         for (var d = 0, e; e = c.fieldRow[d]; d++) e.isTabNavigable() && e.isVisible() && a.push(e);
@@ -6040,75 +5852,37 @@ LearnBlock.BlockSvg.prototype.createTabList_ = function () {
     }
     return a
 };
+//Handles a mouse-down on an svg block
 LearnBlock.BlockSvg.prototype.onMouseDown_ = function (a) {
     var b = this.workspace && this.workspace.getGesture(a);
     b && b.handleBlockStart(a, this)
 };
-LearnBlock.BlockSvg.prototype.showHelp_ = function () {
-    var a = "function" == typeof this.helpUrl ? this.helpUrl() : this.helpUrl;
-    a && window.open(a)
-};
+//Generates the context menu for the current block
 LearnBlock.BlockSvg.prototype.generateContextMenu = function () {
     if (this.workspace.options.readOnly || !this.contextMenu) return null;
     var a = this,
-        b = [];
+        b = [],
+        c;
     if (!this.isInFlyout) {
         this.isDeletable() && this.isMovable() && b.push(LearnBlock.ContextMenu.blockDuplicateOption(a));
-        this.workspace.options.comments && !this.collapsed_ && this.isEditable() && b.push(LearnBlock.ContextMenu.blockCommentOption(a));
-        if (this.isMovable())
-            if (this.collapsed_) this.workspace.options.collapse && (c = {
-                    enabled: !0
-                }, c.text = LearnBlock.Msg.EXPAND_BLOCK, c.callback =
-                function () {
-                    a.setCollapsed(!1)
-                }, b.push(c));
-            else {
-                for (var c = 1; c < this.inputList.length; c++)
-                    if (this.inputList[c - 1].type != LearnBlock.NEXT_STATEMENT && this.inputList[c].type != LearnBlock.NEXT_STATEMENT) {
-                        c = {
-                            enabled: !0
-                        };
-                        var d = this.getInputsInline();
-                        c.text = d ? LearnBlock.Msg.EXTERNAL_INPUTS : LearnBlock.Msg.INLINE_INPUTS;
-                        c.callback = function () {
-                            a.setInputsInline(!d)
-                        };
-                        b.push(c);
-                        break
-                    } this.workspace.options.collapse && (c = {
-                    enabled: !0
-                }, c.text = LearnBlock.Msg.COLLAPSE_BLOCK, c.callback = function () {
-                    a.setCollapsed(!0)
-                }, b.push(c))
-            } this.workspace.options.disable &&
-            this.isEditable() && (c = {
-                text: this.isEnabled() ? LearnBlock.Msg.DISABLE_BLOCK : LearnBlock.Msg.ENABLE_BLOCK,
-                enabled: !this.getInheritedDisabled(),
-                callback: function () {
-                    var b = LearnBlock.Events.getGroup();
-                    b || LearnBlock.Events.setGroup(!0);
-                    a.setEnabled(!a.isEnabled());
-                    b || LearnBlock.Events.setGroup(!1)
-                }
-            }, b.push(c));
         this.isDeletable() && b.push(LearnBlock.ContextMenu.blockDeleteOption(a))
     }
-    b.push(LearnBlock.ContextMenu.blockHelpOption(a));
     this.customContextMenu && this.customContextMenu(b);
     return b
 };
+//Shows the context menu for the current block
 LearnBlock.BlockSvg.prototype.showContextMenu_ = function (a) {
     var b = this.generateContextMenu();
     b && b.length && (LearnBlock.ContextMenu.show(a, b, this.RTL), LearnBlock.ContextMenu.currentBlock = this)
 };
+//Moves connections for the current block and the blocks attached to it
 LearnBlock.BlockSvg.prototype.moveConnections_ = function (a, b) {
     if (this.rendered) {
         for (var c = this.getConnections_(!1), d = 0; d < c.length; d++) c[d].moveBy(a, b);
-        c = this.getIcons();
-        for (d = 0; d < c.length; d++) c[d].computeIconLocation();
         for (d = 0; d < this.childBlocks_.length; d++) this.childBlocks_[d].moveConnections_(a, b)
     }
 };
+//Adds or removes the dragging class to the current node and its children
 LearnBlock.BlockSvg.prototype.setDragging = function (a) {
     if (a) {
         var b = this.getSvgRoot();
@@ -6119,28 +5893,29 @@ LearnBlock.BlockSvg.prototype.setDragging = function (a) {
     } else LearnBlock.draggingConnections_ = [], LearnBlock.utils.dom.removeClass(this.svgGroup_, "blocklyDragging");
     for (b = 0; b < this.childBlocks_.length; b++) this.childBlocks_[b].setDragging(a)
 };
+//Updates the movility of a block
 LearnBlock.BlockSvg.prototype.updateMovable = function () {
     this.isMovable() ? LearnBlock.utils.dom.addClass(this.svgGroup_, "blocklyDraggable") : LearnBlock.utils.dom.removeClass(this.svgGroup_, "blocklyDraggable")
 };
+//Sets whether the block is movable or not
 LearnBlock.BlockSvg.prototype.setMovable = function (a) {
     LearnBlock.BlockSvg.superClass_.setMovable.call(this, a);
     this.updateMovable()
 };
+//Sets whether the block is editable or not
 LearnBlock.BlockSvg.prototype.setEditable = function (a) {
     LearnBlock.BlockSvg.superClass_.setEditable.call(this, a);
-    a = this.getIcons();
     for (var b = 0; b < a.length; b++) a[b].updateEditable()
 };
-LearnBlock.BlockSvg.prototype.setShadow = function (a) {
-    LearnBlock.BlockSvg.superClass_.setShadow.call(this, a);
-    this.updateColour()
-};
+//Sets whether the block is an insertion marker block or not
 LearnBlock.BlockSvg.prototype.setInsertionMarker = function (a) {
     this.isInsertionMarker_ != a && (this.isInsertionMarker_ = a) && (this.setColour(LearnBlock.INSERTION_MARKER_COLOUR), LearnBlock.utils.dom.addClass(this.svgGroup_, "blocklyInsertionMarker"))
 };
+//Returns the root node of the svg
 LearnBlock.BlockSvg.prototype.getSvgRoot = function () {
     return this.svgGroup_
 };
+//Disposes the block
 LearnBlock.BlockSvg.prototype.dispose = function (a, b) {
     if (this.workspace) {
         LearnBlock.Tooltip.hide();
@@ -6155,8 +5930,6 @@ LearnBlock.BlockSvg.prototype.dispose = function (a, b) {
             for (var d in this.warningTextDb_) clearTimeout(this.warningTextDb_[d]);
             this.warningTextDb_ = null
         }
-        d = this.getIcons();
-        for (var e = 0; e < d.length; e++) d[e].dispose();
         LearnBlock.BlockSvg.superClass_.dispose.call(this, a);
         LearnBlock.utils.dom.removeNode(this.svgGroup_);
         c.resizeContents();
@@ -6164,87 +5937,40 @@ LearnBlock.BlockSvg.prototype.dispose = function (a, b) {
         LearnBlock.utils.dom.stopTextWidthCache()
     }
 };
+//Changes the colour
 LearnBlock.BlockSvg.prototype.updateColour = function () {
-    if (this.isEnabled()) {
-        this.isShadow() ? this.setShadowColour_() : (this.setBorderColour_(), this.svgPath_.setAttribute("fill", this.getColour()));
-        for (var a = this.getIcons(), b = 0; b < a.length; b++) a[b].updateColour();
-        for (a = 0; b = this.inputList[a]; a++)
-            for (var c = 0, d; d = b.fieldRow[c]; c++) d.updateColour()
-    }
+    this.setBorderColour_();
+    this.svgPath_.setAttribute("fill", this.getColour());
+    var b = 0;
+    for (var a = 0; b = this.inputList[a]; a++)
+        for (var c = 0, d; d = b.fieldRow[c]; c++) d.updateColour()
 };
+//Sets the border colour
 LearnBlock.BlockSvg.prototype.setBorderColour_ = function () {
     var a = this.getColourBorder();
     a.colourBorder ? (this.svgPathLight_.style.display = "none", this.svgPathDark_.style.display = "none", this.svgPath_.setAttribute("stroke", a.colourBorder)) : (this.svgPathLight_.style.display = "", this.svgPathDark_.style.display = "", this.svgPath_.setAttribute("stroke", "none"), this.svgPathLight_.setAttribute("stroke", a.colourLight), this.svgPathDark_.setAttribute("fill", a.colourDark))
 };
-LearnBlock.BlockSvg.prototype.setShadowColour_ = function () {
-    var a = this.getColourShadow();
-    this.svgPathLight_.style.display = "none";
-    this.svgPathDark_.setAttribute("fill", a);
-    this.svgPath_.setAttribute("stroke", "none");
-    this.svgPath_.setAttribute("fill", a);
-    return a
-};
-LearnBlock.BlockSvg.prototype.updateDisabled = function () {
-    !this.isEnabled() || this.getInheritedDisabled() ? LearnBlock.utils.dom.addClass(this.svgGroup_, "blocklyDisabled") && this.svgPath_.setAttribute("fill", "url(#" + this.workspace.options.disabledPatternId + ")") : LearnBlock.utils.dom.removeClass(this.svgGroup_, "blocklyDisabled") && this.updateColour();
-    for (var a = this.getChildren(!1), b = 0, c; c = a[b]; b++) c.updateDisabled()
-};
-LearnBlock.BlockSvg.prototype.getCommentIcon = function () {
-    return this.commentIcon_
-};
-LearnBlock.BlockSvg.prototype.setCommentText = function (a) {
-    if (!LearnBlock.Comment) throw Error("Missing require for LearnBlock.Comment");
-    this.commentModel.text != a && (LearnBlock.BlockSvg.superClass_.setCommentText.call(this, a), a = null != a, !!this.commentIcon_ == a ? this.commentIcon_.updateText() : (a ? this.comment = this.commentIcon_ = new LearnBlock.Comment(this) : (this.commentIcon_.dispose(), this.comment = this.commentIcon_ = null), this.rendered && (this.render(), this.bumpNeighbours())))
-};
-LearnBlock.BlockSvg.prototype.setWarningText = function (a, b) {
-    this.warningTextDb_ || (this.warningTextDb_ = Object.create(null));
-    var c = b || "";
-    if (c) this.warningTextDb_[c] && (clearTimeout(this.warningTextDb_[c]), delete this.warningTextDb_[c]);
-    else
-        for (var d in this.warningTextDb_) clearTimeout(this.warningTextDb_[d]), delete this.warningTextDb_[d];
-    if (this.workspace.isDragging()) {
-        var e = this;
-        this.warningTextDb_[c] = setTimeout(function () {
-            e.workspace && (delete e.warningTextDb_[c], e.setWarningText(a, c))
-        }, 100)
-    } else {
-        this.isInFlyout &&
-            (a = null);
-        d = this.getSurroundParent();
-        for (var f = null; d;) d.isCollapsed() && (f = d), d = d.getSurroundParent();
-        f && f.setWarningText(LearnBlock.Msg.COLLAPSED_WARNINGS_WARNING, LearnBlock.BlockSvg.COLLAPSED_WARNING_ID);
-        d = !1;
-        "string" == typeof a ? (this.warning || (this.warning = new LearnBlock.Warning(this), d = !0), this.warning.setText(a, c)) : this.warning && !c ? (this.warning.dispose(), d = !0) : this.warning && (d = this.warning.getText(), this.warning.setText("", c), (f = this.warning.getText()) || this.warning.dispose(), d = d != f);
-        d && this.rendered &&
-            (this.render(), this.bumpNeighbours())
-    }
-};
-LearnBlock.BlockSvg.prototype.setMutator = function (a) {
-    this.mutator && this.mutator !== a && this.mutator.dispose();
-    a && (a.block_ = this, this.mutator = a, a.createIcon())
-};
-LearnBlock.BlockSvg.prototype.setDisabled = function (a) {
-    console.warn("Deprecated call to LearnBlock.BlockSvg.prototype.setDisabled, use LearnBlock.BlockSvg.prototype.setEnabled instead.");
-    this.setEnabled(!a)
-};
-LearnBlock.BlockSvg.prototype.setEnabled = function (a) {
-    this.isEnabled() != a && (LearnBlock.BlockSvg.superClass_.setEnabled.call(this, a), this.rendered && this.updateDisabled())
-};
+//Sets whether the block is highlighted or not
 LearnBlock.BlockSvg.prototype.setHighlighted = function (a) {
     this.rendered && (a ? (this.svgPath_.setAttribute("filter", "url(#" + this.workspace.options.embossFilterId + ")"), this.svgPathLight_.style.display = "none") : (this.svgPath_.setAttribute("filter", "none"), this.svgPathLight_.style.display = "inline"))
 };
+//Selects the block
 LearnBlock.BlockSvg.prototype.addSelect = function () {
     LearnBlock.utils.dom.addClass(this.svgGroup_, "blocklySelected")
 };
+//Unselects the block
 LearnBlock.BlockSvg.prototype.removeSelect = function () {
     LearnBlock.utils.dom.removeClass(this.svgGroup_, "blocklySelected")
 };
+//Updates image of cursor when in trash ????
 LearnBlock.BlockSvg.prototype.setDeleteStyle = function (a) {
-    a ? LearnBlock.utils.dom.addClass(this.svgGroup_, "blocklyDraggingDelete") : LearnBlock.utils.dom.removeClass(this.svgGroup_, "blocklyDraggingDelete")
 };
+//Changes the colour
 LearnBlock.BlockSvg.prototype.setColour = function (a) {
     LearnBlock.BlockSvg.superClass_.setColour.call(this, a);
     this.rendered && this.updateColour()
 };
+//Moves the block to the front of the visible workspace
 LearnBlock.BlockSvg.prototype.bringToFront = function () {
     var a = this;
     do {
@@ -6253,35 +5979,43 @@ LearnBlock.BlockSvg.prototype.bringToFront = function () {
         a = a.getParent()
     } while (a)
 };
+//Sets whether the block can chain onto the bottom of another block
 LearnBlock.BlockSvg.prototype.setPreviousStatement = function (a, b) {
     LearnBlock.BlockSvg.superClass_.setPreviousStatement.call(this, a, b);
     this.rendered && (this.render(), this.bumpNeighbours())
 };
+//Sets whether another block can chain onto the bottom of this block
 LearnBlock.BlockSvg.prototype.setNextStatement = function (a, b) {
     LearnBlock.BlockSvg.superClass_.setNextStatement.call(this, a, b);
     this.rendered && (this.render(), this.bumpNeighbours())
 };
+//Sets whether this block returns a value
 LearnBlock.BlockSvg.prototype.setOutput = function (a, b) {
     LearnBlock.BlockSvg.superClass_.setOutput.call(this, a, b);
     this.rendered && (this.render(), this.bumpNeighbours())
 };
+//Sets whether value inputs are arranged horizontally or vertically
 LearnBlock.BlockSvg.prototype.setInputsInline = function (a) {
     LearnBlock.BlockSvg.superClass_.setInputsInline.call(this, a);
     this.rendered && (this.render(), this.bumpNeighbours())
 };
+//Removes an input from this block
 LearnBlock.BlockSvg.prototype.removeInput = function (a, b) {
     LearnBlock.BlockSvg.superClass_.removeInput.call(this, a, b);
     this.rendered && (this.render(), this.bumpNeighbours())
 };
+//Moves a numbered input to a different location on this block
 LearnBlock.BlockSvg.prototype.moveNumberedInputBefore = function (a, b) {
     LearnBlock.BlockSvg.superClass_.moveNumberedInputBefore.call(this, a, b);
     this.rendered && (this.render(), this.bumpNeighbours())
 };
+//Adds a value input, statement input or local variable to this block
 LearnBlock.BlockSvg.prototype.appendInput_ = function (a, b) {
     var c = LearnBlock.BlockSvg.superClass_.appendInput_.call(this, a, b);
     this.rendered && (this.render(), this.bumpNeighbours());
     return c
 };
+//Sets whether the connections are hidden or not
 LearnBlock.BlockSvg.prototype.setConnectionsHidden = function (a) {
     if (!a && this.isCollapsed()) {
         if (this.outputConnection && this.outputConnection.setHidden(a), this.previousConnection && this.previousConnection.setHidden(a), this.nextConnection) {
@@ -6292,6 +6026,7 @@ LearnBlock.BlockSvg.prototype.setConnectionsHidden = function (a) {
     } else
         for (var c = this.getConnections_(!0), d = 0; b = c[d]; d++) b.setHidden(a), b.isSuperior() && (b = b.targetBlock()) && b.setConnectionsHidden(a)
 };
+//Returns connections originating from this block
 LearnBlock.BlockSvg.prototype.getConnections_ = function (a) {
     var b = [];
     if (a || this.rendered)
@@ -6300,9 +6035,11 @@ LearnBlock.BlockSvg.prototype.getConnections_ = function (a) {
             for (var c; c = this.inputList[a]; a++) c.connection && b.push(c.connection)
         } return b
 };
+//Creates a connection of the specified type
 LearnBlock.BlockSvg.prototype.makeConnection_ = function (a) {
     return new LearnBlock.RenderedConnection(this, a)
 };
+//Bumps unconnected blocks out of alignment
 LearnBlock.BlockSvg.prototype.bumpNeighbours = function () {
     if (this.workspace && !this.workspace.isDragging()) {
         var a = this.getRootBlock();
@@ -6313,6 +6050,7 @@ LearnBlock.BlockSvg.prototype.bumpNeighbours = function () {
             }
     }
 };
+//Schedules snapping to grid and bumping neighbours to occur after a brief delay
 LearnBlock.BlockSvg.prototype.scheduleSnapAndBump = function () {
     var a = this,
         b = LearnBlock.Events.getGroup();
@@ -6327,9 +6065,11 @@ LearnBlock.BlockSvg.prototype.scheduleSnapAndBump = function () {
         LearnBlock.Events.setGroup(!1)
     }, LearnBlock.BUMP_DELAY)
 };
+//Positions a block so that it doesn't move the target block when connected
 LearnBlock.BlockSvg.prototype.positionNearConnection = function (a, b) {
     a.type != LearnBlock.NEXT_STATEMENT && a.type != LearnBlock.INPUT_VALUE || this.moveBy(b.x_ - a.x_, b.y_ - a.y_)
 };
+//Renders the block
 LearnBlock.BlockSvg.prototype.render = function (a) {
     LearnBlock.utils.dom.startTextWidthCache();
     this.rendered = !0;
@@ -6338,6 +6078,7 @@ LearnBlock.BlockSvg.prototype.render = function (a) {
     !1 !== a && ((a = this.getParent()) ? a.render(!0) : this.workspace.resizeContents());
     LearnBlock.utils.dom.stopTextWidthCache()
 };
+//Updates all of the connections on the block with the new locations calculated during rendering
 LearnBlock.BlockSvg.prototype.updateConnectionLocations_ = function () {
     var a = this.getRelativeToSurfaceXY();
     this.previousConnection && this.previousConnection.moveToOffset(a);
@@ -6348,12 +6089,15 @@ LearnBlock.BlockSvg.prototype.updateConnectionLocations_ = function () {
     }
     this.nextConnection && (this.nextConnection.moveToOffset(a), this.nextConnection.isConnected() && this.nextConnection.tighten_())
 };
+//Adds the cursor svg to this block's svg group
 LearnBlock.BlockSvg.prototype.setCursorSvg = function (a) {
     a ? (this.svgGroup_.appendChild(a), this.cursorSvg_ = a) : this.cursorSvg_ = null
 };
+//Adds the marker svg to this block's svg group
 LearnBlock.BlockSvg.prototype.setMarkerSvg = function (a) {
     a ? (this.cursorSvg_ ? this.svgGroup_.insertBefore(a, this.cursorSvg_) : this.svgGroup_.appendChild(a), this.markerSvg_ = a) : this.markerSvg_ = null
 };
+//Returns a bounding box describing the dimensions of this block and any blocks stacked below it
 LearnBlock.BlockSvg.prototype.getHeightWidth = function () {
     var a = this.height,
         b = this.width,
@@ -6364,9 +6108,11 @@ LearnBlock.BlockSvg.prototype.getHeightWidth = function () {
         width: b
     }
 };
+//Positions a new block correctly, so that it doesn't move the existing block when connected to it
 LearnBlock.BlockSvg.prototype.positionNewBlock = function (a, b, c) {
     b.type != LearnBlock.NEXT_STATEMENT && b.type != LearnBlock.INPUT_VALUE || a.moveBy(c.x_ - b.x_, c.y_ - b.y_)
 };
+//Visual effect to show that if the dragging block is dropped, this block will be replaced
 LearnBlock.BlockSvg.prototype.highlightForReplacement = function (a) {
     a ? LearnBlock.utils.dom.addClass(this.svgGroup_, "blocklyReplaceable") : LearnBlock.utils.dom.removeClass(this.svgGroup_, "blocklyReplaceable")
 };
@@ -8211,33 +7957,8 @@ LearnBlock.WorkspaceSvg.prototype.showContextMenu_ = function (a) {
         h.callback = this.undo.bind(this, !0);
         d.push(h);
         this.isMovable() && (h = {}, h.text = LearnBlock.Msg.CLEAN_UP, h.enabled = 1 < e.length, h.callback = this.cleanUp.bind(this), d.push(h));
-        if (this.options.collapse) {
-            for (var k = h = !1, l = 0; l < e.length; l++)
-                for (var m = e[l]; m;) m.isCollapsed() ? h = !0 : k = !0, m = m.getNextBlock();
-            var n = function (a) {
-                for (var b = 0, c = 0; c < e.length; c++)
-                    for (var d = e[c]; d;) setTimeout(d.setCollapsed.bind(d, a), b), d = d.getNextBlock(),
-                        b += 10
-            };
-            k = {
-                enabled: k
-            };
-            k.text = LearnBlock.Msg.COLLAPSE_ALL;
-            k.callback = function () {
-                n(!0)
-            };
-            d.push(k);
-            h = {
-                enabled: h
-            };
-            h.text = LearnBlock.Msg.EXPAND_ALL;
-            h.callback = function () {
-                n(!1)
-            };
-            d.push(h)
-        }
         var p = [];
-        for (l = 0; l < e.length; l++) b(e[l]);
+        for (var l = 0; l < e.length; l++) b(e[l]);
         h = {
             text: 1 == p.length ? LearnBlock.Msg.DELETE_BLOCK : LearnBlock.Msg.DELETE_X_BLOCKS.replace("%1", String(p.length)),
             enabled: 0 < p.length,
@@ -9188,8 +8909,8 @@ LearnBlock.navigation.insertFromFlyout = function () {
         b = a.getFlyout();
     if (b && b.isVisible()) {
         var c = LearnBlock.navigation.getFlyoutCursor_().getCurNode().getLocation();
-        c.isEnabled() ? (b = b.createBlock(c), b.render(), b.setConnectionsHidden(!1), a.getCursor().setCurNode(LearnBlock.ASTNode.createBlockNode(b)), LearnBlock.navigation.modify_() || LearnBlock.navigation.warn_("Something went wrong while inserting a block from the flyout."), LearnBlock.navigation.focusWorkspace_(), a.getCursor().setCurNode(LearnBlock.navigation.getTopNode(b)),
-            LearnBlock.navigation.removeMark_()) : LearnBlock.navigation.warn_("Can't insert a disabled block.")
+        b = b.createBlock(c), b.render(), b.setConnectionsHidden(!1), a.getCursor().setCurNode(LearnBlock.ASTNode.createBlockNode(b)), LearnBlock.navigation.modify_() || LearnBlock.navigation.warn_("Something went wrong while inserting a block from the flyout."), LearnBlock.navigation.focusWorkspace_(), a.getCursor().setCurNode(LearnBlock.navigation.getTopNode(b)),
+            LearnBlock.navigation.removeMark_()
     } else LearnBlock.navigation.warn_("Trying to insert from the flyout when the flyout does not  exist or is not visible")
 };
 LearnBlock.navigation.resetFlyout_ = function (a) {
@@ -11875,7 +11596,7 @@ LearnBlock.Flyout.prototype.show = function (a) {
         if (f.tagName) switch (f.tagName.toUpperCase()) {
             case "BLOCK":
                 var g = LearnBlock.Xml.domToBlock(f, this.workspace_);
-                g.isEnabled() || this.permanentlyDisabled_.push(g);
+                this.permanentlyDisabled_.push(g);
                 b.push({
                     type: "block",
                     block: g
@@ -11938,7 +11659,7 @@ LearnBlock.Flyout.prototype.onMouseDown_ = function (a) {
     b && b.handleFlyoutStart(a, this)
 };
 LearnBlock.Flyout.prototype.isBlockCreatable_ = function (a) {
-    return a.isEnabled()
+    return true
 };
 LearnBlock.Flyout.prototype.createBlock = function (a) {
     var b = null;
@@ -12341,128 +12062,7 @@ LearnBlock.VerticalFlyout.prototype.reflowInternal_ = function () {
         this.position()
     }
 };
-LearnBlock.Generator = function (a) {
-    this.name_ = a;
-    this.FUNCTION_NAME_PLACEHOLDER_REGEXP_ = new RegExp(this.FUNCTION_NAME_PLACEHOLDER_, "g")
-};
-LearnBlock.Generator.NAME_TYPE = "generated_function";
-LearnBlock.Generator.prototype.INFINITE_LOOP_TRAP = null;
-LearnBlock.Generator.prototype.STATEMENT_PREFIX = null;
-LearnBlock.Generator.prototype.STATEMENT_SUFFIX = null;
-LearnBlock.Generator.prototype.INDENT = "  ";
-LearnBlock.Generator.prototype.COMMENT_WRAP = 60;
-LearnBlock.Generator.prototype.ORDER_OVERRIDES = [];
-LearnBlock.Generator.prototype.workspaceToCode = function (a) {
-    a || (console.warn("No workspace specified in workspaceToCode call.  Guessing."), a = LearnBlock.getMainWorkspace());
-    var b = [];
-    this.init(a);
-    a = a.getTopBlocks(!0);
-    for (var c = 0, d; d = a[c]; c++) {
-        var e = this.blockToCode(d);
-        Array.isArray(e) && (e = e[0]);
-        e && (d.outputConnection && (e = this.scrubNakedValue(e), this.STATEMENT_PREFIX && !d.suppressPrefixSuffix && (e = this.injectId(this.STATEMENT_PREFIX, d) + e), this.STATEMENT_SUFFIX && !d.suppressPrefixSuffix && (e += this.injectId(this.STATEMENT_SUFFIX,
-            d))), b.push(e))
-    }
-    b = b.join("\n");
-    b = this.finish(b);
-    b = b.replace(/^\s+\n/, "");
-    b = b.replace(/\n\s+$/, "\n");
-    return b = b.replace(/[ \t]+\n/g, "\n")
-};
-LearnBlock.Generator.prototype.prefixLines = function (a, b) {
-    return b + a.replace(/(?!\n$)\n/g, "\n" + b)
-};
-LearnBlock.Generator.prototype.allNestedComments = function (a) {
-    var b = [];
-    a = a.getDescendants(!0);
-    for (var c = 0; c < a.length; c++) {
-        var d = a[c].getCommentText();
-        d && b.push(d)
-    }
-    b.length && b.push("");
-    return b.join("\n")
-};
-LearnBlock.Generator.prototype.blockToCode = function (a, b) {
-    if (!a) return "";
-    if (!a.isEnabled()) return b ? "" : this.blockToCode(a.getNextBlock());
-    var c = this[a.type];
-    if ("function" != typeof c) throw Error('Language "' + this.name_ + '" does not know how to generate  code for block type "' + a.type + '".');
-    c = c.call(a, a);
-    if (Array.isArray(c)) {
-        if (!a.outputConnection) throw TypeError("Expecting string from statement block: " + a.type);
-        return [this.scrub_(a, c[0], b), c[1]]
-    }
-    if ("string" == typeof c) return this.STATEMENT_PREFIX && !a.suppressPrefixSuffix &&
-        (c = this.injectId(this.STATEMENT_PREFIX, a) + c), this.STATEMENT_SUFFIX && !a.suppressPrefixSuffix && (c += this.injectId(this.STATEMENT_SUFFIX, a)), this.scrub_(a, c, b);
-    if (null === c) return "";
-    throw SyntaxError("Invalid code generated: " + c);
-};
-LearnBlock.Generator.prototype.valueToCode = function (a, b, c) {
-    if (isNaN(c)) throw TypeError("Expecting valid order from block: " + a.type);
-    var d = a.getInputTargetBlock(b);
-    if (!d) return "";
-    b = this.blockToCode(d);
-    if ("" === b) return "";
-    if (!Array.isArray(b)) throw TypeError("Expecting tuple from value block: " + d.type);
-    a = b[0];
-    b = b[1];
-    if (isNaN(b)) throw TypeError("Expecting valid order from value block: " + d.type);
-    if (!a) return "";
-    d = !1;
-    var e = Math.floor(c),
-        f = Math.floor(b);
-    if (e <= f && (e != f || 0 != e && 99 != e))
-        for (d = !0, e = 0; e < this.ORDER_OVERRIDES.length; e++)
-            if (this.ORDER_OVERRIDES[e][0] ==
-                c && this.ORDER_OVERRIDES[e][1] == b) {
-                d = !1;
-                break
-            } d && (a = "(" + a + ")");
-    return a
-};
-LearnBlock.Generator.prototype.statementToCode = function (a, b) {
-    var c = a.getInputTargetBlock(b),
-        d = this.blockToCode(c);
-    if ("string" != typeof d) throw TypeError("Expecting code from statement block: " + (c && c.type));
-    d && (d = this.prefixLines(d, this.INDENT));
-    return d
-};
-LearnBlock.Generator.prototype.addLoopTrap = function (a, b) {
-    this.INFINITE_LOOP_TRAP && (a = this.prefixLines(this.injectId(this.INFINITE_LOOP_TRAP, b), this.INDENT) + a);
-    this.STATEMENT_SUFFIX && !b.suppressPrefixSuffix && (a = this.prefixLines(this.injectId(this.STATEMENT_SUFFIX, b), this.INDENT) + a);
-    this.STATEMENT_PREFIX && !b.suppressPrefixSuffix && (a += this.prefixLines(this.injectId(this.STATEMENT_PREFIX, b), this.INDENT));
-    return a
-};
-LearnBlock.Generator.prototype.injectId = function (a, b) {
-    var c = b.id.replace(/\$/g, "$$$$");
-    return a.replace(/%1/g, "'" + c + "'")
-};
-LearnBlock.Generator.prototype.RESERVED_WORDS_ = "";
-LearnBlock.Generator.prototype.addReservedWords = function (a) {
-    this.RESERVED_WORDS_ += a + ","
-};
-LearnBlock.Generator.prototype.FUNCTION_NAME_PLACEHOLDER_ = "{leCUI8hutHZI4480Dc}";
-LearnBlock.Generator.prototype.provideFunction_ = function (a, b) {
-    if (!this.definitions_[a]) {
-        var c = this.variableDB_.getDistinctName(a, LearnBlock.Procedures.NAME_TYPE);
-        this.functionNames_[a] = c;
-        c = b.join("\n").replace(this.FUNCTION_NAME_PLACEHOLDER_REGEXP_, c);
-        for (var d; d != c;) d = c, c = c.replace(/^(( {2})*) {2}/gm, "$1\x00");
-        c = c.replace(/\0/g, this.INDENT);
-        this.definitions_[a] = c
-    }
-    return this.functionNames_[a]
-};
-LearnBlock.Generator.prototype.init = function (a) {};
-LearnBlock.Generator.prototype.scrub_ = function (a, b) {
-    return b
-};
-LearnBlock.Generator.prototype.finish = function (a) {
-    return a
-};
-LearnBlock.Generator.prototype.scrubNakedValue = function (a) {
-    return a
-};
+
 LearnBlock.CursorSvg = function (a, b) {
     this.workspace_ = a;
     this.isMarker_ = b;
@@ -12730,7 +12330,6 @@ LearnBlock.Mutator.prototype.createEditor_ = function () {
     };
     this.workspace_ = new LearnBlock.WorkspaceSvg(a);
     this.workspace_.isMutator = !0;
-    this.workspace_.addChangeListener(LearnBlock.Events.disableOrphans);
     a = this.workspace_.addFlyout_("g");
     b = this.workspace_.createDom("blocklyMutatorBackground");
     b.insertBefore(a, this.workspace_.svgBlockCanvas_);
@@ -13395,14 +12994,8 @@ LearnBlock.blockRendering.RenderInfo.prototype.measure = function () {
 LearnBlock.blockRendering.RenderInfo.prototype.createRows_ = function () {
     this.populateTopRow_();
     this.rows.push(this.topRow);
-    var a = new LearnBlock.blockRendering.InputRow(this.constants_),
-        b = this.block_.getIcons();
-    if (b.length)
-        for (var c = 0, d; d = b[c]; c++) {
-            var e = new LearnBlock.blockRendering.Icon(this.constants_, d);
-            this.isCollapsed && d.collapseHidden ? this.hiddenIcons.push(e) : a.elements.push(e)
-        }
-    d = null;
+    var a = new LearnBlock.blockRendering.InputRow(this.constants_);
+    var b, c, d, e;
     for (c = 0; b = this.block_.inputList[c]; c++)
         if (b.isVisible()) {
             this.shouldStartNewRow_(b, d) && (this.rows.push(a), a = new LearnBlock.blockRendering.InputRow(this.constants_));

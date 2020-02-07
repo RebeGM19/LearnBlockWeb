@@ -64,12 +64,7 @@
                         </div>
 
                         <div class="tab-pane active" id="learnblock">
-                            <!--
-                            <iframe id="mainiframe" src="./learnblock.html">
-                                <div id="blocklyArea"></div>
-                            </iframe>
-                            -->
-                            <div id="blocklyDiv"></div>
+                            <div id="learnblockDiv"></div>
                             <div id="toolbox" style="display: none">
 
                                 <category name="Control" expanded="true">
@@ -281,7 +276,7 @@
 
 
     <script>
-        var workspace = LearnBlock.inject('blocklyDiv', {
+        var workspace = LearnBlock.inject('learnblockDiv', {
             toolbox: document.getElementById('toolbox'),
             horizontalLayout: false,
             scrollbars: true

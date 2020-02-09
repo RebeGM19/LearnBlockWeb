@@ -9209,9 +9209,10 @@ LearnBlock.Names.equals = function (a, b) {
 };
 
 
-//Procedimientos
+//Procedures
 LearnBlock.Procedures = {};
 LearnBlock.Procedures.NAME_TYPE = LearnBlock.PROCEDURE_CATEGORY_NAME;
+//Finds all the procedures created by the user
 LearnBlock.Procedures.allProcedures = function (a) {
     a = a.getAllBlocks(!1);
     for (var b = [], c = [], d = 0; d < a.length; d++)
@@ -9222,9 +9223,11 @@ LearnBlock.Procedures.allProcedures = function (a) {
     b.sort(LearnBlock.Procedures.procTupleComparator_);
     return [c, b]
 };
+//Comparison function
 LearnBlock.Procedures.procTupleComparator_ = function (a, b) {
     return a[0].toLowerCase().localeCompare(b[0].toLowerCase())
 };
+//Ensures two identically-named procedures don't exist
 LearnBlock.Procedures.findLegalName = function (a, b) {
     if (b.isInFlyout) return a;
     for (a = a || LearnBlock.Msg.UNNAMED_KEY || "unnamed"; !LearnBlock.Procedures.isLegalName_(a, b.workspace, b);) {
@@ -9233,9 +9236,11 @@ LearnBlock.Procedures.findLegalName = function (a, b) {
     }
     return a
 };
+//Ensures the procedure's name is legal
 LearnBlock.Procedures.isLegalName_ = function (a, b, c) {
     return !LearnBlock.Procedures.isNameUsed(a, b, c)
 };
+//Ensures the procedure's name is used
 LearnBlock.Procedures.isNameUsed = function (a, b, c) {
     b = b.getAllBlocks(!1);
     for (var d = 0; d < b.length; d++)
@@ -9244,6 +9249,7 @@ LearnBlock.Procedures.isNameUsed = function (a, b, c) {
             if (LearnBlock.Names.equals(e[0], a)) return !0
         } return !1
 };
+//Renames the procedure
 LearnBlock.Procedures.rename = function (a) {
     a = a.trim();
     var b = LearnBlock.Procedures.findLegalName(a, this.getSourceBlock()),
@@ -9254,6 +9260,7 @@ LearnBlock.Procedures.rename = function (a) {
     }
     return b
 };
+//Constructs the blocks required by the flyout for the procedure category
 LearnBlock.Procedures.flyoutCategory = function (a) {
     function b(a, b) {
         for (var d = 0; d < a.length; d++) {
@@ -9269,6 +9276,7 @@ LearnBlock.Procedures.flyoutCategory = function (a) {
         }
     }
     var c = [];
+    //Only procedures with no return and no parameters
     if (LearnBlock.Blocks.procedures_defnoreturn) {
         var d = LearnBlock.utils.xml.createElement("block");
         d.setAttribute("type", "procedures_defnoreturn");
@@ -9283,6 +9291,7 @@ LearnBlock.Procedures.flyoutCategory = function (a) {
     b(a[0], "procedures_callnoreturn");
     return c
 };
+//Finds all the callers of a named procedure
 LearnBlock.Procedures.getCallers = function (a, b) {
     for (var c = [], d = b.getAllBlocks(!1), e = 0; e < d.length; e++)
         if (d[e].getProcedureCall) {
@@ -9290,6 +9299,7 @@ LearnBlock.Procedures.getCallers = function (a, b) {
             f && LearnBlock.Names.equals(f, a) && c.push(d[e])
         } return c
 };
+//When a procedure definition changes its parameters, finds and edits all its callers
 LearnBlock.Procedures.mutateCallers = function (a) {
     var b = LearnBlock.Events.recordUndo,
         c = a.getProcedureDef()[0],
@@ -9305,6 +9315,7 @@ LearnBlock.Procedures.mutateCallers = function (a) {
         f != g && (LearnBlock.Events.recordUndo = !1, LearnBlock.Events.fire(new LearnBlock.Events.BlockChange(e, "mutation", null, f, g)), LearnBlock.Events.recordUndo = b)
     }
 };
+//Finds the definition block for the named procedure
 LearnBlock.Procedures.getDefinition = function (a, b) {
     for (var c = b.getTopBlocks(!1), d = 0; d < c.length; d++)
         if (c[d].getProcedureDef) {
@@ -9313,7 +9324,8 @@ LearnBlock.Procedures.getDefinition = function (a, b) {
         } return null
 };
 
-
+//Variable model
+//Info for the variable: name, id, type
 LearnBlock.VariableModel = function (a, b, c, d) {
     this.workspace = a;
     this.name = b;
@@ -9321,80 +9333,20 @@ LearnBlock.VariableModel = function (a, b, c, d) {
     this.id_ = d || LearnBlock.utils.genUid();
     LearnBlock.Events.fire(new LearnBlock.Events.VarCreate(this))
 };
+//Returns the variable id
 LearnBlock.VariableModel.prototype.getId = function () {
     return this.id_
 };
+//Compare function for the variablemodel objects
 LearnBlock.VariableModel.compareByName = function (a, b) {
     var c = a.name.toLowerCase(),
         d = b.name.toLowerCase();
     return c < d ? -1 : c == d ? 0 : 1
 };
+
+//Variables
 LearnBlock.Variables = {};
-LearnBlock.Variables.NAME_TYPE = LearnBlock.VARIABLE_CATEGORY_NAME;
-LearnBlock.Variables.allUsedVarModels = function (a) {
-    var b = a.getAllBlocks(!1);
-    a = Object.create(null);
-    for (var c = 0; c < b.length; c++) {
-        var d = b[c].getVarModels();
-        if (d)
-            for (var e = 0; e < d.length; e++) {
-                var f = d[e],
-                    g = f.getId();
-                g && (a[g] = f)
-            }
-    }
-    b = [];
-    for (g in a) b.push(a[g]);
-    return b
-};
-LearnBlock.Variables.allUsedVariables = function () {
-    console.warn("Deprecated call to LearnBlock.Variables.allUsedVariables. Use LearnBlock.Variables.allUsedVarModels instead.\nIf this is a major issue please file a bug on GitHub.")
-};
-LearnBlock.Variables.ALL_DEVELOPER_VARS_WARNINGS_BY_BLOCK_TYPE_ = {};
-LearnBlock.Variables.allDeveloperVariables = function (a) {
-    a = a.getAllBlocks(!1);
-    for (var b = Object.create(null), c = 0, d; d = a[c]; c++) {
-        var e = d.getDeveloperVariables;
-        !e && d.getDeveloperVars && (e = d.getDeveloperVars, LearnBlock.Variables.ALL_DEVELOPER_VARS_WARNINGS_BY_BLOCK_TYPE_[d.type] || (console.warn("Function getDeveloperVars() deprecated. Use getDeveloperVariables() (block type '" + d.type + "')"), LearnBlock.Variables.ALL_DEVELOPER_VARS_WARNINGS_BY_BLOCK_TYPE_[d.type] = !0));
-        if (e)
-            for (d = e(), e = 0; e < d.length; e++) b[d[e]] = !0
-    }
-    return Object.keys(b)
-};
-LearnBlock.Variables.flyoutCategory = function (a) {
-    var b = [],
-        c = document.createElement("button");
-    c.setAttribute("text", "%{BKY_NEW_VARIABLE}");
-    c.setAttribute("callbackKey", "CREATE_VARIABLE");
-    a.registerButtonCallback("CREATE_VARIABLE", function (a) {
-        LearnBlock.Variables.createVariableButtonHandler(a.getTargetWorkspace())
-    });
-    b.push(c);
-    a = LearnBlock.Variables.flyoutCategoryBlocks(a);
-    return b = b.concat(a)
-};
-LearnBlock.Variables.flyoutCategoryBlocks = function (a) {
-    a = a.getVariablesOfType("");
-    var b = [];
-    if (0 < a.length) {
-        var c = a[a.length - 1];
-        if (LearnBlock.Blocks.variables_set) {
-            var d = LearnBlock.utils.xml.createElement("block");
-            d.setAttribute("type", "variables_set");
-            d.setAttribute("gap", LearnBlock.Blocks.math_change ? 8 : 24);
-            d.appendChild(LearnBlock.Variables.generateVariableFieldDom(c));
-            b.push(d)
-        }
-        LearnBlock.Blocks.math_change && (d = LearnBlock.utils.xml.createElement("block"), d.setAttribute("type", "math_change"), d.setAttribute("gap", LearnBlock.Blocks.variables_get ?
-            20 : 8), d.appendChild(LearnBlock.Variables.generateVariableFieldDom(c)), c = LearnBlock.Xml.textToDom('<value name="DELTA"><shadow type="math_number"><field name="NUM">1</field></shadow></value>'), d.appendChild(c), b.push(d));
-        if (LearnBlock.Blocks.variables_get) {
-            a.sort(LearnBlock.VariableModel.compareByName);
-            c = 0;
-            for (var e; e = a[c]; c++) d = LearnBlock.utils.xml.createElement("block"), d.setAttribute("type", "variables_get"), d.setAttribute("gap", 8), d.appendChild(LearnBlock.Variables.generateVariableFieldDom(e)), b.push(d)
-        }
-    }
-    return b
-};
+//Returns a new variable name that is not yet being used
 LearnBlock.Variables.generateUniqueName = function (a) {
     a = a.getAllVariables();
     var b = "";
@@ -9408,6 +9360,7 @@ LearnBlock.Variables.generateUniqueName = function (a) {
         } else b = "i";
     return b
 };
+//Handles "Create Variable" button
 LearnBlock.Variables.createVariableButtonHandler = function (a, b, c) {
     var d = c || "",
         e = function (c) {
@@ -9428,6 +9381,7 @@ LearnBlock.Variables.createVariableButtonHandler = function (a, b, c) {
     e("")
 };
 LearnBlock.Variables.createVariable = LearnBlock.Variables.createVariableButtonHandler;
+//Renames a variable with the given workspace, variableType, and oldName
 LearnBlock.Variables.renameVariable = function (a, b, c) {
     var d = function (e) {
         var f = LearnBlock.Msg.RENAME_VARIABLE_TITLE.replace("%1", b.name);
@@ -9442,12 +9396,14 @@ LearnBlock.Variables.renameVariable = function (a, b, c) {
     };
     d("")
 };
+//Prompts the user for a new variable name
 LearnBlock.Variables.promptName = function (a, b, c) {
     LearnBlock.prompt(a, b, function (a) {
         a && (a = a.replace(/[\s\xa0]+/g, " ").trim(), a == LearnBlock.Msg.RENAME_VARIABLE || a == LearnBlock.Msg.NEW_VARIABLE) && (a = null);
         c(a)
     })
 };
+//Checks whether there exists a variable with the given name but a different type
 LearnBlock.Variables.nameUsedWithOtherType_ = function (a, b, c) {
     c = c.getVariableMap().getAllVariables();
     a = a.toLowerCase();
@@ -9455,6 +9411,7 @@ LearnBlock.Variables.nameUsedWithOtherType_ = function (a, b, c) {
         if (e.name.toLowerCase() == a && e.type != b) return e;
     return null
 };
+//Checks whether there exists a variable with the given name of any type
 LearnBlock.Variables.nameUsedWithAnyType_ = function (a, b) {
     var c = b.getVariableMap().getAllVariables();
     a = a.toLowerCase();
@@ -9462,6 +9419,7 @@ LearnBlock.Variables.nameUsedWithAnyType_ = function (a, b) {
         if (e.name.toLowerCase() == a) return e;
     return null
 };
+//Generates DOM objects representing a variable field
 LearnBlock.Variables.generateVariableFieldDom = function (a) {
     var b = LearnBlock.utils.xml.createElement("field");
     b.setAttribute("name", "VAR");
@@ -9471,11 +9429,13 @@ LearnBlock.Variables.generateVariableFieldDom = function (a) {
     b.appendChild(a);
     return b
 };
+//Helper function to look up or create a variable on the given workspace
 LearnBlock.Variables.getOrCreateVariablePackage = function (a, b, c, d) {
     var e = LearnBlock.Variables.getVariable(a, b, c, d);
     e || (e = LearnBlock.Variables.createVariable_(a, b, c, d));
     return e
 };
+//Looks up  a variable on the given workspace
 LearnBlock.Variables.getVariable = function (a, b, c, d) {
     var e = a.getPotentialVariableMap();
     if (b) {
@@ -9490,11 +9450,13 @@ LearnBlock.Variables.getVariable = function (a, b, c, d) {
     }
     return f
 };
+//Helper function to create a variable on the given workspace
 LearnBlock.Variables.createVariable_ = function (a, b, c, d) {
     var e = a.getPotentialVariableMap();
     c || (c = LearnBlock.Variables.generateUniqueName(a.isFlyout ? a.targetWorkspace : a));
     return e ? e.createVariable(c, d, b) : a.createVariable(c, d, b)
 };
+//Helper function to get the list of variables that have been added to the workspace after adding a new block
 LearnBlock.Variables.getAddedVariables = function (a, b) {
     var c = a.getAllVariables(),
         d = [];
@@ -9504,6 +9466,8 @@ LearnBlock.Variables.getAddedVariables = function (a, b) {
         }
     return d
 };
+
+
 LearnBlock.WidgetDiv = {};
 LearnBlock.WidgetDiv.DIV = null;
 LearnBlock.WidgetDiv.owner_ = null;
@@ -14097,14 +14061,17 @@ LearnBlock.Css.register([
   /* eslint-enable indent */
 ]);
 
-
+//Dynamic Variables
 LearnBlock.VariablesDynamic = {};
+//Button for String variable
 LearnBlock.VariablesDynamic.onCreateVariableButtonClick_String = function (a) {
     LearnBlock.Variables.createVariableButtonHandler(a.getTargetWorkspace(), null, "String")
 };
+//Button for Number variable
 LearnBlock.VariablesDynamic.onCreateVariableButtonClick_Number = function (a) {
     LearnBlock.Variables.createVariableButtonHandler(a.getTargetWorkspace(), null, "Number")
 };
+//Constructs the elements (blocks and button) required by the flyout for the variable category
 LearnBlock.VariablesDynamic.flyoutCategory = function (a) {
     var b = [],
         c = document.createElement("button");
@@ -14120,11 +14087,13 @@ LearnBlock.VariablesDynamic.flyoutCategory = function (a) {
     a = LearnBlock.VariablesDynamic.flyoutCategoryBlocks(a);
     return b = b.concat(a)
 };
+//Constructs the blocks required by the flyout for the variable category
 LearnBlock.VariablesDynamic.flyoutCategoryBlocks = function (a) {
     a = a.getAllVariables();
     var b = [];
     if (0 < a.length) {
         if (LearnBlock.Blocks.variables_set_dynamic) {
+            //Setter block
             var c = a[a.length - 1],
                 d = LearnBlock.utils.xml.createElement("block");
             d.setAttribute("type", "variables_set_dynamic");
@@ -14133,6 +14102,7 @@ LearnBlock.VariablesDynamic.flyoutCategoryBlocks = function (a) {
             b.push(d)
         }
         if (LearnBlock.Blocks.variables_get_dynamic) {
+            //Getter block: input and output
             a.sort(LearnBlock.VariableModel.compareByName);
             c = 0;
             for (var e; e = a[c]; c++) {
@@ -14141,6 +14111,7 @@ LearnBlock.VariablesDynamic.flyoutCategoryBlocks = function (a) {
             }
         }
         if (LearnBlock.Blocks['variables_get_dynamic2']) {
+            //Getter block: output
             a.sort(LearnBlock.VariableModel.compareByName);
             c = 0;
             for (var e; e = a[c]; c++) {
@@ -14149,6 +14120,7 @@ LearnBlock.VariablesDynamic.flyoutCategoryBlocks = function (a) {
             }
         }
         if (LearnBlock.Blocks['variables_get_dynamic3']) {
+            //Getter block: prev and next statements
             a.sort(LearnBlock.VariableModel.compareByName);
             c = 0;
             for (var e; e = a[c]; c++) {
@@ -14159,6 +14131,9 @@ LearnBlock.VariablesDynamic.flyoutCategoryBlocks = function (a) {
     }
     return b
 };
+
+
+
 LearnBlock.ZoomControls = function (a) {
     this.workspace_ = a
 };

@@ -1011,9 +1011,6 @@ LearnBlock.Xml.blockToDom = function (a, b) {
         if (f.type != LearnBlock.DUMMY_INPUT) {
             var k = f.connection.targetBlock();
             f.type == LearnBlock.INPUT_VALUE ? h = LearnBlock.utils.xml.createElement("value") : f.type == LearnBlock.NEXT_STATEMENT && (h = LearnBlock.utils.xml.createElement("statement"));
-            d = f.connection.getShadowDom();
-            !d || k && k.isShadow() || h.appendChild(LearnBlock.Xml.cloneShadow_(d,
-                b));
             k && (h.appendChild(LearnBlock.Xml.blockToDom(k, b)), g = !1);
             h.setAttribute("name", f.name);
             g || c.appendChild(h)
@@ -1021,12 +1018,12 @@ LearnBlock.Xml.blockToDom = function (a, b) {
     }
     void 0 != a.inputsInline && a.inputsInline != a.inputsInlineDefault && c.setAttribute("inline", a.inputsInline);
     a.isDeletable() || c.setAttribute("deletable", !1);
-    a.isMovable()|| c.setAttribute("movable", !1);
+    a.isMovable() || c.setAttribute("movable", !1);
     a.isEditable() || c.setAttribute("editable", !1);
     if (e = a.getNextBlock()) h = LearnBlock.utils.xml.createElement("next"),
         h.appendChild(LearnBlock.Xml.blockToDom(e, b)), c.appendChild(h);
-    d = a.nextConnection && a.nextConnection.getShadowDom();
-    !d || e && e.isShadow() || h.appendChild(LearnBlock.Xml.cloneShadow_(d, b));
+    d = a.nextConnection;
+    !d || e;
     return c
 };
 LearnBlock.Xml.cloneShadow_ = function (a, b) {
@@ -1219,14 +1216,13 @@ LearnBlock.Xml.domToBlockHeadless_ = function (a, b) {
                         console.warn("Ignoring non-existent input " + k + " in block " + d);
                         break
                     }
-                    h && g.connection.setShadowDom(h);
                     if (f)
                         if (f = LearnBlock.Xml.domToBlockHeadless_(f, b), f.outputConnection) g.connection.connect(f.outputConnection);
                         else if (f.previousConnection) g.connection.connect(f.previousConnection);
                     else throw TypeError("Child block does not have output or previous statement.");
                     break;
                 case "next":
-                    h && c.nextConnection && c.nextConnection.setShadowDom(h);
+                    h && c.nextConnection;
                     if (f) {
                         if (!c.nextConnection) throw TypeError("Next statement does not exist.");
                         if (c.nextConnection.isConnected()) throw TypeError("Next statement is already connected.");
@@ -1261,6 +1257,9 @@ LearnBlock.Xml.deleteNext = function (a) {
             break
         }
 };
+
+
+//Class for connection between blocks
 LearnBlock.Connection = function (a, b) {
     this.sourceBlock_ = a;
     this.type = b
@@ -1271,24 +1270,21 @@ LearnBlock.Connection.REASON_WRONG_TYPE = 2;
 LearnBlock.Connection.REASON_TARGET_NULL = 3;
 LearnBlock.Connection.REASON_CHECKS_FAILED = 4;
 LearnBlock.Connection.REASON_DIFFERENT_WORKSPACES = 5;
-LearnBlock.Connection.REASON_SHADOW_PARENT = 6;
 LearnBlock.Connection.prototype.targetConnection = null;
 LearnBlock.Connection.prototype.disposed = !1;
 LearnBlock.Connection.prototype.check_ = null;
 LearnBlock.Connection.prototype.shadowDom_ = null;
 LearnBlock.Connection.prototype.x_ = 0;
 LearnBlock.Connection.prototype.y_ = 0;
+//Connects two connections together
 LearnBlock.Connection.prototype.connect_ = function (a) {
     var b = this,
         c = b.getSourceBlock(),
         d = a.getSourceBlock();
     a.isConnected() && a.disconnect();
     if (b.isConnected()) {
-        var e = b.targetBlock(),
-            f = b.getShadowDom();
-        b.setShadowDom(null);
-        if (e.isShadow()) f = LearnBlock.Xml.blockToDom(e), e.dispose(), e = null;
-        else if (b.type == LearnBlock.INPUT_VALUE) {
+        var e = b.targetBlock();
+        if (b.type == LearnBlock.INPUT_VALUE) {
             if (!e.outputConnection) throw Error("Orphan block does not have an output connection.");
             var g = LearnBlock.Connection.lastConnectionInRow_(d, e);
             g && (e.outputConnection.connect(g), e = null)
@@ -1297,7 +1293,7 @@ LearnBlock.Connection.prototype.connect_ = function (a) {
             if (!e.previousConnection) throw Error("Orphan block does not have a previous connection.");
             for (g = d; g.nextConnection;) {
                 var h = g.getNextBlock();
-                if (h && !h.isShadow()) g = h;
+                if (h) g = h;
                 else {
                     e.previousConnection.checkType_(g.nextConnection) && (g.nextConnection.connect(e.previousConnection), e = null);
                     break
@@ -1315,7 +1311,6 @@ LearnBlock.Connection.prototype.connect_ = function (a) {
                 }
             }, LearnBlock.BUMP_DELAY)
         }
-        b.setShadowDom(f)
     }
     var l;
     LearnBlock.Events.isEnabled() && (l = new LearnBlock.Events.BlockMove(d));
@@ -1323,31 +1318,50 @@ LearnBlock.Connection.prototype.connect_ = function (a) {
     d.setParent(c);
     l && (l.recordNew(), LearnBlock.Events.fire(l))
 };
+//Disposes of the connection, deals with connected blocks and removes the connection from db
 LearnBlock.Connection.prototype.dispose = function () {
     if (this.isConnected()) {
-        this.setShadowDom(null);
         var a = this.targetBlock();
-        a.isShadow() ? a.dispose() : a.unplug()
+        a.unplug()
     }
     this.disposed = !0
 };
+//Gets the source block for the connection
 LearnBlock.Connection.prototype.getSourceBlock = function () {
     return this.sourceBlock_
 };
+//Does the connection belong to a superior block?
 LearnBlock.Connection.prototype.isSuperior = function () {
     return this.type == LearnBlock.INPUT_VALUE || this.type == LearnBlock.NEXT_STATEMENT
 };
+//Is the connection connected?
 LearnBlock.Connection.prototype.isConnected = function () {
     return !!this.targetConnection
 };
+//Checks whether the current connection can connect with the target connection
 LearnBlock.Connection.prototype.canConnectWithReason_ = function (a) {
-    if (!a) return LearnBlock.Connection.REASON_TARGET_NULL;
-    if (this.isSuperior()) var b = this.sourceBlock_,
-        c = a.getSourceBlock();
-    else c = this.sourceBlock_, b = a.getSourceBlock();
-    return b && b == c ? LearnBlock.Connection.REASON_SELF_CONNECTION : a.type != LearnBlock.OPPOSITE_TYPE[this.type] ? LearnBlock.Connection.REASON_WRONG_TYPE : b && c && b.workspace !== c.workspace ? LearnBlock.Connection.REASON_DIFFERENT_WORKSPACES : this.checkType_(a) ? b.isShadow() && !c.isShadow() ? LearnBlock.Connection.REASON_SHADOW_PARENT :
-        LearnBlock.Connection.CAN_CONNECT : LearnBlock.Connection.REASON_CHECKS_FAILED
+    if (!a) {
+        return LearnBlock.Connection.REASON_TARGET_NULL;
+    }
+    if (this.isSuperior()) {
+        var blockA = this.sourceBlock_;
+        var blockB = a.getSourceBlock();
+    } else {
+        var blockB = this.sourceBlock_;
+        var blockA = a.getSourceBlock();
+    }
+    if (blockA && blockA == blockB) {
+        return LearnBlock.Connection.REASON_SELF_CONNECTION;
+    } else if (a.type != LearnBlock.OPPOSITE_TYPE[this.type]) {
+        return LearnBlock.Connection.REASON_WRONG_TYPE;
+    } else if (blockA && blockB && blockA.workspace !== blockB.workspace) {
+        return LearnBlock.a.REASON_DIFFERENT_WORKSPACES;
+    } else if (!this.checkType_(a)) {
+        return LearnBlock.Connection.REASON_CHECKS_FAILED;
+    }
+    return LearnBlock.Connection.CAN_CONNECT;
 };
+//Checks whether the current connection and target connection are compatible
 LearnBlock.Connection.prototype.checkConnection_ = function (a) {
     switch (this.canConnectWithReason_(a)) {
         case LearnBlock.Connection.CAN_CONNECT:
@@ -1362,12 +1376,11 @@ LearnBlock.Connection.prototype.checkConnection_ = function (a) {
             throw Error("Target connection is null.");
         case LearnBlock.Connection.REASON_CHECKS_FAILED:
             throw Error("Connection checks failed. " + (this + " expected " + this.check_ + ", found " + a.check_));
-        case LearnBlock.Connection.REASON_SHADOW_PARENT:
-            throw Error("Connecting non-shadow to shadow block.");
         default:
             throw Error("Unknown connection failure: this should never happen!");
     }
 };
+//Checks if two connections can be dragged to connect to each other
 LearnBlock.Connection.prototype.canConnectToPrevious_ = function (a) {
     if (this.targetConnection || -1 != LearnBlock.draggingConnections_.indexOf(a)) return !1;
     if (!a.targetConnection) return !0;
@@ -1394,7 +1407,9 @@ LearnBlock.Connection.prototype.isConnectionAllowed = function (a) {
     }
     return -1 != LearnBlock.draggingConnections_.indexOf(a) ? !1 : !0
 };
+//Behavior after a connection attempt fails (does nothing)
 LearnBlock.Connection.prototype.onFailedConnect = function (a) {};
+//Connects the connection to another connection
 LearnBlock.Connection.prototype.connect = function (a) {
     if (this.targetConnection != a) {
         this.checkConnection_(a);
@@ -1404,11 +1419,13 @@ LearnBlock.Connection.prototype.connect = function (a) {
         b || LearnBlock.Events.setGroup(!1)
     }
 };
+//Updates two connections to target each other
 LearnBlock.Connection.connectReciprocally_ = function (a, b) {
     if (!a || !b) throw Error("Cannot connect null connections.");
     a.targetConnection = b;
     b.targetConnection = a
 };
+//Does the given block have one connection point that will accept an orphaned block?
 LearnBlock.Connection.singleConnection_ = function (a, b) {
     for (var c = !1, d = 0; d < a.inputList.length; d++) {
         var e = a.inputList[d].connection;
@@ -1419,11 +1436,13 @@ LearnBlock.Connection.singleConnection_ = function (a, b) {
     }
     return c
 };
+//Walks down a row a blocks, at each stage checking if there are any connections that will accept the orphaned block
 LearnBlock.Connection.lastConnectionInRow_ = function (a, b) {
     for (var c = a, d; d = LearnBlock.Connection.singleConnection_(c, b);)
-        if (c = d.targetBlock(), !c || c.isShadow()) return d;
+        if (c = d.targetBlock(), !c) return d;
     return null
 };
+//Disconnects the connection
 LearnBlock.Connection.prototype.disconnect = function () {
     var a = this.targetConnection;
     if (!a) throw Error("Source connection not connected.");
@@ -1436,9 +1455,9 @@ LearnBlock.Connection.prototype.disconnect = function () {
     var d = LearnBlock.Events.getGroup();
     d || LearnBlock.Events.setGroup(!0);
     this.disconnectInternal_(b, c);
-    a.respawnShadow_();
     d || LearnBlock.Events.setGroup(!1)
 };
+//Disconnecs two block that are connected by this connection
 LearnBlock.Connection.prototype.disconnectInternal_ = function (a, b) {
     var c;
     LearnBlock.Events.isEnabled() && (c = new LearnBlock.Events.BlockMove(b));
@@ -1446,42 +1465,35 @@ LearnBlock.Connection.prototype.disconnectInternal_ = function (a, b) {
     b.setParent(null);
     c && (c.recordNew(), LearnBlock.Events.fire(c))
 };
-LearnBlock.Connection.prototype.respawnShadow_ = function () {
-    var a = this.getSourceBlock(),
-        b = this.getShadowDom();
-    if (a.workspace && b && LearnBlock.Events.recordUndo)
-        if (a = LearnBlock.Xml.domToBlock(b, a.workspace), a.outputConnection) this.connect(a.outputConnection);
-        else if (a.previousConnection) this.connect(a.previousConnection);
-    else throw Error("Child block does not have output or previous statement.");
-};
+//Returns the block that this connection connects to
 LearnBlock.Connection.prototype.targetBlock = function () {
     return this.isConnected() ? this.targetConnection.getSourceBlock() : null
 };
+//Is the connection compatible with another connection?
 LearnBlock.Connection.prototype.checkType_ = function (a) {
     if (!this.check_ || !a.check_) return !0;
     for (var b = 0; b < this.check_.length; b++)
         if (-1 != a.check_.indexOf(this.check_[b])) return !0;
     return !1
 };
+//Called when the connection's compatible types have changed
 LearnBlock.Connection.prototype.onCheckChanged_ = function () {
     this.isConnected() && !this.checkType_(this.targetConnection) && (this.isSuperior() ? this.targetBlock() : this.sourceBlock_).unplug()
 };
+//Changes a connection compatibilitty
 LearnBlock.Connection.prototype.setCheck = function (a) {
     a ? (Array.isArray(a) || (a = [a]), this.check_ = a, this.onCheckChanged_()) : this.check_ = null;
     return this
 };
+//Gets a connection compatibility
 LearnBlock.Connection.prototype.getCheck = function () {
     return this.check_
 };
-LearnBlock.Connection.prototype.setShadowDom = function (a) {
-    this.shadowDom_ = a
-};
-LearnBlock.Connection.prototype.getShadowDom = function () {
-    return this.shadowDom_
-};
+//Finds all nearby compatible connections
 LearnBlock.Connection.prototype.neighbours_ = function (a) {
     return []
 };
+//Gets the parent input of a connection
 LearnBlock.Connection.prototype.getParentInput = function () {
     for (var a = null, b = this.sourceBlock_, c = b.inputList, d = 0; d < b.inputList.length; d++)
         if (c[d].connection === this) {
@@ -1489,6 +1501,7 @@ LearnBlock.Connection.prototype.getParentInput = function () {
             break
         } return a
 };
+//Returns a string describing the connection
 LearnBlock.Connection.prototype.toString = function () {
     var a = this.sourceBlock_;
     if (a)
@@ -1506,6 +1519,9 @@ LearnBlock.Connection.prototype.toString = function () {
     } else return "Orphan Connection";
     return b + a.toDevString()
 };
+
+
+
 LearnBlock.Extensions = {};
 LearnBlock.Extensions.ALL_ = {};
 LearnBlock.Extensions.register = function (a, b) {
@@ -5963,8 +5979,7 @@ LearnBlock.BlockSvg.prototype.removeSelect = function () {
     LearnBlock.utils.dom.removeClass(this.svgGroup_, "blocklySelected")
 };
 //Updates image of cursor when in trash ????
-LearnBlock.BlockSvg.prototype.setDeleteStyle = function (a) {
-};
+LearnBlock.BlockSvg.prototype.setDeleteStyle = function (a) {};
 //Changes the colour
 LearnBlock.BlockSvg.prototype.setColour = function (a) {
     LearnBlock.BlockSvg.superClass_.setColour.call(this, a);

@@ -2348,43 +2348,57 @@ LearnBlock.MarkerCursor.prototype.prev = function () {
 LearnBlock.MarkerCursor.prototype.out = function () {
     return null
 };
+
+
+//Class for a theme
 LearnBlock.Theme = function (a, b, c) {
     this.blockStyles_ = a;
     this.categoryStyles_ = b;
     this.componentStyles_ = c || Object.create(null)
 };
+//Overrides or adds all values from blockStyles to blockStyles_
 LearnBlock.Theme.prototype.setAllBlockStyles = function (a) {
     for (var b in a) this.setBlockStyle(b, a[b])
 };
+//Gets a map of all the block style names
 LearnBlock.Theme.prototype.getAllBlockStyles = function () {
     return this.blockStyles_
 };
+//Gets the BlockStyle for the given block style name
 LearnBlock.Theme.prototype.getBlockStyle = function (a) {
     return this.blockStyles_[a]
 };
+//Overrides or adds a style to the blockStyles map
 LearnBlock.Theme.prototype.setBlockStyle = function (a, b) {
     this.blockStyles_[a] = b
 };
+//Gets the CategoryStyle for the given category style name
 LearnBlock.Theme.prototype.getCategoryStyle = function (a) {
     return this.categoryStyles_[a]
 };
+//Overrides or adds a style to the categoryStyles map
 LearnBlock.Theme.prototype.setCategoryStyle = function (a, b) {
     this.categoryStyles_[a] = b
 };
+//Gets the style for a given Blockly UI component
 LearnBlock.Theme.prototype.getComponentStyle = function (a) {
     return (a = this.componentStyles_[a]) && "string" == typeof propertyValue && this.getComponentStyle(a) ? this.getComponentStyle(a) : a ? String(a) : null
 };
+//Configures a specific Blockly UI component with a style value
 LearnBlock.Theme.prototype.setComponentStyle = function (a, b) {
     this.componentStyles_[a] = b
 };
+//Class for storing and updating a workspace's theme and UI components
 LearnBlock.ThemeManager = function (a) {
     this.theme_ = a;
     this.subscribedWorkspaces_ = [];
     this.componentDB_ = Object.create(null)
 };
+//Gets the workspace theme
 LearnBlock.ThemeManager.prototype.getTheme = function () {
     return this.theme_
 };
+//Sets the workspace theme, and refreshes the workspace and all components
 LearnBlock.ThemeManager.prototype.setTheme = function (a) {
     if (this.theme_ !== a) {
         this.theme_ = a;
@@ -2401,14 +2415,17 @@ LearnBlock.ThemeManager.prototype.setTheme = function (a) {
             }
     }
 };
+//Subscribes a workspace to changes to the selected theme
 LearnBlock.ThemeManager.prototype.subscribeWorkspace = function (a) {
     this.subscribedWorkspaces_.push(a)
 };
+//Unsubscribes a workspace to changes to the selected theme
 LearnBlock.ThemeManager.prototype.unsubscribeWorkspace = function (a) {
     a = this.subscribedWorkspaces_.indexOf(a);
     if (0 > a) throw Error("Cannot unsubscribe a workspace that hasn't been subscribed.");
     this.subscribedWorkspaces_.splice(a, 1)
 };
+//Subscribes an element to changes to the selected theme
 LearnBlock.ThemeManager.prototype.subscribe = function (a, b, c) {
     this.componentDB_[b] || (this.componentDB_[b] = []);
     this.componentDB_[b].push({
@@ -2418,6 +2435,7 @@ LearnBlock.ThemeManager.prototype.subscribe = function (a, b, c) {
     b = this.theme_ && this.theme_.getComponentStyle(b);
     a.style[c] = b || ""
 };
+//Unsubscribes an element to changes to the selected theme
 LearnBlock.ThemeManager.prototype.unsubscribe = function (a) {
     if (a)
         for (var b = Object.keys(this.componentDB_), c = 0, d; d = b[c]; c++) {
@@ -2425,74 +2443,27 @@ LearnBlock.ThemeManager.prototype.unsubscribe = function (a) {
             this.componentDB_[d].length || delete this.componentDB_[d]
         }
 };
+//Dispose of the theme manager
 LearnBlock.ThemeManager.prototype.dispose = function () {
     this.componentDB_ = this.subscribedWorkspaces_ = this.theme_ = this.owner_ = null
 };
 LearnBlock.Themes = {};
+//Classic theme
 LearnBlock.Themes.Classic = {};
+//Default styles for variables and procedures blocks
 LearnBlock.Themes.Classic.defaultBlockStyles = {
-    colour_blocks: {
-        colourPrimary: "20"
-    },
-    list_blocks: {
-        colourPrimary: "260"
-    },
-    logic_blocks: {
-        colourPrimary: "210"
-    },
-    loop_blocks: {
-        colourPrimary: "120"
-    },
-    math_blocks: {
-        colourPrimary: "230"
-    },
     procedure_blocks: {
         colourPrimary: "290"
     },
-    text_blocks: {
-        colourPrimary: "160"
-    },
-    variable_blocks: {
-        colourPrimary: "330"
-    },
     variable_dynamic_blocks: {
         colourPrimary: "310"
-    },
-    hat_blocks: {
-        colourPrimary: "330",
-        hat: "cap"
     }
 };
-LearnBlock.Themes.Classic.categoryStyles = {
-    colour_category: {
-        colour: "20"
-    },
-    list_category: {
-        colour: "260"
-    },
-    logic_category: {
-        colour: "210"
-    },
-    loop_category: {
-        colour: "120"
-    },
-    math_category: {
-        colour: "230"
-    },
-    procedure_category: {
-        colour: "290"
-    },
-    text_category: {
-        colour: "160"
-    },
-    variable_category: {
-        colour: "330"
-    },
-    variable_dynamic_category: {
-        colour: "310"
-    }
-};
-LearnBlock.Themes.Classic = new LearnBlock.Theme(LearnBlock.Themes.Classic.defaultBlockStyles, LearnBlock.Themes.Classic.categoryStyles);
+LearnBlock.Themes.Classic = new LearnBlock.Theme(LearnBlock.Themes.Classic.defaultBlockStyles);
+
+
+
+
 LearnBlock.VariableMap = function (a) {
     this.variableMap_ = Object.create(null);
     this.workspace = a
@@ -2621,6 +2592,8 @@ LearnBlock.VariableMap.prototype.getVariableUsesById = function (a) {
     }
     return b
 };
+
+
 LearnBlock.Workspace = function (a) {
     this.id = LearnBlock.utils.genUid();
     LearnBlock.Workspace.WorkspaceDB_[this.id] = this;
@@ -2880,269 +2853,8 @@ LearnBlock.Workspace.getAll = function () {
 LearnBlock.Workspace.prototype.getThemeManager = function () {
     return this.themeManager_
 };
-LearnBlock.Bubble = function (a, b, c, d, e, f) {
-    this.workspace_ = a;
-    this.content_ = b;
-    this.shape_ = c;
-    c = LearnBlock.Bubble.ARROW_ANGLE;
-    this.workspace_.RTL && (c = -c);
-    this.arrow_radians_ = LearnBlock.utils.math.toRadians(c);
-    a.getBubbleCanvas().appendChild(this.createDom_(b, !(!e || !f)));
-    this.setAnchorLocation(d);
-    e && f || (b = this.content_.getBBox(), e = b.width + 2 * LearnBlock.Bubble.BORDER_WIDTH, f = b.height + 2 * LearnBlock.Bubble.BORDER_WIDTH);
-    this.setBubbleSize(e, f);
-    this.positionBubble_();
-    this.renderArrow_();
-    this.rendered_ = !0;
-    a.options.readOnly ||
-        (LearnBlock.bindEventWithChecks_(this.bubbleBack_, "mousedown", this, this.bubbleMouseDown_), this.resizeGroup_ && LearnBlock.bindEventWithChecks_(this.resizeGroup_, "mousedown", this, this.resizeMouseDown_))
-};
-LearnBlock.Bubble.BORDER_WIDTH = 6;
-LearnBlock.Bubble.ARROW_THICKNESS = 5;
-LearnBlock.Bubble.ARROW_ANGLE = 20;
-LearnBlock.Bubble.ARROW_BEND = 4;
-LearnBlock.Bubble.ANCHOR_RADIUS = 8;
-LearnBlock.Bubble.onMouseUpWrapper_ = null;
-LearnBlock.Bubble.onMouseMoveWrapper_ = null;
-LearnBlock.Bubble.prototype.resizeCallback_ = null;
-LearnBlock.Bubble.unbindDragEvents_ = function () {
-    LearnBlock.Bubble.onMouseUpWrapper_ && (LearnBlock.unbindEvent_(LearnBlock.Bubble.onMouseUpWrapper_), LearnBlock.Bubble.onMouseUpWrapper_ = null);
-    LearnBlock.Bubble.onMouseMoveWrapper_ && (LearnBlock.unbindEvent_(LearnBlock.Bubble.onMouseMoveWrapper_), LearnBlock.Bubble.onMouseMoveWrapper_ = null)
-};
-LearnBlock.Bubble.bubbleMouseUp_ = function () {
-    LearnBlock.Touch.clearTouchIdentifier();
-    LearnBlock.Bubble.unbindDragEvents_()
-};
-LearnBlock.Bubble.prototype.rendered_ = !1;
-LearnBlock.Bubble.prototype.anchorXY_ = null;
-LearnBlock.Bubble.prototype.relativeLeft_ = 0;
-LearnBlock.Bubble.prototype.relativeTop_ = 0;
-LearnBlock.Bubble.prototype.width_ = 0;
-LearnBlock.Bubble.prototype.height_ = 0;
-LearnBlock.Bubble.prototype.autoLayout_ = !0;
-LearnBlock.Bubble.prototype.createDom_ = function (a, b) {
-    this.bubbleGroup_ = LearnBlock.utils.dom.createSvgElement("g", {}, null);
-    var c = {
-        filter: "url(#" + this.workspace_.options.embossFilterId + ")"
-    };
-    LearnBlock.utils.userAgent.JAVA_FX && (c = {});
-    c = LearnBlock.utils.dom.createSvgElement("g", c, this.bubbleGroup_);
-    this.bubbleArrow_ = LearnBlock.utils.dom.createSvgElement("path", {}, c);
-    this.bubbleBack_ = LearnBlock.utils.dom.createSvgElement("rect", {
-            "class": "blocklyDraggable",
-            x: 0,
-            y: 0,
-            rx: LearnBlock.Bubble.BORDER_WIDTH,
-            ry: LearnBlock.Bubble.BORDER_WIDTH
-        },
-        c);
-    b ? (this.resizeGroup_ = LearnBlock.utils.dom.createSvgElement("g", {
-        "class": this.workspace_.RTL ? "blocklyResizeSW" : "blocklyResizeSE"
-    }, this.bubbleGroup_), c = 2 * LearnBlock.Bubble.BORDER_WIDTH, LearnBlock.utils.dom.createSvgElement("polygon", {
-        points: "0,x x,x x,0".replace(/x/g, c.toString())
-    }, this.resizeGroup_), LearnBlock.utils.dom.createSvgElement("line", {
-        "class": "blocklyResizeLine",
-        x1: c / 3,
-        y1: c - 1,
-        x2: c - 1,
-        y2: c / 3
-    }, this.resizeGroup_), LearnBlock.utils.dom.createSvgElement("line", {
-        "class": "blocklyResizeLine",
-        x1: 2 * c / 3,
-        y1: c - 1,
-        x2: c -
-            1,
-        y2: 2 * c / 3
-    }, this.resizeGroup_)) : this.resizeGroup_ = null;
-    this.bubbleGroup_.appendChild(a);
-    return this.bubbleGroup_
-};
-LearnBlock.Bubble.prototype.getSvgRoot = function () {
-    return this.bubbleGroup_
-};
-LearnBlock.Bubble.prototype.setSvgId = function (a) {
-    this.bubbleGroup_.dataset && (this.bubbleGroup_.dataset.blockId = a)
-};
-LearnBlock.Bubble.prototype.bubbleMouseDown_ = function (a) {
-    var b = this.workspace_.getGesture(a);
-    b && b.handleBubbleStart(a, this)
-};
-LearnBlock.Bubble.prototype.showContextMenu_ = function (a) {};
-LearnBlock.Bubble.prototype.isDeletable = function () {
-    return !1
-};
-LearnBlock.Bubble.prototype.resizeMouseDown_ = function (a) {
-    this.promote_();
-    LearnBlock.Bubble.unbindDragEvents_();
-    LearnBlock.utils.isRightButton(a) || (this.workspace_.startDrag(a, new LearnBlock.utils.Coordinate(this.workspace_.RTL ? -this.width_ : this.width_, this.height_)), LearnBlock.Bubble.onMouseUpWrapper_ = LearnBlock.bindEventWithChecks_(document, "mouseup", this, LearnBlock.Bubble.bubbleMouseUp_), LearnBlock.Bubble.onMouseMoveWrapper_ = LearnBlock.bindEventWithChecks_(document, "mousemove", this, this.resizeMouseMove_), LearnBlock.hideChaff());
-    a.stopPropagation()
-};
-LearnBlock.Bubble.prototype.resizeMouseMove_ = function (a) {
-    this.autoLayout_ = !1;
-    a = this.workspace_.moveDrag(a);
-    this.setBubbleSize(this.workspace_.RTL ? -a.x : a.x, a.y);
-    this.workspace_.RTL && this.positionBubble_()
-};
-LearnBlock.Bubble.prototype.registerResizeEvent = function (a) {
-    this.resizeCallback_ = a
-};
-LearnBlock.Bubble.prototype.promote_ = function () {
-    var a = this.bubbleGroup_.parentNode;
-    return a.lastChild !== this.bubbleGroup_ ? (a.appendChild(this.bubbleGroup_), !0) : !1
-};
-LearnBlock.Bubble.prototype.setAnchorLocation = function (a) {
-    this.anchorXY_ = a;
-    this.rendered_ && this.positionBubble_()
-};
-LearnBlock.Bubble.prototype.layoutBubble_ = function () {
-    var a = this.workspace_.getMetrics();
-    a.viewLeft /= this.workspace_.scale;
-    a.viewWidth /= this.workspace_.scale;
-    a.viewTop /= this.workspace_.scale;
-    a.viewHeight /= this.workspace_.scale;
-    var b = this.getOptimalRelativeLeft_(a),
-        c = this.getOptimalRelativeTop_(a),
-        d = this.shape_.getBBox(),
-        e = {
-            x: b,
-            y: -this.height_ - LearnBlock.BlockSvg.MIN_BLOCK_Y
-        },
-        f = {
-            x: -this.width_ - 30,
-            y: c
-        };
-    c = {
-        x: d.width,
-        y: c
-    };
-    var g = {
-        x: b,
-        y: d.height
-    };
-    b = d.width < d.height ? c : g;
-    d = d.width < d.height ? g : c;
-    c = this.getOverlap_(e,
-        a);
-    g = this.getOverlap_(f, a);
-    var h = this.getOverlap_(b, a);
-    a = this.getOverlap_(d, a);
-    a = Math.max(c, g, h, a);
-    c == a ? (this.relativeLeft_ = e.x, this.relativeTop_ = e.y) : g == a ? (this.relativeLeft_ = f.x, this.relativeTop_ = f.y) : h == a ? (this.relativeLeft_ = b.x, this.relativeTop_ = b.y) : (this.relativeLeft_ = d.x, this.relativeTop_ = d.y)
-};
-LearnBlock.Bubble.prototype.getOverlap_ = function (a, b) {
-    var c = this.workspace_.RTL ? this.anchorXY_.x - a.x - this.width_ : a.x + this.anchorXY_.x,
-        d = a.y + this.anchorXY_.y;
-    return Math.max(0, Math.min(1, (Math.min(c + this.width_, b.viewLeft + b.viewWidth) - Math.max(c, b.viewLeft)) * (Math.min(d + this.height_, b.viewTop + b.viewHeight) - Math.max(d, b.viewTop)) / (this.width_ * this.height_)))
-};
-LearnBlock.Bubble.prototype.getOptimalRelativeLeft_ = function (a) {
-    var b = -this.width_ / 4;
-    if (this.width_ > a.viewWidth) return b;
-    if (this.workspace_.RTL) var c = this.anchorXY_.x - b,
-        d = c - this.width_,
-        e = a.viewLeft + a.viewWidth,
-        f = a.viewLeft + LearnBlock.Scrollbar.scrollbarThickness / this.workspace_.scale;
-    else d = b + this.anchorXY_.x, c = d + this.width_, f = a.viewLeft, e = a.viewLeft + a.viewWidth - LearnBlock.Scrollbar.scrollbarThickness / this.workspace_.scale;
-    this.workspace_.RTL ? d < f ? b = -(f - this.anchorXY_.x + this.width_) : c > e && (b = -(e - this.anchorXY_.x)) :
-        d < f ? b = f - this.anchorXY_.x : c > e && (b = e - this.anchorXY_.x - this.width_);
-    return b
-};
-LearnBlock.Bubble.prototype.getOptimalRelativeTop_ = function (a) {
-    var b = -this.height_ / 4;
-    if (this.height_ > a.viewHeight) return b;
-    var c = this.anchorXY_.y + b,
-        d = c + this.height_,
-        e = a.viewTop;
-    a = a.viewTop + a.viewHeight - LearnBlock.Scrollbar.scrollbarThickness / this.workspace_.scale;
-    var f = this.anchorXY_.y;
-    c < e ? b = e - f : d > a && (b = a - f - this.height_);
-    return b
-};
-LearnBlock.Bubble.prototype.positionBubble_ = function () {
-    var a = this.anchorXY_.x;
-    a = this.workspace_.RTL ? a - (this.relativeLeft_ + this.width_) : a + this.relativeLeft_;
-    this.moveTo(a, this.relativeTop_ + this.anchorXY_.y)
-};
-LearnBlock.Bubble.prototype.moveTo = function (a, b) {
-    this.bubbleGroup_.setAttribute("transform", "translate(" + a + "," + b + ")")
-};
-LearnBlock.Bubble.prototype.getBubbleSize = function () {
-    return new LearnBlock.utils.Size(this.width_, this.height_)
-};
-LearnBlock.Bubble.prototype.setBubbleSize = function (a, b) {
-    var c = 2 * LearnBlock.Bubble.BORDER_WIDTH;
-    a = Math.max(a, c + 45);
-    b = Math.max(b, c + 20);
-    this.width_ = a;
-    this.height_ = b;
-    this.bubbleBack_.setAttribute("width", a);
-    this.bubbleBack_.setAttribute("height", b);
-    this.resizeGroup_ && (this.workspace_.RTL ? this.resizeGroup_.setAttribute("transform", "translate(" + 2 * LearnBlock.Bubble.BORDER_WIDTH + "," + (b - c) + ") scale(-1 1)") : this.resizeGroup_.setAttribute("transform", "translate(" + (a - c) + "," + (b - c) + ")"));
-    this.autoLayout_ && this.layoutBubble_();
-    this.positionBubble_();
-    this.renderArrow_();
-    this.resizeCallback_ && this.resizeCallback_()
-};
-LearnBlock.Bubble.prototype.renderArrow_ = function () {
-    var a = [],
-        b = this.width_ / 2,
-        c = this.height_ / 2,
-        d = -this.relativeLeft_,
-        e = -this.relativeTop_;
-    if (b == d && c == e) a.push("M " + b + "," + c);
-    else {
-        e -= c;
-        d -= b;
-        this.workspace_.RTL && (d *= -1);
-        var f = Math.sqrt(e * e + d * d),
-            g = Math.acos(d / f);
-        0 > e && (g = 2 * Math.PI - g);
-        var h = g + Math.PI / 2;
-        h > 2 * Math.PI && (h -= 2 * Math.PI);
-        var k = Math.sin(h),
-            l = Math.cos(h),
-            m = this.getBubbleSize();
-        h = (m.width + m.height) / LearnBlock.Bubble.ARROW_THICKNESS;
-        h = Math.min(h, m.width, m.height) / 4;
-        m = 1 - LearnBlock.Bubble.ANCHOR_RADIUS / f;
-        d = b +
-            m * d;
-        e = c + m * e;
-        m = b + h * l;
-        var n = c + h * k;
-        b -= h * l;
-        c -= h * k;
-        k = g + this.arrow_radians_;
-        k > 2 * Math.PI && (k -= 2 * Math.PI);
-        g = Math.sin(k) * f / LearnBlock.Bubble.ARROW_BEND;
-        f = Math.cos(k) * f / LearnBlock.Bubble.ARROW_BEND;
-        a.push("M" + m + "," + n);
-        a.push("C" + (m + f) + "," + (n + g) + " " + d + "," + e + " " + d + "," + e);
-        a.push("C" + d + "," + e + " " + (b + f) + "," + (c + g) + " " + b + "," + c)
-    }
-    a.push("z");
-    this.bubbleArrow_.setAttribute("d", a.join(" "))
-};
-LearnBlock.Bubble.prototype.setColour = function (a) {
-    this.bubbleBack_.setAttribute("fill", a);
-    this.bubbleArrow_.setAttribute("fill", a)
-};
-LearnBlock.Bubble.prototype.dispose = function () {
-    LearnBlock.Bubble.unbindDragEvents_();
-    LearnBlock.utils.dom.removeNode(this.bubbleGroup_);
-    this.shape_ = this.content_ = this.workspace_ = this.resizeGroup_ = this.bubbleBack_ = this.bubbleArrow_ = this.bubbleGroup_ = null
-};
-LearnBlock.Bubble.prototype.moveDuringDrag = function (a, b) {
-    a ? a.translateSurface(b.x, b.y) : this.moveTo(b.x, b.y);
-    this.relativeLeft_ = this.workspace_.RTL ? this.anchorXY_.x - b.x - this.width_ : b.x - this.anchorXY_.x;
-    this.relativeTop_ = b.y - this.anchorXY_.y;
-    this.renderArrow_()
-};
-LearnBlock.Bubble.prototype.getRelativeToSurfaceXY = function () {
-    return new LearnBlock.utils.Coordinate(this.anchorXY_.x + this.relativeLeft_, this.anchorXY_.y + this.relativeTop_)
-};
-LearnBlock.Bubble.prototype.setAutoLayout = function (a) {
-    this.autoLayout_ = a
-};
+
+
 LearnBlock.Events.CommentBase = function (a) {
     this.commentId = a.id;
     this.workspaceId = a.workspace.id;
@@ -3691,6 +3403,8 @@ LearnBlock.Gesture.inProgress = function () {
         if (c.currentGesture_) return !0;
     return !1
 };
+
+//Class for an editable field
 LearnBlock.Field = function (a, b, c) {
     this.tooltip_ = this.validator_ = this.value_ = null;
     this.size_ = new LearnBlock.utils.Size(0, 0);
@@ -3960,6 +3674,8 @@ LearnBlock.fieldRegistry.fromJson = function (a) {
     b = LearnBlock.fieldRegistry.typeMap_[b];
     return b ? b.fromJson(a) : (console.warn("Blockly could not create a field of type " + a.type + ". The field is probably not being registered. This could be because the file is not loaded, the field does not register itself (Issue #1584), or the registration is not being reached."), null)
 };
+
+
 LearnBlock.FieldLabel = function (a, b, c) {
     this.class_ = null;
     null == a && (a = "");
@@ -3990,6 +3706,8 @@ LearnBlock.FieldLabel.prototype.setClass = function (a) {
     this.class_ = a
 };
 LearnBlock.fieldRegistry.register("field_label", LearnBlock.FieldLabel);
+
+
 LearnBlock.Input = function (a, b, c, d) {
     if (a != LearnBlock.DUMMY_INPUT && !b) throw Error("Value inputs and statement inputs must have non-empty name.");
     this.type = a;
@@ -9705,122 +9423,8 @@ LearnBlock.checkBlockColourConstant_ = function (a, b, c) {
     for (var d = "Blockly", e = Blockly, f = 0; f < b.length; ++f) d += "." + b[f], e && (e = e[b[f]]);
     e && e !== c && (a = (void 0 === c ? '%1 has been removed. Use LearnBlock.Msg["%2"].' : '%1 is deprecated and unused. Override LearnBlock.Msg["%2"].').replace("%1", d).replace("%2", a), console.warn(a))
 };
-LearnBlock.Comment = function (a) {
-    LearnBlock.Comment.superClass_.constructor.call(this, a);
-    this.model_ = a.commentModel;
-    this.model_.text = this.model_.text || "";
-    this.cachedText_ = "";
-    this.createIcon()
-};
-LearnBlock.utils.object.inherits(LearnBlock.Comment, LearnBlock.Icon);
-LearnBlock.Comment.prototype.drawIcon_ = function (a) {
-    LearnBlock.utils.dom.createSvgElement("circle", {
-        "class": "blocklyIconShape",
-        r: "8",
-        cx: "8",
-        cy: "8"
-    }, a);
-    LearnBlock.utils.dom.createSvgElement("path", {
-        "class": "blocklyIconSymbol",
-        d: "m6.8,10h2c0.003,-0.617 0.271,-0.962 0.633,-1.266 2.875,-2.4050.607,-5.534 -3.765,-3.874v1.7c3.12,-1.657 3.698,0.118 2.336,1.25-1.201,0.998 -1.201,1.528 -1.204,2.19z"
-    }, a);
-    LearnBlock.utils.dom.createSvgElement("rect", {
-        "class": "blocklyIconSymbol",
-        x: "6.8",
-        y: "10.78",
-        height: "2",
-        width: "2"
-    }, a)
-};
-LearnBlock.Comment.prototype.createEditor_ = function () {
-    this.foreignObject_ = LearnBlock.utils.dom.createSvgElement("foreignObject", {
-        x: LearnBlock.Bubble.BORDER_WIDTH,
-        y: LearnBlock.Bubble.BORDER_WIDTH
-    }, null);
-    var a = document.createElementNS(LearnBlock.utils.dom.HTML_NS, "body");
-    a.setAttribute("xmlns", LearnBlock.utils.dom.HTML_NS);
-    a.className = "blocklyMinimalBody";
-    var b = this.textarea_ = document.createElementNS(LearnBlock.utils.dom.HTML_NS, "textarea");
-    b.className = "blocklyCommentTextarea";
-    b.setAttribute("dir", this.block_.RTL ? "RTL" :
-        "LTR");
-    b.value = this.model_.text;
-    this.resizeTextarea_();
-    a.appendChild(b);
-    this.foreignObject_.appendChild(a);
-    LearnBlock.bindEventWithChecks_(b, "mouseup", this, this.startEdit_, !0, !0);
-    LearnBlock.bindEventWithChecks_(b, "wheel", this, function (a) {
-        a.stopPropagation()
-    });
-    LearnBlock.bindEventWithChecks_(b, "change", this, function (a) {
-        this.cachedText_ != this.model_.text && LearnBlock.Events.fire(new LearnBlock.Events.BlockChange(this.block_, "comment", null, this.cachedText_, this.model_.text))
-    });
-    LearnBlock.bindEventWithChecks_(b, "input",
-        this,
-        function (a) {
-            this.model_.text = b.value
-        });
-    setTimeout(b.focus.bind(b), 0);
-    return this.foreignObject_
-};
-LearnBlock.Comment.prototype.updateEditable = function () {
-    LearnBlock.Comment.superClass_.updateEditable.call(this);
-    this.isVisible() && (this.disposeBubble_(), this.createBubble_())
-};
-LearnBlock.Comment.prototype.onBubbleResize_ = function () {
-    this.isVisible() && (this.model_.size = this.bubble_.getBubbleSize(), this.resizeTextarea_())
-};
-LearnBlock.Comment.prototype.resizeTextarea_ = function () {
-    var a = this.model_.size,
-        b = 2 * LearnBlock.Bubble.BORDER_WIDTH,
-        c = a.width - b;
-    a = a.height - b;
-    this.foreignObject_.setAttribute("width", c);
-    this.foreignObject_.setAttribute("height", a);
-    this.textarea_.style.width = c - 4 + "px";
-    this.textarea_.style.height = a - 4 + "px"
-};
-LearnBlock.Comment.prototype.setVisible = function (a) {
-    a != this.isVisible() && (LearnBlock.Events.fire(new LearnBlock.Events.Ui(this.block_, "commentOpen", !a, a)), (this.model_.pinned = a) ? this.createBubble_() : this.disposeBubble_())
-};
-LearnBlock.Comment.prototype.createBubble_ = function () {
-    !this.block_.isEditable() || LearnBlock.utils.userAgent.IE ? this.createNonEditableBubble_() : this.createEditableBubble_()
-};
-LearnBlock.Comment.prototype.createEditableBubble_ = function () {
-    this.bubble_ = new LearnBlock.Bubble(this.block_.workspace, this.createEditor_(), this.block_.svgPath_, this.iconXY_, this.model_.size.width, this.model_.size.height);
-    this.bubble_.setSvgId(this.block_.id);
-    this.bubble_.registerResizeEvent(this.onBubbleResize_.bind(this));
-    this.updateColour()
-};
-LearnBlock.Comment.prototype.createNonEditableBubble_ = function () {
-    LearnBlock.Warning.prototype.createBubble.call(this)
-};
-LearnBlock.Comment.prototype.disposeBubble_ = function () {
-    this.paragraphElement_ ? LearnBlock.Warning.prototype.disposeBubble.call(this) : (this.bubble_.dispose(), this.foreignObject_ = this.textarea_ = this.bubble_ = null)
-};
-LearnBlock.Comment.prototype.startEdit_ = function (a) {
-    this.bubble_.promote_() && this.textarea_.focus();
-    this.cachedText_ = this.model_.text
-};
-LearnBlock.Comment.prototype.getBubbleSize = function () {
-    return this.model_.size
-};
-LearnBlock.Comment.prototype.setBubbleSize = function (a, b) {
-    this.bubble_ ? this.bubble_.setBubbleSize(a, b) : (this.model_.size.width = a, this.model_.size.height = b)
-};
-LearnBlock.Comment.prototype.getText = function () {
-    return this.model_.text || ""
-};
-LearnBlock.Comment.prototype.setText = function (a) {
-    this.model_.text != a && (this.model_.text = a, this.updateText())
-};
-LearnBlock.Comment.prototype.updateText = function () {
-    this.textarea_ ? this.textarea_.value = this.model_.text : this.paragraphElement_ && (this.paragraphElement_.firstChild.textContent = this.model_.text)
-};
-LearnBlock.Comment.prototype.dispose = function () {
-    this.block_.comment = null;
-    LearnBlock.Icon.prototype.dispose.call(this)
-};
+
+
 LearnBlock.tree = {};
 LearnBlock.tree.BaseNode = function (a, b) {
     LearnBlock.Component.call(this);
@@ -10357,6 +9961,8 @@ LearnBlock.tree.TreeControl.prototype.getNodeFromEvent_ = function (a) {
 LearnBlock.tree.TreeControl.prototype.createNode = function (a) {
     return new LearnBlock.tree.TreeNode(this.toolbox_, a || "", this.getConfig())
 };
+
+//Field for text input
 LearnBlock.FieldTextInput = function (a, b, c) {
     this.spellcheck_ = !0;
     null == a && (a = "");
@@ -10497,391 +10103,8 @@ LearnBlock.FieldTextInput.prototype.getValueFromEditorText_ = function (a) {
     return a
 };
 LearnBlock.fieldRegistry.register("field_input", LearnBlock.FieldTextInput);
-LearnBlock.FieldAngle = function (a, b, c) {
-    this.clockwise_ = LearnBlock.FieldAngle.CLOCKWISE;
-    this.offset_ = LearnBlock.FieldAngle.OFFSET;
-    this.wrap_ = LearnBlock.FieldAngle.WRAP;
-    this.round_ = LearnBlock.FieldAngle.ROUND;
-    LearnBlock.FieldAngle.superClass_.constructor.call(this, a || 0, b, c)
-};
-LearnBlock.utils.object.inherits(LearnBlock.FieldAngle, LearnBlock.FieldTextInput);
-LearnBlock.FieldAngle.fromJson = function (a) {
-    return new LearnBlock.FieldAngle(a.angle, void 0, a)
-};
-LearnBlock.FieldAngle.prototype.SERIALIZABLE = !0;
-LearnBlock.FieldAngle.ROUND = 15;
-LearnBlock.FieldAngle.HALF = 50;
-LearnBlock.FieldAngle.CLOCKWISE = !1;
-LearnBlock.FieldAngle.OFFSET = 0;
-LearnBlock.FieldAngle.WRAP = 360;
-LearnBlock.FieldAngle.RADIUS = LearnBlock.FieldAngle.HALF - 1;
-LearnBlock.FieldAngle.prototype.configure_ = function (a) {
-    LearnBlock.FieldAngle.superClass_.configure_.call(this, a);
-    switch (a.mode) {
-        case "compass":
-            this.clockwise_ = !0;
-            this.offset_ = 90;
-            break;
-        case "protractor":
-            this.clockwise_ = !1, this.offset_ = 0
-    }
-    var b = a.clockwise;
-    "boolean" == typeof b && (this.clockwise_ = b);
-    b = a.offset;
-    null != b && (b = Number(b), isNaN(b) || (this.offset_ = b));
-    b = a.wrap;
-    null != b && (b = Number(b), isNaN(b) || (this.wrap_ = b));
-    a = a.round;
-    null != a && (a = Number(a), isNaN(a) || (this.round_ = a))
-};
-LearnBlock.FieldAngle.prototype.initView = function () {
-    LearnBlock.FieldAngle.superClass_.initView.call(this);
-    this.symbol_ = LearnBlock.utils.dom.createSvgElement("tspan", {}, null);
-    this.symbol_.appendChild(document.createTextNode("\u00b0"));
-    this.textElement_.appendChild(this.symbol_)
-};
-LearnBlock.FieldAngle.prototype.render_ = function () {
-    LearnBlock.FieldAngle.superClass_.render_.call(this);
-    this.updateGraph_()
-};
-LearnBlock.FieldAngle.prototype.showEditor_ = function () {
-    LearnBlock.FieldAngle.superClass_.showEditor_.call(this, LearnBlock.utils.userAgent.MOBILE || LearnBlock.utils.userAgent.ANDROID || LearnBlock.utils.userAgent.IPAD);
-    var a = this.dropdownCreate_();
-    LearnBlock.DropDownDiv.getContentDiv().appendChild(a);
-    a = this.sourceBlock_.getColourBorder();
-    a = a.colourBorder || a.colourLight;
-    LearnBlock.DropDownDiv.setColour(this.sourceBlock_.getColour(), a);
-    LearnBlock.DropDownDiv.showPositionedByField(this, this.dropdownDispose_.bind(this));
-    this.updateGraph_()
-};
-LearnBlock.FieldAngle.prototype.dropdownCreate_ = function () {
-    var a = LearnBlock.utils.dom.createSvgElement("svg", {
-            xmlns: LearnBlock.utils.dom.SVG_NS,
-            "xmlns:html": LearnBlock.utils.dom.HTML_NS,
-            "xmlns:xlink": LearnBlock.utils.dom.XLINK_NS,
-            version: "1.1",
-            height: 2 * LearnBlock.FieldAngle.HALF + "px",
-            width: 2 * LearnBlock.FieldAngle.HALF + "px",
-            style: "touch-action: none"
-        }, null),
-        b = LearnBlock.utils.dom.createSvgElement("circle", {
-            cx: LearnBlock.FieldAngle.HALF,
-            cy: LearnBlock.FieldAngle.HALF,
-            r: LearnBlock.FieldAngle.RADIUS,
-            "class": "blocklyAngleCircle"
-        }, a);
-    this.gauge_ =
-        LearnBlock.utils.dom.createSvgElement("path", {
-            "class": "blocklyAngleGauge"
-        }, a);
-    this.line_ = LearnBlock.utils.dom.createSvgElement("line", {
-        x1: LearnBlock.FieldAngle.HALF,
-        y1: LearnBlock.FieldAngle.HALF,
-        "class": "blocklyAngleLine"
-    }, a);
-    for (var c = 0; 360 > c; c += 15) LearnBlock.utils.dom.createSvgElement("line", {
-        x1: LearnBlock.FieldAngle.HALF + LearnBlock.FieldAngle.RADIUS,
-        y1: LearnBlock.FieldAngle.HALF,
-        x2: LearnBlock.FieldAngle.HALF + LearnBlock.FieldAngle.RADIUS - (0 == c % 45 ? 10 : 5),
-        y2: LearnBlock.FieldAngle.HALF,
-        "class": "blocklyAngleMarks",
-        transform: "rotate(" +
-            c + "," + LearnBlock.FieldAngle.HALF + "," + LearnBlock.FieldAngle.HALF + ")"
-    }, a);
-    this.clickWrapper_ = LearnBlock.bindEventWithChecks_(a, "click", this, this.hide_);
-    this.clickSurfaceWrapper_ = LearnBlock.bindEventWithChecks_(b, "click", this, this.onMouseMove, !0, !0);
-    this.moveSurfaceWrapper_ = LearnBlock.bindEventWithChecks_(b, "mousemove", this, this.onMouseMove, !0, !0);
-    return a
-};
-LearnBlock.FieldAngle.prototype.dropdownDispose_ = function () {
-    LearnBlock.unbindEvent_(this.clickWrapper_);
-    LearnBlock.unbindEvent_(this.clickSurfaceWrapper_);
-    LearnBlock.unbindEvent_(this.moveSurfaceWrapper_)
-};
-LearnBlock.FieldAngle.prototype.hide_ = function () {
-    LearnBlock.DropDownDiv.hideIfOwner(this);
-    LearnBlock.WidgetDiv.hide()
-};
-LearnBlock.FieldAngle.prototype.onMouseMove = function (a) {
-    var b = this.gauge_.ownerSVGElement.getBoundingClientRect(),
-        c = a.clientX - b.left - LearnBlock.FieldAngle.HALF;
-    a = a.clientY - b.top - LearnBlock.FieldAngle.HALF;
-    b = Math.atan(-a / c);
-    isNaN(b) || (b = LearnBlock.utils.math.toDegrees(b), 0 > c ? b += 180 : 0 < a && (b += 360), b = this.clockwise_ ? this.offset_ + 360 - b : 360 - (this.offset_ - b), this.displayMouseOrKeyboardValue_(b))
-};
-LearnBlock.FieldAngle.prototype.displayMouseOrKeyboardValue_ = function (a) {
-    this.round_ && (a = Math.round(a / this.round_) * this.round_);
-    a = this.wrapValue_(a);
-    a != this.value_ && this.setEditorValue_(a)
-};
-LearnBlock.FieldAngle.prototype.updateGraph_ = function () {
-    if (this.gauge_) {
-        var a = Number(this.getText()) + this.offset_,
-            b = LearnBlock.utils.math.toRadians(a % 360);
-        a = ["M ", LearnBlock.FieldAngle.HALF, ",", LearnBlock.FieldAngle.HALF];
-        var c = LearnBlock.FieldAngle.HALF,
-            d = LearnBlock.FieldAngle.HALF;
-        if (!isNaN(b)) {
-            var e = Number(this.clockwise_),
-                f = LearnBlock.utils.math.toRadians(this.offset_),
-                g = Math.cos(f) * LearnBlock.FieldAngle.RADIUS,
-                h = Math.sin(f) * -LearnBlock.FieldAngle.RADIUS;
-            e && (b = 2 * f - b);
-            c += Math.cos(b) * LearnBlock.FieldAngle.RADIUS;
-            d -= Math.sin(b) *
-                LearnBlock.FieldAngle.RADIUS;
-            b = Math.abs(Math.floor((b - f) / Math.PI) % 2);
-            e && (b = 1 - b);
-            a.push(" l ", g, ",", h, " A ", LearnBlock.FieldAngle.RADIUS, ",", LearnBlock.FieldAngle.RADIUS, " 0 ", b, " ", e, " ", c, ",", d, " z")
-        }
-        this.gauge_.setAttribute("d", a.join(""));
-        this.line_.setAttribute("x2", c);
-        this.line_.setAttribute("y2", d)
-    }
-};
-LearnBlock.FieldAngle.prototype.onHtmlInputKeyDown_ = function (a) {
-    LearnBlock.FieldAngle.superClass_.onHtmlInputKeyDown_.call(this, a);
-    var b;
-    a.keyCode === LearnBlock.utils.KeyCodes.LEFT ? b = this.sourceBlock_.RTL ? 1 : -1 : a.keyCode === LearnBlock.utils.KeyCodes.RIGHT ? b = this.sourceBlock_.RTL ? -1 : 1 : a.keyCode === LearnBlock.utils.KeyCodes.DOWN ? b = -1 : a.keyCode === LearnBlock.utils.KeyCodes.UP && (b = 1);
-    if (b) {
-        var c = this.getValue();
-        this.displayMouseOrKeyboardValue_(c + b * this.round_);
-        a.preventDefault();
-        a.stopPropagation()
-    }
-};
-LearnBlock.FieldAngle.prototype.doClassValidation_ = function (a) {
-    a = Number(a);
-    return isNaN(a) || !isFinite(a) ? null : this.wrapValue_(a)
-};
-LearnBlock.FieldAngle.prototype.wrapValue_ = function (a) {
-    a %= 360;
-    0 > a && (a += 360);
-    a > this.wrap_ && (a -= 360);
-    return a
-};
-LearnBlock.Css.register(".blocklyAngleCircle {,stroke: #444;,stroke-width: 1;,fill: #ddd;,fill-opacity: .8;,},.blocklyAngleMarks {,stroke: #444;,stroke-width: 1;,},.blocklyAngleGauge {,fill: #f88;,fill-opacity: .8;,pointer-events: none;,},.blocklyAngleLine {,stroke: #f00;,stroke-width: 2;,stroke-linecap: round;,pointer-events: none;,}".split(","));
-LearnBlock.fieldRegistry.register("field_angle", LearnBlock.FieldAngle);
-LearnBlock.FieldCheckbox = function (a, b, c) {
-    this.checkChar_ = null;
-    null == a && (a = "FALSE");
-    LearnBlock.FieldCheckbox.superClass_.constructor.call(this, a, b, c);
-    this.size_.width = LearnBlock.FieldCheckbox.WIDTH
-};
-LearnBlock.utils.object.inherits(LearnBlock.FieldCheckbox, LearnBlock.Field);
-LearnBlock.FieldCheckbox.fromJson = function (a) {
-    return new LearnBlock.FieldCheckbox(a.checked, void 0, a)
-};
-LearnBlock.FieldCheckbox.WIDTH = 15;
-LearnBlock.FieldCheckbox.CHECK_CHAR = "\u2713";
-LearnBlock.FieldCheckbox.CHECK_X_OFFSET = LearnBlock.Field.DEFAULT_TEXT_OFFSET - 3;
-LearnBlock.FieldCheckbox.CHECK_Y_OFFSET = 14;
-LearnBlock.FieldCheckbox.prototype.SERIALIZABLE = !0;
-LearnBlock.FieldCheckbox.prototype.CURSOR = "default";
-LearnBlock.FieldCheckbox.prototype.isDirty_ = !1;
-LearnBlock.FieldCheckbox.prototype.configure_ = function (a) {
-    LearnBlock.FieldCheckbox.superClass_.configure_.call(this, a);
-    a.checkCharacter && (this.checkChar_ = a.checkCharacter)
-};
-LearnBlock.FieldCheckbox.prototype.initView = function () {
-    LearnBlock.FieldCheckbox.superClass_.initView.call(this);
-    this.textElement_.setAttribute("x", LearnBlock.FieldCheckbox.CHECK_X_OFFSET);
-    this.textElement_.setAttribute("y", LearnBlock.FieldCheckbox.CHECK_Y_OFFSET);
-    LearnBlock.utils.dom.addClass(this.textElement_, "blocklyCheckbox");
-    this.textContent_.nodeValue = this.checkChar_ || LearnBlock.FieldCheckbox.CHECK_CHAR;
-    this.textElement_.style.display = this.value_ ? "block" : "none"
-};
-LearnBlock.FieldCheckbox.prototype.setCheckCharacter = function (a) {
-    this.checkChar_ = a;
-    this.textContent_ && (this.textContent_.nodeValue = a || LearnBlock.FieldCheckbox.CHECK_CHAR)
-};
-LearnBlock.FieldCheckbox.prototype.showEditor_ = function () {
-    this.setValue(!this.value_)
-};
-LearnBlock.FieldCheckbox.prototype.doClassValidation_ = function (a) {
-    return !0 === a || "TRUE" === a ? "TRUE" : !1 === a || "FALSE" === a ? "FALSE" : null
-};
-LearnBlock.FieldCheckbox.prototype.doValueUpdate_ = function (a) {
-    this.value_ = this.convertValueToBool_(a);
-    this.textElement_ && (this.textElement_.style.display = this.value_ ? "block" : "none")
-};
-LearnBlock.FieldCheckbox.prototype.getValue = function () {
-    return this.value_ ? "TRUE" : "FALSE"
-};
-LearnBlock.FieldCheckbox.prototype.getValueBoolean = function () {
-    return this.value_
-};
-LearnBlock.FieldCheckbox.prototype.getText = function () {
-    return String(this.convertValueToBool_(this.value_))
-};
-LearnBlock.FieldCheckbox.prototype.convertValueToBool_ = function (a) {
-    return "string" == typeof a ? "TRUE" == a : !!a
-};
-LearnBlock.fieldRegistry.register("field_checkbox", LearnBlock.FieldCheckbox);
-LearnBlock.FieldColour = function (a, b, c) {
-    LearnBlock.FieldColour.superClass_.constructor.call(this, a || LearnBlock.FieldColour.COLOURS[0], b, c);
-    this.size_ = new LearnBlock.utils.Size(LearnBlock.FieldColour.DEFAULT_WIDTH, LearnBlock.FieldColour.DEFAULT_HEIGHT)
-};
-LearnBlock.utils.object.inherits(LearnBlock.FieldColour, LearnBlock.Field);
-LearnBlock.FieldColour.fromJson = function (a) {
-    return new LearnBlock.FieldColour(a.colour, void 0, a)
-};
-LearnBlock.FieldColour.DEFAULT_WIDTH = 26;
-LearnBlock.FieldColour.DEFAULT_HEIGHT = LearnBlock.Field.BORDER_RECT_DEFAULT_HEIGHT;
-LearnBlock.FieldColour.prototype.SERIALIZABLE = !0;
-LearnBlock.FieldColour.prototype.CURSOR = "default";
-LearnBlock.FieldColour.prototype.isDirty_ = !1;
-LearnBlock.FieldColour.prototype.colours_ = null;
-LearnBlock.FieldColour.prototype.titles_ = null;
-LearnBlock.FieldColour.prototype.columns_ = 0;
-LearnBlock.FieldColour.prototype.configure_ = function (a) {
-    LearnBlock.FieldColour.superClass_.configure_.call(this, a);
-    a.colourOptions && (this.colours_ = a.colourOptions, this.titles_ = a.colourTitles);
-    a.columns && (this.columns_ = a.columns)
-};
-LearnBlock.FieldColour.prototype.initView = function () {
-    this.createBorderRect_();
-    this.borderRect_.style.fillOpacity = 1;
-    this.borderRect_.style.fill = this.value_
-};
-LearnBlock.FieldColour.prototype.doClassValidation_ = function (a) {
-    return "string" != typeof a ? null : LearnBlock.utils.colour.parse(a)
-};
-LearnBlock.FieldColour.prototype.doValueUpdate_ = function (a) {
-    this.value_ = a;
-    this.borderRect_ && (this.borderRect_.style.fill = a)
-};
-LearnBlock.FieldColour.prototype.getText = function () {
-    var a = this.value_;
-    /^#(.)\1(.)\2(.)\3$/.test(a) && (a = "#" + a[1] + a[3] + a[5]);
-    return a
-};
-LearnBlock.FieldColour.COLOURS = "#ffffff #cccccc #c0c0c0 #999999 #666666 #333333 #000000 #ffcccc #ff6666 #ff0000 #cc0000 #990000 #660000 #330000 #ffcc99 #ff9966 #ff9900 #ff6600 #cc6600 #993300 #663300 #ffff99 #ffff66 #ffcc66 #ffcc33 #cc9933 #996633 #663333 #ffffcc #ffff33 #ffff00 #ffcc00 #999900 #666600 #333300 #99ff99 #66ff99 #33ff33 #33cc00 #009900 #006600 #003300 #99ffff #33ffff #66cccc #00cccc #339999 #336666 #003333 #ccffff #66ffff #33ccff #3366ff #3333ff #000099 #000066 #ccccff #9999ff #6666cc #6633ff #6600cc #333399 #330099 #ffccff #ff99ff #cc66cc #cc33cc #993399 #663366 #330033".split(" ");
-LearnBlock.FieldColour.TITLES = [];
-LearnBlock.FieldColour.COLUMNS = 7;
-LearnBlock.FieldColour.prototype.setColours = function (a, b) {
-    this.colours_ = a;
-    b && (this.titles_ = b);
-    return this
-};
-LearnBlock.FieldColour.prototype.setColumns = function (a) {
-    this.columns_ = a;
-    return this
-};
-LearnBlock.FieldColour.prototype.showEditor_ = function () {
-    this.picker_ = this.dropdownCreate_();
-    LearnBlock.DropDownDiv.getContentDiv().appendChild(this.picker_);
-    LearnBlock.DropDownDiv.showPositionedByField(this, this.dropdownDispose_.bind(this));
-    this.picker_.focus()
-};
-LearnBlock.FieldColour.prototype.onClick_ = function (a) {
-    a = (a = a.target) && a.label;
-    null !== a && (this.setValue(a), LearnBlock.DropDownDiv.hideIfOwner(this))
-};
-LearnBlock.FieldColour.prototype.onKeyDown_ = function (a) {
-    var b = !1;
-    if (a.keyCode === LearnBlock.utils.KeyCodes.UP) this.moveHighlightBy_(0, -1), b = !0;
-    else if (a.keyCode === LearnBlock.utils.KeyCodes.DOWN) this.moveHighlightBy_(0, 1), b = !0;
-    else if (a.keyCode === LearnBlock.utils.KeyCodes.LEFT) this.moveHighlightBy_(-1, 0), b = !0;
-    else if (a.keyCode === LearnBlock.utils.KeyCodes.RIGHT) this.moveHighlightBy_(1, 0), b = !0;
-    else if (a.keyCode === LearnBlock.utils.KeyCodes.ENTER) {
-        if (b = this.getHighlighted_()) b = b && b.label, null !== b && this.setValue(b);
-        LearnBlock.DropDownDiv.hideWithoutAnimation();
-        b = !0
-    }
-    b && a.stopPropagation()
-};
-LearnBlock.FieldColour.prototype.onBlocklyAction = function (a) {
-    if (this.picker_) {
-        if (a === LearnBlock.navigation.ACTION_PREVIOUS) return this.moveHighlightBy_(0, -1), !0;
-        if (a === LearnBlock.navigation.ACTION_NEXT) return this.moveHighlightBy_(0, 1), !0;
-        if (a === LearnBlock.navigation.ACTION_OUT) return this.moveHighlightBy_(-1, 0), !0;
-        if (a === LearnBlock.navigation.ACTION_IN) return this.moveHighlightBy_(1, 0), !0
-    }
-    return LearnBlock.FieldColour.superClass_.onBlocklyAction.call(this, a)
-};
-LearnBlock.FieldColour.prototype.moveHighlightBy_ = function (a, b) {
-    var c = this.colours_ || LearnBlock.FieldColour.COLOURS,
-        d = this.columns_ || LearnBlock.FieldColour.COLUMNS,
-        e = this.highlightedIndex_ % d,
-        f = Math.floor(this.highlightedIndex_ / d);
-    e += a;
-    f += b;
-    0 > a ? 0 > e && 0 < f ? (e = d - 1, f--) : 0 > e && (e = 0) : 0 < a ? e > d - 1 && f < Math.floor(c.length / d) - 1 ? (e = 0, f++) : e > d - 1 && e-- : 0 > b ? 0 > f && (f = 0) : 0 < b && f > Math.floor(c.length / d) - 1 && (f = Math.floor(c.length / d) - 1);
-    this.setHighlightedCell_(this.picker_.childNodes[f].childNodes[e], f * d + e)
-};
-LearnBlock.FieldColour.prototype.onMouseMove_ = function (a) {
-    var b = (a = a.target) && a.getAttribute("data-index");
-    null !== b && b !== this.highlightedIndex_ && this.setHighlightedCell_(a, Number(b))
-};
-LearnBlock.FieldColour.prototype.onMouseEnter_ = function () {
-    this.picker_.focus()
-};
-LearnBlock.FieldColour.prototype.onMouseLeave_ = function () {
-    this.picker_.blur();
-    var a = this.getHighlighted_();
-    a && LearnBlock.utils.dom.removeClass(a, "blocklyColourHighlighted")
-};
-LearnBlock.FieldColour.prototype.getHighlighted_ = function () {
-    var a = this.columns_ || LearnBlock.FieldColour.COLUMNS,
-        b = this.picker_.childNodes[Math.floor(this.highlightedIndex_ / a)];
-    return b ? b.childNodes[this.highlightedIndex_ % a] : null
-};
-LearnBlock.FieldColour.prototype.setHighlightedCell_ = function (a, b) {
-    var c = this.getHighlighted_();
-    c && LearnBlock.utils.dom.removeClass(c, "blocklyColourHighlighted");
-    LearnBlock.utils.dom.addClass(a, "blocklyColourHighlighted");
-    this.highlightedIndex_ = b;
-    LearnBlock.utils.aria.setState(this.picker_, LearnBlock.utils.aria.State.ACTIVEDESCENDANT, a.getAttribute("id"))
-};
-LearnBlock.FieldColour.prototype.dropdownCreate_ = function () {
-    var a = this.columns_ || LearnBlock.FieldColour.COLUMNS,
-        b = this.colours_ || LearnBlock.FieldColour.COLOURS,
-        c = this.titles_ || LearnBlock.FieldColour.TITLES,
-        d = this.getValue(),
-        e = document.createElement("table");
-    e.className = "blocklyColourTable";
-    e.tabIndex = 0;
-    e.dir = "ltr";
-    LearnBlock.utils.aria.setRole(e, LearnBlock.utils.aria.Role.GRID);
-    LearnBlock.utils.aria.setState(e, LearnBlock.utils.aria.State.EXPANDED, !0);
-    LearnBlock.utils.aria.setState(e, "rowcount", Math.floor(b.length / a));
-    LearnBlock.utils.aria.setState(e,
-        "colcount", a);
-    for (var f, g = 0; g < b.length; g++) {
-        0 == g % a && (f = document.createElement("tr"), LearnBlock.utils.aria.setRole(f, LearnBlock.utils.aria.Role.ROW), e.appendChild(f));
-        var h = document.createElement("td");
-        f.appendChild(h);
-        h.label = b[g];
-        h.title = c[g] || b[g];
-        h.id = LearnBlock.utils.IdGenerator.getNextUniqueId();
-        h.setAttribute("data-index", g);
-        LearnBlock.utils.aria.setRole(h, LearnBlock.utils.aria.Role.GRIDCELL);
-        LearnBlock.utils.aria.setState(h, LearnBlock.utils.aria.State.LABEL, b[g]);
-        LearnBlock.utils.aria.setState(h, LearnBlock.utils.aria.State.SELECTED,
-            b[g] == d);
-        h.style.backgroundColor = b[g];
-        b[g] == d && (h.className = "blocklyColourSelected", this.highlightedIndex_ = g)
-    }
-    this.onClickWrapper_ = LearnBlock.bindEventWithChecks_(e, "click", this, this.onClick_, !0);
-    this.onMouseMoveWrapper_ = LearnBlock.bindEventWithChecks_(e, "mousemove", this, this.onMouseMove_, !0);
-    this.onMouseEnterWrapper_ = LearnBlock.bindEventWithChecks_(e, "mouseenter", this, this.onMouseEnter_, !0);
-    this.onMouseLeaveWrapper_ = LearnBlock.bindEventWithChecks_(e, "mouseleave", this, this.onMouseLeave_, !0);
-    this.onKeyDownWrapper_ =
-        LearnBlock.bindEventWithChecks_(e, "keydown", this, this.onKeyDown_);
-    return e
-};
-LearnBlock.FieldColour.prototype.dropdownDispose_ = function () {
-    LearnBlock.unbindEvent_(this.onClickWrapper_);
-    LearnBlock.unbindEvent_(this.onMouseMoveWrapper_);
-    LearnBlock.unbindEvent_(this.onMouseEnterWrapper_);
-    LearnBlock.unbindEvent_(this.onMouseLeaveWrapper_);
-    LearnBlock.unbindEvent_(this.onKeyDownWrapper_);
-    this.picker_ = null
-};
-LearnBlock.Css.register([".blocklyColourTable {", "border-collapse: collapse;", "display: block;", "outline: none;", "padding: 1px;", "}", ".blocklyColourTable>tr>td {", "border: .5px solid #888;", "box-sizing: border-box;", "cursor: pointer;", "display: inline-block;", "height: 20px;", "padding: 0;", "width: 20px;", "}", ".blocklyColourTable>tr>td.blocklyColourHighlighted {", "border-color: #eee;", "box-shadow: 2px 2px 7px 2px rgba(0,0,0,.3);", "position: relative;", "}", ".blocklyColourSelected, .blocklyColourSelected:hover {",
-"border-color: #eee !important;", "outline: 1px solid #333;", "position: relative;", "}"]);
-LearnBlock.fieldRegistry.register("field_colour", LearnBlock.FieldColour);
+
+//Field for a dropdown
 LearnBlock.FieldDropdown = function (a, b, c) {
     "function" != typeof a && LearnBlock.FieldDropdown.validateOptions_(a);
     this.menuGenerator_ = a;
@@ -11059,166 +10282,8 @@ LearnBlock.FieldDropdown.prototype.onBlocklyAction = function (a) {
     return LearnBlock.FieldDropdown.superClass_.onBlocklyAction.call(this, a)
 };
 LearnBlock.fieldRegistry.register("field_dropdown", LearnBlock.FieldDropdown);
-LearnBlock.FieldImage = function (a, b, c, d, e, f, g) {
-    if (!a) throw Error("Src value of an image field is required");
-    a = LearnBlock.utils.replaceMessageReferences(a);
-    c = Number(LearnBlock.utils.replaceMessageReferences(c));
-    b = Number(LearnBlock.utils.replaceMessageReferences(b));
-    if (isNaN(c) || isNaN(b)) throw Error("Height and width values of an image field must cast to numbers.");
-    if (0 >= c || 0 >= b) throw Error("Height and width values of an image field must be greater than 0.");
-    this.flipRtl_ = !1;
-    this.altText_ = "";
-    LearnBlock.FieldImage.superClass_.constructor.call(this,
-        a || "", null, g);
-    g || (this.flipRtl_ = !!f, this.altText_ = LearnBlock.utils.replaceMessageReferences(d) || "");
-    this.size_ = new LearnBlock.utils.Size(b, c + LearnBlock.FieldImage.Y_PADDING);
-    this.imageHeight_ = c;
-    this.clickHandler_ = null;
-    "function" == typeof e && (this.clickHandler_ = e)
-};
-LearnBlock.utils.object.inherits(LearnBlock.FieldImage, LearnBlock.Field);
-LearnBlock.FieldImage.fromJson = function (a) {
-    return new LearnBlock.FieldImage(a.src, a.width, a.height, void 0, void 0, void 0, a)
-};
-LearnBlock.FieldImage.Y_PADDING = 1;
-LearnBlock.FieldImage.prototype.EDITABLE = !1;
-LearnBlock.FieldImage.prototype.isDirty_ = !1;
-LearnBlock.FieldImage.prototype.configure_ = function (a) {
-    LearnBlock.FieldImage.superClass_.configure_.call(this, a);
-    this.flipRtl_ = !!a.flipRtl;
-    this.altText_ = LearnBlock.utils.replaceMessageReferences(a.alt) || ""
-};
-LearnBlock.FieldImage.prototype.initView = function () {
-    this.imageElement_ = LearnBlock.utils.dom.createSvgElement("image", {
-        height: this.imageHeight_ + "px",
-        width: this.size_.width + "px",
-        alt: this.altText_
-    }, this.fieldGroup_);
-    this.imageElement_.setAttributeNS(LearnBlock.utils.dom.XLINK_NS, "xlink:href", this.value_)
-};
-LearnBlock.FieldImage.prototype.doClassValidation_ = function (a) {
-    return "string" != typeof a ? null : a
-};
-LearnBlock.FieldImage.prototype.doValueUpdate_ = function (a) {
-    this.value_ = a;
-    this.imageElement_ && this.imageElement_.setAttributeNS(LearnBlock.utils.dom.XLINK_NS, "xlink:href", this.value_ || "")
-};
-LearnBlock.FieldImage.prototype.getFlipRtl = function () {
-    return this.flipRtl_
-};
-LearnBlock.FieldImage.prototype.setAlt = function (a) {
-    a != this.altText_ && (this.altText_ = a || "", this.imageElement_ && this.imageElement_.setAttribute("alt", this.altText_))
-};
-LearnBlock.FieldImage.prototype.showEditor_ = function () {
-    this.clickHandler_ && this.clickHandler_(this)
-};
-LearnBlock.FieldImage.prototype.setOnClickHandler = function (a) {
-    this.clickHandler_ = a
-};
-LearnBlock.FieldImage.prototype.getText_ = function () {
-    return this.altText_
-};
-LearnBlock.fieldRegistry.register("field_image", LearnBlock.FieldImage);
-LearnBlock.FieldLabelSerializable = function (a, b, c) {
-    LearnBlock.FieldLabelSerializable.superClass_.constructor.call(this, a, b, c)
-};
-LearnBlock.utils.object.inherits(LearnBlock.FieldLabelSerializable, LearnBlock.FieldLabel);
-LearnBlock.FieldLabelSerializable.fromJson = function (a) {
-    var b = LearnBlock.utils.replaceMessageReferences(a.text);
-    return new LearnBlock.FieldLabelSerializable(b, void 0, a)
-};
-LearnBlock.FieldLabelSerializable.prototype.EDITABLE = !1;
-LearnBlock.FieldLabelSerializable.prototype.SERIALIZABLE = !0;
-LearnBlock.fieldRegistry.register("field_label_serializable", LearnBlock.FieldLabelSerializable);
-LearnBlock.FieldMultilineInput = function (a, b, c) {
-    null == a && (a = "");
-    LearnBlock.FieldMultilineInput.superClass_.constructor.call(this, a, b, c)
-};
-LearnBlock.utils.object.inherits(LearnBlock.FieldMultilineInput, LearnBlock.FieldTextInput);
-LearnBlock.FieldMultilineInput.LINE_HEIGHT = 20;
-LearnBlock.FieldMultilineInput.fromJson = function (a) {
-    var b = LearnBlock.utils.replaceMessageReferences(a.text);
-    return new LearnBlock.FieldMultilineInput(b, void 0, a)
-};
-LearnBlock.FieldMultilineInput.prototype.initView = function () {
-    this.createBorderRect_();
-    this.textGroup_ = LearnBlock.utils.dom.createSvgElement("g", {
-        "class": "blocklyEditableText"
-    }, this.fieldGroup_)
-};
-LearnBlock.FieldMultilineInput.prototype.getDisplayText_ = function () {
-    var a = this.value_;
-    if (!a) return LearnBlock.Field.NBSP;
-    var b = a.split("\n");
-    a = "";
-    for (var c = 0; c < b.length; c++) {
-        var d = b[c];
-        d.length > this.maxDisplayLength && (d = d.substring(0, this.maxDisplayLength - 4) + "...");
-        d = d.replace(/\s/g, LearnBlock.Field.NBSP);
-        a += d;
-        c !== b.length - 1 && (a += "\n")
-    }
-    this.sourceBlock_.RTL && (a += "\u200f");
-    return a
-};
-LearnBlock.FieldMultilineInput.prototype.render_ = function () {
-    for (var a; a = this.textGroup_.firstChild;) this.textGroup_.removeChild(a);
-    a = this.getDisplayText_().split("\n");
-    for (var b = LearnBlock.Field.Y_PADDING / 2, c = 0, d = 0; d < a.length; d++) LearnBlock.utils.dom.createSvgElement("text", {
-        "class": "blocklyText blocklyMultilineText",
-        x: LearnBlock.Field.DEFAULT_TEXT_OFFSET,
-        y: c + b,
-        dy: LearnBlock.FieldMultilineInput.LINE_HEIGHT / 2
-    }, this.textGroup_).appendChild(document.createTextNode(a[d])), c += LearnBlock.FieldMultilineInput.LINE_HEIGHT;
-    this.updateSize_();
-    this.isBeingEdited_ && (this.sourceBlock_.RTL ? setTimeout(this.resizeEditor_.bind(this), 0) : this.resizeEditor_(), this.isTextValid_ ? (LearnBlock.utils.dom.removeClass(this.htmlInput_, "blocklyInvalidInput"), LearnBlock.utils.aria.setState(this.htmlInput_, "invalid", !1)) : (LearnBlock.utils.dom.addClass(this.htmlInput_, "blocklyInvalidInput"), LearnBlock.utils.aria.setState(this.htmlInput_, "invalid", !0)))
-};
-LearnBlock.FieldMultilineInput.prototype.updateSize_ = function () {
-    for (var a = this.textGroup_.childNodes, b = 0, c = 0, d = 0; d < a.length; d++) {
-        var e = LearnBlock.utils.dom.getTextWidth(a[d]);
-        e > b && (b = e);
-        c += LearnBlock.FieldMultilineInput.LINE_HEIGHT
-    }
-    this.borderRect_ && (b += LearnBlock.Field.X_PADDING, this.borderRect_.setAttribute("width", b), this.borderRect_.setAttribute("height", c));
-    this.size_.width = b;
-    this.size_.height = c
-};
-LearnBlock.FieldMultilineInput.prototype.resizeEditor_ = function () {
-    var a = LearnBlock.WidgetDiv.DIV,
-        b = this.getScaledBBox_();
-    a.style.width = b.right - b.left + "px";
-    a.style.height = b.bottom - b.top + "px";
-    b = new LearnBlock.utils.Coordinate(this.sourceBlock_.RTL ? b.right - a.offsetWidth : b.left, b.top);
-    a.style.left = b.x + "px";
-    a.style.top = b.y + "px"
-};
-LearnBlock.FieldMultilineInput.prototype.widgetCreate_ = function () {
-    var a = LearnBlock.WidgetDiv.DIV,
-        b = this.workspace_.scale,
-        c = document.createElement("textarea");
-    c.className = "blocklyHtmlInput blocklyHtmlTextAreaInput";
-    c.setAttribute("spellcheck", this.spellcheck_);
-    var d = LearnBlock.FieldTextInput.FONTSIZE * b + "pt";
-    a.style.fontSize = d;
-    c.style.fontSize = d;
-    c.style.borderRadius = LearnBlock.FieldTextInput.BORDERRADIUS * b + "px";
-    d = LearnBlock.Field.DEFAULT_TEXT_OFFSET * b;
-    c.style.paddingLeft = d + "px";
-    c.style.width = "calc(100% - " + d + "px)";
-    c.style.lineHeight = LearnBlock.FieldMultilineInput.LINE_HEIGHT * b + "px";
-    a.appendChild(c);
-    c.value = c.defaultValue = this.getEditorText_(this.value_);
-    c.untypedDefaultValue_ = this.value_;
-    c.oldValue_ = null;
-    LearnBlock.utils.userAgent.GECKO ? setTimeout(this.resizeEditor_.bind(this), 0) : this.resizeEditor_();
-    this.bindInputEvents_(c);
-    return c
-};
-LearnBlock.FieldMultilineInput.prototype.onHtmlInputKeyDown_ = function (a) {
-    a.keyCode !== LearnBlock.utils.KeyCodes.ENTER && LearnBlock.FieldMultilineInput.superClass_.onHtmlInputKeyDown_.call(this, a)
-};
-LearnBlock.Css.register(".blocklyHtmlTextAreaInput {,font-family: monospace;,resize: none;,overflow: hidden;,height: 100%;,text-align: left;,}".split(","));
-LearnBlock.fieldRegistry.register("field_multilinetext", LearnBlock.FieldMultilineInput);
+
+//Field for a number
 LearnBlock.FieldNumber = function (a, b, c, d, e, f) {
     this.min_ = -Infinity;
     this.max_ = Infinity;
@@ -11295,6 +10360,8 @@ LearnBlock.FieldNumber.prototype.widgetCreate_ = function () {
     return a
 };
 LearnBlock.fieldRegistry.register("field_number", LearnBlock.FieldNumber);
+
+//Field for a variable
 LearnBlock.FieldVariable = function (a, b, c, d, e) {
     this.menuGenerator_ = LearnBlock.FieldVariable.dropdownCreate;
     this.defaultVariableName = a || "";
@@ -11426,6 +10493,8 @@ LearnBlock.FieldVariable.prototype.referencesVariables = function () {
     return !0
 };
 LearnBlock.fieldRegistry.register("field_variable", LearnBlock.FieldVariable);
+
+
 LearnBlock.FlyoutCursor = function () {
     LearnBlock.FlyoutCursor.superClass_.constructor.call(this)
 };
@@ -11450,7 +10519,7 @@ LearnBlock.FlyoutCursor.prototype.out = function () {
 };
 
 
-//Funciones flyout
+//Functions flyout
 LearnBlock.Flyout = function (a) {
     a.getMetrics = this.getMetrics_.bind(this);
     a.setMetrics = this.setMetrics_.bind(this);
@@ -11796,116 +10865,9 @@ LearnBlock.FlyoutButton.prototype.onMouseUp_ = function (a) {
     this.isLabel_ && this.callbackKey_ ? console.warn("Labels should not have callbacks. Label text: " + this.text_) : this.isLabel_ || this.callbackKey_ && this.targetWorkspace_.getButtonCallback(this.callbackKey_) ? this.isLabel_ || this.targetWorkspace_.getButtonCallback(this.callbackKey_)(this) : console.warn("Buttons should have callbacks. Button text: " + this.text_)
 };
 LearnBlock.Css.register(".blocklyFlyoutButton {,fill: #888;,cursor: default;,},.blocklyFlyoutButtonShadow {,fill: #666;,},.blocklyFlyoutButton:hover {,fill: #aaa;,},.blocklyFlyoutLabel {,cursor: default;,},.blocklyFlyoutLabelBackground {,opacity: 0;,},.blocklyFlyoutLabelText {,fill: #000;,}".split(","));
-LearnBlock.HorizontalFlyout = function (a) {
-    a.getMetrics = this.getMetrics_.bind(this);
-    a.setMetrics = this.setMetrics_.bind(this);
-    LearnBlock.HorizontalFlyout.superClass_.constructor.call(this, a);
-    this.horizontalLayout_ = !0
-};
-LearnBlock.utils.object.inherits(LearnBlock.HorizontalFlyout, LearnBlock.Flyout);
-LearnBlock.HorizontalFlyout.prototype.getMetrics_ = function () {
-    if (!this.isVisible()) return null;
-    try {
-        var a = this.workspace_.getCanvas().getBBox()
-    } catch (e) {
-        a = {
-            height: 0,
-            y: 0,
-            width: 0,
-            x: 0
-        }
-    }
-    var b = this.SCROLLBAR_PADDING,
-        c = this.SCROLLBAR_PADDING;
-    this.toolboxPosition_ == LearnBlock.TOOLBOX_AT_BOTTOM && (b = 0);
-    var d = this.height_;
-    this.toolboxPosition_ == LearnBlock.TOOLBOX_AT_TOP && (d -= this.SCROLLBAR_PADDING);
-    return {
-        viewHeight: d,
-        viewWidth: this.width_ - 2 * this.SCROLLBAR_PADDING,
-        contentHeight: (a.height + 2 * this.MARGIN) * this.workspace_.scale,
-        contentWidth: (a.width + 2 * this.MARGIN) * this.workspace_.scale,
-        viewTop: -this.workspace_.scrollY,
-        viewLeft: -this.workspace_.scrollX,
-        contentTop: 0,
-        contentLeft: 0,
-        absoluteTop: b,
-        absoluteLeft: c
-    }
-};
-LearnBlock.HorizontalFlyout.prototype.setMetrics_ = function (a) {
-    var b = this.getMetrics_();
-    b && ("number" == typeof a.x && (this.workspace_.scrollX = -b.contentWidth * a.x), this.workspace_.translate(this.workspace_.scrollX + b.absoluteLeft, this.workspace_.scrollY + b.absoluteTop))
-};
-LearnBlock.HorizontalFlyout.prototype.position = function () {
-    if (this.isVisible()) {
-        var a = this.targetWorkspace_.getMetrics();
-        a && (this.width_ = a.viewWidth, this.setBackgroundPath_(a.viewWidth - 2 * this.CORNER_RADIUS, this.height_ - this.CORNER_RADIUS), this.positionAt_(this.width_, this.height_, 0, this.targetWorkspace_.toolboxPosition == this.toolboxPosition_ ? a.toolboxHeight ? this.toolboxPosition_ == LearnBlock.TOOLBOX_AT_TOP ? a.toolboxHeight : a.viewHeight - this.height_ : this.toolboxPosition_ == LearnBlock.TOOLBOX_AT_TOP ? 0 : a.viewHeight :
-            this.toolboxPosition_ == LearnBlock.TOOLBOX_AT_TOP ? 0 : a.viewHeight + a.absoluteTop - this.height_))
-    }
-};
-LearnBlock.HorizontalFlyout.prototype.setBackgroundPath_ = function (a, b) {
-    var c = this.toolboxPosition_ == LearnBlock.TOOLBOX_AT_TOP,
-        d = ["M 0," + (c ? 0 : this.CORNER_RADIUS)];
-    c ? (d.push("h", a + 2 * this.CORNER_RADIUS), d.push("v", b), d.push("a", this.CORNER_RADIUS, this.CORNER_RADIUS, 0, 0, 1, -this.CORNER_RADIUS, this.CORNER_RADIUS), d.push("h", -1 * a), d.push("a", this.CORNER_RADIUS, this.CORNER_RADIUS, 0, 0, 1, -this.CORNER_RADIUS, -this.CORNER_RADIUS)) : (d.push("a", this.CORNER_RADIUS, this.CORNER_RADIUS, 0, 0, 1, this.CORNER_RADIUS, -this.CORNER_RADIUS),
-        d.push("h", a), d.push("a", this.CORNER_RADIUS, this.CORNER_RADIUS, 0, 0, 1, this.CORNER_RADIUS, this.CORNER_RADIUS), d.push("v", b), d.push("h", -a - 2 * this.CORNER_RADIUS));
-    d.push("z");
-    this.svgBackground_.setAttribute("d", d.join(" "))
-};
-LearnBlock.HorizontalFlyout.prototype.scrollToStart = function () {
-    this.scrollbar_.set(this.RTL ? Infinity : 0)
-};
-LearnBlock.HorizontalFlyout.prototype.wheel_ = function (a) {
-    var b = LearnBlock.utils.getScrollDeltaPixels(a),
-        c = b.x || b.y;
-    c && (b = this.getMetrics_(), c = b.viewLeft + c, c = Math.min(c, b.contentWidth - b.viewWidth), c = Math.max(c, 0), this.scrollbar_.set(c), LearnBlock.WidgetDiv.hide());
-    a.preventDefault();
-    a.stopPropagation()
-};
-LearnBlock.HorizontalFlyout.prototype.layout_ = function (a, b) {
-    this.workspace_.scale = this.targetWorkspace_.scale;
-    var c = this.MARGIN,
-        d = c + this.tabWidth_;
-    this.RTL && (a = a.reverse());
-    for (var e = 0, f; f = a[e]; e++)
-        if ("block" == f.type) {
-            f = f.block;
-            for (var g = f.getDescendants(!1), h = 0, k; k = g[h]; h++) k.isInFlyout = !0;
-            f.render();
-            g = f.getSvgRoot();
-            h = f.getHeightWidth();
-            k = f.outputConnection ? this.tabWidth_ : 0;
-            k = this.RTL ? d + h.width : d - k;
-            f.moveBy(k, c);
-            k = this.createRect_(f, k, c, h, e);
-            d += h.width + b[e];
-            this.addBlockListeners_(g, f, k)
-        } else "button" ==
-            f.type && (this.initFlyoutButton_(f.button, d, c), d += f.button.width + b[e])
-};
-LearnBlock.HorizontalFlyout.prototype.isDragTowardWorkspace = function (a) {
-    a = Math.atan2(a.y, a.x) / Math.PI * 180;
-    var b = this.dragAngleRange_;
-    return a < 90 + b && a > 90 - b || a > -90 - b && a < -90 + b ? !0 : !1
-};
-LearnBlock.HorizontalFlyout.prototype.getClientRect = function () {
-    if (!this.svgGroup_) return null;
-    var a = this.svgGroup_.getBoundingClientRect(),
-        b = a.top;
-    return this.toolboxPosition_ == LearnBlock.TOOLBOX_AT_TOP ? new LearnBlock.utils.Rect(-1E9, b + a.height, -1E9, 1E9) : new LearnBlock.utils.Rect(b, -1E9, -1E9, 1E9)
-};
-LearnBlock.HorizontalFlyout.prototype.reflowInternal_ = function () {
-    this.workspace_.scale = this.targetWorkspace_.scale;
-    for (var a = 0, b = this.workspace_.getTopBlocks(!1), c = 0, d; d = b[c]; c++) a = Math.max(a, d.getHeightWidth().height);
-    a += 1.5 * this.MARGIN;
-    a *= this.workspace_.scale;
-    a += LearnBlock.Scrollbar.scrollbarThickness;
-    if (this.height_ != a) {
-        for (c = 0; d = b[c]; c++) d.flyoutRect_ && this.moveRectToBlock_(d.flyoutRect_, d);
-        this.height_ = a;
-        this.position()
-    }
-};
+
+
+//Class for a flyout
 LearnBlock.VerticalFlyout = function (a) {
     a.getMetrics = this.getMetrics_.bind(this);
     a.setMetrics = this.setMetrics_.bind(this);
@@ -11913,6 +10875,7 @@ LearnBlock.VerticalFlyout = function (a) {
     this.horizontalLayout_ = !1
 };
 LearnBlock.utils.object.inherits(LearnBlock.VerticalFlyout, LearnBlock.Flyout);
+//Return an object with all the metrics required to size scrollbars for the flyout
 LearnBlock.VerticalFlyout.prototype.getMetrics_ = function () {
     if (!this.isVisible()) return null;
     try {
@@ -11942,10 +10905,12 @@ LearnBlock.VerticalFlyout.prototype.getMetrics_ = function () {
         absoluteLeft: 0
     }
 };
+//Sets the translation of the flyout to match the scrollbars
 LearnBlock.VerticalFlyout.prototype.setMetrics_ = function (a) {
     var b = this.getMetrics_();
     b && ("number" == typeof a.y && (this.workspace_.scrollY = -b.contentHeight * a.y), this.workspace_.translate(this.workspace_.scrollX + b.absoluteLeft, this.workspace_.scrollY + b.absoluteTop))
 };
+//Moves the flyout to the edge of the workspace
 LearnBlock.VerticalFlyout.prototype.position = function () {
     if (this.isVisible()) {
         var a = this.targetWorkspace_.getMetrics();
@@ -11953,6 +10918,7 @@ LearnBlock.VerticalFlyout.prototype.position = function () {
             LearnBlock.TOOLBOX_AT_LEFT ? 0 : a.viewWidth + a.absoluteLeft - this.width_, 0))
     }
 };
+//Creates and sets the path for the visible boundaries of the flyout
 LearnBlock.VerticalFlyout.prototype.setBackgroundPath_ = function (a, b) {
     var c = this.toolboxPosition_ == LearnBlock.TOOLBOX_AT_RIGHT,
         d = a + this.CORNER_RADIUS;
@@ -11966,9 +10932,11 @@ LearnBlock.VerticalFlyout.prototype.setBackgroundPath_ = function (a, b) {
     this.svgBackground_.setAttribute("d",
         d.join(" "))
 };
+//Scrolls the flyout to the top
 LearnBlock.VerticalFlyout.prototype.scrollToStart = function () {
     this.scrollbar_.set(0)
 };
+//Scrolls the flyout
 LearnBlock.VerticalFlyout.prototype.wheel_ = function (a) {
     var b = LearnBlock.utils.getScrollDeltaPixels(a);
     if (b.y) {
@@ -11982,6 +10950,7 @@ LearnBlock.VerticalFlyout.prototype.wheel_ = function (a) {
     a.preventDefault();
     a.stopPropagation()
 };
+//Lays out the blocks in the flyout
 LearnBlock.VerticalFlyout.prototype.layout_ = function (a, b) {
     this.workspace_.scale = this.targetWorkspace_.scale;
     for (var c = this.MARGIN, d = this.RTL ? c : c + this.tabWidth_, e = 0, f; f = a[e]; e++)
@@ -11999,11 +10968,13 @@ LearnBlock.VerticalFlyout.prototype.layout_ = function (a, b) {
         } else "button" == f.type && (this.initFlyoutButton_(f.button,
             d, c), c += f.button.height + b[e])
 };
+//Used to determine if a new block should be created or if the flyout should scroll
 LearnBlock.VerticalFlyout.prototype.isDragTowardWorkspace = function (a) {
     a = Math.atan2(a.y, a.x) / Math.PI * 180;
     var b = this.dragAngleRange_;
     return a < b && a > -b || a < -180 + b || a > 180 - b ? !0 : !1
 };
+//Returns the deletion rectangle for this flyout in viewport coordinates
 LearnBlock.VerticalFlyout.prototype.getClientRect = function () {
     if (!this.svgGroup_) return null;
     var a = this.svgGroup_.getBoundingClientRect(),
@@ -12013,6 +10984,7 @@ LearnBlock.VerticalFlyout.prototype.getClientRect = function () {
     return new LearnBlock.utils.Rect(-1E9,
         1E9, b, 1E9)
 };
+//Computes width of flyout
 LearnBlock.VerticalFlyout.prototype.reflowInternal_ = function () {
     this.workspace_.scale = this.targetWorkspace_.scale;
     for (var a = 0, b = this.workspace_.getTopBlocks(!1), c = 0, d; d = b[c]; c++) {
@@ -12041,6 +11013,7 @@ LearnBlock.VerticalFlyout.prototype.reflowInternal_ = function () {
         this.position()
     }
 };
+
 
 LearnBlock.CursorSvg = function (a, b) {
     this.workspace_ = a;
@@ -14132,388 +13105,4 @@ LearnBlock.VariablesDynamic.flyoutCategoryBlocks = function (a) {
     return b
 };
 
-
-
-LearnBlock.ZoomControls = function (a) {
-    this.workspace_ = a
-};
-LearnBlock.ZoomControls.prototype.WIDTH_ = 32;
-LearnBlock.ZoomControls.prototype.HEIGHT_ = 110;
-LearnBlock.ZoomControls.prototype.MARGIN_BOTTOM_ = 20;
-LearnBlock.ZoomControls.prototype.MARGIN_SIDE_ = 20;
-LearnBlock.ZoomControls.prototype.svgGroup_ = null;
-LearnBlock.ZoomControls.prototype.left_ = 0;
-LearnBlock.ZoomControls.prototype.top_ = 0;
-LearnBlock.ZoomControls.prototype.createDom = function () {
-    this.svgGroup_ = LearnBlock.utils.dom.createSvgElement("g", {}, null);
-    var a = String(Math.random()).substring(2);
-    this.createZoomOutSvg_(a);
-    this.createZoomInSvg_(a);
-    this.workspace_.isMovable() && this.createZoomResetSvg_(a);
-    return this.svgGroup_
-};
-LearnBlock.ZoomControls.prototype.init = function (a) {
-    this.verticalSpacing_ = this.MARGIN_BOTTOM_ + a;
-    return this.verticalSpacing_ + this.HEIGHT_
-};
-LearnBlock.ZoomControls.prototype.dispose = function () {
-    this.svgGroup_ && LearnBlock.utils.dom.removeNode(this.svgGroup_)
-};
-LearnBlock.ZoomControls.prototype.position = function () {
-    if (this.verticalSpacing_) {
-        var a = this.workspace_.getMetrics();
-        a && (this.left_ = a.toolboxPosition == LearnBlock.TOOLBOX_AT_LEFT || this.workspace_.horizontalLayout && !this.workspace_.RTL ? a.viewWidth + a.absoluteLeft - this.WIDTH_ - this.MARGIN_SIDE_ - LearnBlock.Scrollbar.scrollbarThickness : this.MARGIN_SIDE_ + LearnBlock.Scrollbar.scrollbarThickness, a.toolboxPosition == LearnBlock.TOOLBOX_AT_BOTTOM ? (this.top_ = this.verticalSpacing_, this.zoomInGroup_.setAttribute("transform", "translate(0, 34)"),
-            this.zoomResetGroup_ && this.zoomResetGroup_.setAttribute("transform", "translate(0, 77)")) : (this.top_ = a.viewHeight + a.absoluteTop - this.HEIGHT_ - this.verticalSpacing_, this.zoomInGroup_.setAttribute("transform", "translate(0, 43)"), this.zoomOutGroup_.setAttribute("transform", "translate(0, 77)")), this.svgGroup_.setAttribute("transform", "translate(" + this.left_ + "," + this.top_ + ")"))
-    }
-};
-LearnBlock.ZoomControls.prototype.createZoomOutSvg_ = function (a) {
-    var b = this.workspace_;
-    this.zoomOutGroup_ = LearnBlock.utils.dom.createSvgElement("g", {
-        "class": "blocklyZoom"
-    }, this.svgGroup_);
-    var c = LearnBlock.utils.dom.createSvgElement("clipPath", {
-        id: "blocklyZoomoutClipPath" + a
-    }, this.zoomOutGroup_);
-    LearnBlock.utils.dom.createSvgElement("rect", {
-        width: 32,
-        height: 32
-    }, c);
-    a = LearnBlock.utils.dom.createSvgElement("image", {
-        width: LearnBlock.SPRITE.width,
-        height: LearnBlock.SPRITE.height,
-        x: -64,
-        y: -92,
-        "clip-path": "url(#blocklyZoomoutClipPath" +
-            a + ")"
-    }, this.zoomOutGroup_);
-    a.setAttributeNS(LearnBlock.utils.dom.XLINK_NS, "xlink:href", b.options.pathToMedia + LearnBlock.SPRITE.url);
-    LearnBlock.bindEventWithChecks_(a, "mousedown", null, function (a) {
-        b.markFocused();
-        b.zoomCenter(-1);
-        LearnBlock.Touch.clearTouchIdentifier();
-        a.stopPropagation();
-        a.preventDefault()
-    })
-};
-LearnBlock.ZoomControls.prototype.createZoomInSvg_ = function (a) {
-    var b = this.workspace_;
-    this.zoomInGroup_ = LearnBlock.utils.dom.createSvgElement("g", {
-        "class": "blocklyZoom"
-    }, this.svgGroup_);
-    var c = LearnBlock.utils.dom.createSvgElement("clipPath", {
-        id: "blocklyZoominClipPath" + a
-    }, this.zoomInGroup_);
-    LearnBlock.utils.dom.createSvgElement("rect", {
-        width: 32,
-        height: 32
-    }, c);
-    a = LearnBlock.utils.dom.createSvgElement("image", {
-        width: LearnBlock.SPRITE.width,
-        height: LearnBlock.SPRITE.height,
-        x: -32,
-        y: -92,
-        "clip-path": "url(#blocklyZoominClipPath" +
-            a + ")"
-    }, this.zoomInGroup_);
-    a.setAttributeNS(LearnBlock.utils.dom.XLINK_NS, "xlink:href", b.options.pathToMedia + LearnBlock.SPRITE.url);
-    LearnBlock.bindEventWithChecks_(a, "mousedown", null, function (a) {
-        b.markFocused();
-        b.zoomCenter(1);
-        LearnBlock.Touch.clearTouchIdentifier();
-        a.stopPropagation();
-        a.preventDefault()
-    })
-};
-LearnBlock.ZoomControls.prototype.createZoomResetSvg_ = function (a) {
-    var b = this.workspace_;
-    this.zoomResetGroup_ = LearnBlock.utils.dom.createSvgElement("g", {
-        "class": "blocklyZoom"
-    }, this.svgGroup_);
-    var c = LearnBlock.utils.dom.createSvgElement("clipPath", {
-        id: "blocklyZoomresetClipPath" + a
-    }, this.zoomResetGroup_);
-    LearnBlock.utils.dom.createSvgElement("rect", {
-        width: 32,
-        height: 32
-    }, c);
-    a = LearnBlock.utils.dom.createSvgElement("image", {
-        width: LearnBlock.SPRITE.width,
-        height: LearnBlock.SPRITE.height,
-        y: -92,
-        "clip-path": "url(#blocklyZoomresetClipPath" +
-            a + ")"
-    }, this.zoomResetGroup_);
-    a.setAttributeNS(LearnBlock.utils.dom.XLINK_NS, "xlink:href", b.options.pathToMedia + LearnBlock.SPRITE.url);
-    LearnBlock.bindEventWithChecks_(a, "mousedown", null, function (a) {
-        b.markFocused();
-        b.setScale(b.options.zoomOptions.startScale);
-        b.beginCanvasTransition();
-        b.scrollCenter();
-        setTimeout(b.endCanvasTransition.bind(b), 500);
-        LearnBlock.Touch.clearTouchIdentifier();
-        a.stopPropagation();
-        a.preventDefault()
-    })
-};
-LearnBlock.Css.register([".blocklyZoom>image, .blocklyZoom>svg>image {", "opacity: .4;", "}", ".blocklyZoom>image:hover, .blocklyZoom>svg>image:hover {", "opacity: .6;", "}", ".blocklyZoom>image:active, .blocklyZoom>svg>image:active {", "opacity: .8;", "}"]);
-LearnBlock.Themes.Dark = {};
-LearnBlock.Themes.Dark.defaultBlockStyles = {
-    colour_blocks: {
-        colourPrimary: "#a5745b",
-        colourSecondary: "#dbc7bd",
-        colourTertiary: "#845d49"
-    },
-    list_blocks: {
-        colourPrimary: "#745ba5",
-        colourSecondary: "#c7bddb",
-        colourTertiary: "#5d4984"
-    },
-    logic_blocks: {
-        colourPrimary: "#5b80a5",
-        colourSecondary: "#bdccdb",
-        colourTertiary: "#496684"
-    },
-    loop_blocks: {
-        colourPrimary: "#5ba55b",
-        colourSecondary: "#bddbbd",
-        colourTertiary: "#498449"
-    },
-    math_blocks: {
-        colourPrimary: "#5b67a5",
-        colourSecondary: "#bdc2db",
-        colourTertiary: "#495284"
-    },
-    procedure_blocks: {
-        colourPrimary: "#995ba5",
-        colourSecondary: "#d6bddb",
-        colourTertiary: "#7a4984"
-    },
-    text_blocks: {
-        colourPrimary: "#5ba58c",
-        colourSecondary: "#bddbd1",
-        colourTertiary: "#498470"
-    },
-    variable_blocks: {
-        colourPrimary: "#a55b99",
-        colourSecondary: "#dbbdd6",
-        colourTertiary: "#84497a"
-    },
-    variable_dynamic_blocks: {
-        colourPrimary: "#a55b99",
-        colourSecondary: "#dbbdd6",
-        colourTertiary: "#84497a"
-    },
-    hat_blocks: {
-        colourPrimary: "#a55b99",
-        colourSecondary: "#dbbdd6",
-        colourTertiary: "#84497a",
-        hat: "cap"
-    }
-};
-LearnBlock.Themes.Dark.categoryStyles = {
-    colour_category: {
-        colour: "#a5745b"
-    },
-    list_category: {
-        colour: "#745ba5"
-    },
-    logic_category: {
-        colour: "#5b80a5"
-    },
-    loop_category: {
-        colour: "#5ba55b"
-    },
-    math_category: {
-        colour: "#5b67a5"
-    },
-    procedure_category: {
-        colour: "#995ba5"
-    },
-    text_category: {
-        colour: "#5ba58c"
-    },
-    variable_category: {
-        colour: "#a55b99"
-    },
-    variable_dynamic_category: {
-        colour: "#a55b99"
-    }
-};
-LearnBlock.Themes.Dark = new LearnBlock.Theme(LearnBlock.Themes.Dark.defaultBlockStyles, LearnBlock.Themes.Dark.categoryStyles);
-LearnBlock.Themes.Dark.setComponentStyle("workspace", "#1e1e1e");
-LearnBlock.Themes.Dark.setComponentStyle("toolbox", "#333");
-LearnBlock.Themes.Dark.setComponentStyle("toolboxText", "#fff");
-LearnBlock.Themes.Dark.setComponentStyle("flyout", "#252526");
-LearnBlock.Themes.Dark.setComponentStyle("flyoutText", "#ccc");
-LearnBlock.Themes.Dark.setComponentStyle("flyoutOpacity", 1);
-LearnBlock.Themes.Dark.setComponentStyle("scrollbar", "#797979");
-LearnBlock.Themes.Dark.setComponentStyle("scrollbarOpacity", .4);
-LearnBlock.Themes.HighContrast = {};
-LearnBlock.Themes.HighContrast.defaultBlockStyles = {
-    colour_blocks: {
-        colourPrimary: "#a52714",
-        colourSecondary: "#FB9B8C",
-        colourTertiary: "#FBE1DD"
-    },
-    list_blocks: {
-        colourPrimary: "#4a148c",
-        colourSecondary: "#AD7BE9",
-        colourTertiary: "#CDB6E9"
-    },
-    logic_blocks: {
-        colourPrimary: "#01579b",
-        colourSecondary: "#64C7FF",
-        colourTertiary: "#C5EAFF"
-    },
-    loop_blocks: {
-        colourPrimary: "#33691e",
-        colourSecondary: "#9AFF78",
-        colourTertiary: "#E1FFD7"
-    },
-    math_blocks: {
-        colourPrimary: "#1a237e",
-        colourSecondary: "#8A9EFF",
-        colourTertiary: "#DCE2FF"
-    },
-    procedure_blocks: {
-        colourPrimary: "#006064",
-        colourSecondary: "#77E6EE",
-        colourTertiary: "#CFECEE"
-    },
-    text_blocks: {
-        colourPrimary: "#004d40",
-        colourSecondary: "#5ae27c",
-        colourTertiary: "#D2FFDD"
-    },
-    variable_blocks: {
-        colourPrimary: "#880e4f",
-        colourSecondary: "#FF73BE",
-        colourTertiary: "#FFD4EB"
-    },
-    variable_dynamic_blocks: {
-        colourPrimary: "#880e4f",
-        colourSecondary: "#FF73BE",
-        colourTertiary: "#FFD4EB"
-    },
-    hat_blocks: {
-        colourPrimary: "#880e4f",
-        colourSecondary: "#FF73BE",
-        colourTertiary: "#FFD4EB",
-        hat: "cap"
-    }
-};
-LearnBlock.Themes.HighContrast.categoryStyles = {
-    colour_category: {
-        colour: "#a52714"
-    },
-    list_category: {
-        colour: "#4a148c"
-    },
-    logic_category: {
-        colour: "#01579b"
-    },
-    loop_category: {
-        colour: "#33691e"
-    },
-    math_category: {
-        colour: "#1a237e"
-    },
-    procedure_category: {
-        colour: "#006064"
-    },
-    text_category: {
-        colour: "#004d40"
-    },
-    variable_category: {
-        colour: "#880e4f"
-    },
-    variable_dynamic_category: {
-        colour: "#880e4f"
-    }
-};
-LearnBlock.Themes.HighContrast = new LearnBlock.Theme(LearnBlock.Themes.HighContrast.defaultBlockStyles, LearnBlock.Themes.HighContrast.categoryStyles);
-LearnBlock.Themes.Modern = {};
-LearnBlock.Themes.Modern.defaultBlockStyles = {
-    colour_blocks: {
-        colourPrimary: "#a5745b",
-        colourSecondary: "#dbc7bd",
-        colourTertiary: "#845d49"
-    },
-    list_blocks: {
-        colourPrimary: "#745ba5",
-        colourSecondary: "#c7bddb",
-        colourTertiary: "#5d4984"
-    },
-    logic_blocks: {
-        colourPrimary: "#5b80a5",
-        colourSecondary: "#bdccdb",
-        colourTertiary: "#496684"
-    },
-    loop_blocks: {
-        colourPrimary: "#5ba55b",
-        colourSecondary: "#bddbbd",
-        colourTertiary: "#498449"
-    },
-    math_blocks: {
-        colourPrimary: "#5b67a5",
-        colourSecondary: "#bdc2db",
-        colourTertiary: "#495284"
-    },
-    procedure_blocks: {
-        colourPrimary: "#995ba5",
-        colourSecondary: "#d6bddb",
-        colourTertiary: "#7a4984"
-    },
-    text_blocks: {
-        colourPrimary: "#5ba58c",
-        colourSecondary: "#bddbd1",
-        colourTertiary: "#498470"
-    },
-    variable_blocks: {
-        colourPrimary: "#a55b99",
-        colourSecondary: "#dbbdd6",
-        colourTertiary: "#84497a"
-    },
-    variable_dynamic_blocks: {
-        colourPrimary: "#a55b99",
-        colourSecondary: "#dbbdd6",
-        colourTertiary: "#84497a"
-    },
-    hat_blocks: {
-        colourPrimary: "#a55b99",
-        colourSecondary: "#dbbdd6",
-        colourTertiary: "#84497a",
-        hat: "cap"
-    }
-};
-LearnBlock.Themes.Modern.categoryStyles = {
-    colour_category: {
-        colour: "#a5745b"
-    },
-    list_category: {
-        colour: "#745ba5"
-    },
-    logic_category: {
-        colour: "#5b80a5"
-    },
-    loop_category: {
-        colour: "#5ba55b"
-    },
-    math_category: {
-        colour: "#5b67a5"
-    },
-    procedure_category: {
-        colour: "#995ba5"
-    },
-    text_category: {
-        colour: "#5ba58c"
-    },
-    variable_category: {
-        colour: "#a55b99"
-    },
-    variable_dynamic_category: {
-        colour: "#a55b99"
-    }
-};
-LearnBlock.Themes.Modern = new LearnBlock.Theme(LearnBlock.Themes.Modern.defaultBlockStyles, LearnBlock.Themes.Modern.categoryStyles);
 LearnBlock.requires = {};

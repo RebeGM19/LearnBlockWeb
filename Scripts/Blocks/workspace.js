@@ -18,6 +18,7 @@ LearnBlock.utils.global = function () {
     }
     return this;
 }();
+//Msg singleton
 LearnBlock.Msg = {};
 LearnBlock.utils.global.Blockly || (LearnBlock.utils.global.Blockly = {});
 LearnBlock.utils.global.Blockly.Msg || (LearnBlock.utils.global.Blockly.Msg = LearnBlock.Msg);
@@ -784,13 +785,17 @@ LearnBlock.Events.Move.prototype.run = function (a) {
         }
     } else console.warn("Can't move non-existent block: " + this.blockId)
 };
+
+//Class for a finished loading event
 LearnBlock.Events.FinishedLoading = function (a) {
     this.workspaceId = a.id;
     this.group = LearnBlock.Events.getGroup();
     this.recordUndo = !1
 };
 LearnBlock.utils.object.inherits(LearnBlock.Events.FinishedLoading, LearnBlock.Events.Abstract);
+//Type of the event
 LearnBlock.Events.FinishedLoading.prototype.type = LearnBlock.Events.FINISHED_LOADING;
+//Encodes the event as JSON
 LearnBlock.Events.FinishedLoading.prototype.toJson = function () {
     var a = {
         type: this.type
@@ -799,10 +804,12 @@ LearnBlock.Events.FinishedLoading.prototype.toJson = function () {
     this.workspaceId && (a.workspaceId = this.workspaceId);
     return a
 };
+//Decodes the JSON event
 LearnBlock.Events.FinishedLoading.prototype.fromJson = function (a) {
     this.workspaceId = a.workspaceId;
     this.group = a.group
 };
+
 LearnBlock.Events.VarBase = function (a) {
     LearnBlock.Events.VarBase.superClass_.constructor.call(this);
     this.varId = a.getId();
@@ -1096,10 +1103,7 @@ LearnBlock.Xml.domToWorkspace = function (a, b) {
                 isNaN(n) || isNaN(p) || m.moveBy(b.RTL ? d - n : n, p);
                 g = !1
             } else {
-                if ("shadow" == l) throw TypeError("Shadow block cannot be a top-level block.");
-                if ("comment" == l) b.rendered ? LearnBlock.WorkspaceCommentSvg ? LearnBlock.WorkspaceCommentSvg.fromXml(k, b, d) : console.warn("Missing require for LearnBlock.WorkspaceCommentSvg, ignoring workspace comment.") : LearnBlock.WorkspaceComment ?
-                    LearnBlock.WorkspaceComment.fromXml(k, b) : console.warn("Missing require for LearnBlock.WorkspaceComment, ignoring workspace comment.");
-                else if ("variables" == l) {
+                if ("variables" == l) {
                     if (g) LearnBlock.Xml.domToVariables(k, b);
                     else throw Error("'variables' tag must exist once before block and shadow tag elements in the workspace XML, but it was found in another location.");
                     g = !1
@@ -1654,7 +1658,6 @@ LearnBlock.blockAnimations.disposeUiStep_ = function (a, b, c, d) {
 LearnBlock.blockAnimations.connectionUiEffect = function (a) {
     var b = a.workspace,
         c = b.scale;
-    b.getAudioManager().play("click");
     if (!(1 > c)) {
         var d = b.getSvgXY(a.getSvgRoot());
         a.outputConnection ? (d.x += (a.RTL ? 3 : -3) * c, d.y += 13 * c) : a.previousConnection && (d.x += (a.RTL ? -23 : 23) * c, d.y += 3 * c);
@@ -3136,6 +3139,8 @@ LearnBlock.FlyoutDragger.prototype.drag = function (a) {
     a = LearnBlock.utils.Coordinate.sum(this.startScrollXY_, a);
     this.horizontalLayout_ ? this.scrollbar_.set(-a.x) : this.scrollbar_.set(-a.y)
 };
+
+
 LearnBlock.Tooltip = {};
 LearnBlock.Tooltip.visible = !1;
 LearnBlock.Tooltip.blocked_ = !1;
@@ -3223,6 +3228,8 @@ LearnBlock.Tooltip.show_ = function () {
         LearnBlock.Tooltip.DIV.style.left = d + "px"
     }
 };
+
+
 LearnBlock.Gesture = function (a, b) {
     this.startWorkspace_ = this.targetBlock_ = this.startBlock_ = this.startField_ = this.startBubble_ = this.currentDragDeltaXY_ = this.mouseDownXY_ = null;
     this.creatorWorkspace_ = b;
@@ -3428,26 +3435,33 @@ LearnBlock.Field.prototype.clickTarget_ = null;
 LearnBlock.Field.NBSP = "\u00a0";
 LearnBlock.Field.prototype.EDITABLE = !0;
 LearnBlock.Field.prototype.SERIALIZABLE = !1;
+//Processes the configuration map passed to the field
 LearnBlock.Field.prototype.configure_ = function (a) {
     var b = a.tooltip;
     "string" == typeof b && (b = LearnBlock.utils.replaceMessageReferences(a.tooltip));
     b && this.setTooltip(b)
 };
+//Attaches this field to a block
 LearnBlock.Field.prototype.setSourceBlock = function (a) {
     if (this.sourceBlock_) throw Error("Field already bound to a block.");
     this.sourceBlock_ = a
 };
+//Gets the block this field is attached to
 LearnBlock.Field.prototype.getSourceBlock = function () {
     return this.sourceBlock_
 };
+//Initializes everything to render the field
 LearnBlock.Field.prototype.init = function () {
     this.fieldGroup_ || (this.fieldGroup_ = LearnBlock.utils.dom.createSvgElement("g", {}, null), this.isVisible() || (this.fieldGroup_.style.display = "none"), this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_), this.initView(), this.updateEditable(), this.setTooltip(this.tooltip_), this.bindEvents_(), this.initModel())
 };
+//Creates the block UI for the field
 LearnBlock.Field.prototype.initView = function () {
     this.createBorderRect_();
     this.createTextElement_()
 };
+//Initializes the model of the field after it has been installed on a block
 LearnBlock.Field.prototype.initModel = function () {};
+//Creates a field border rect element
 LearnBlock.Field.prototype.createBorderRect_ = function () {
     this.size_.height = Math.max(this.size_.height, LearnBlock.Field.BORDER_RECT_DEFAULT_HEIGHT);
     this.size_.width = Math.max(this.size_.width, LearnBlock.Field.X_PADDING);
@@ -3460,6 +3474,7 @@ LearnBlock.Field.prototype.createBorderRect_ = function () {
         width: this.size_.width
     }, this.fieldGroup_)
 };
+//Creates a field text element
 LearnBlock.Field.prototype.createTextElement_ = function () {
     this.textElement_ = LearnBlock.utils.dom.createSvgElement("text", {
         "class": "blocklyText",
@@ -3469,17 +3484,21 @@ LearnBlock.Field.prototype.createTextElement_ = function () {
     this.textContent_ = document.createTextNode("");
     this.textElement_.appendChild(this.textContent_)
 };
+//Binds events to the field
 LearnBlock.Field.prototype.bindEvents_ = function () {
     LearnBlock.Tooltip.bindMouseEvents(this.getClickTarget_());
     this.mouseDownWrapper_ = LearnBlock.bindEventWithChecks_(this.getClickTarget_(), "mousedown", this, this.onMouseDown_)
 };
+//Sets the field's value based on the given XML element
 LearnBlock.Field.prototype.fromXml = function (a) {
     this.setValue(a.textContent)
 };
+//Serializes the field's value to XML
 LearnBlock.Field.prototype.toXml = function (a) {
     a.textContent = this.getValue();
     return a
 };
+//Disposes of all DOM objects and events belonging to the editable field
 LearnBlock.Field.prototype.dispose = function () {
     LearnBlock.DropDownDiv.hideIfOwner(this);
     LearnBlock.WidgetDiv.hideIfOwner(this);
@@ -3487,24 +3506,37 @@ LearnBlock.Field.prototype.dispose = function () {
     LearnBlock.utils.dom.removeNode(this.fieldGroup_);
     this.disposed = !0
 };
+//Adds or removes the UI indicating if the field is editable or not
 LearnBlock.Field.prototype.updateEditable = function () {
-    var a = this.getClickTarget_();
-    this.EDITABLE && a && (this.sourceBlock_.isEditable() ? (LearnBlock.utils.dom.addClass(a, "blocklyEditableText"), LearnBlock.utils.dom.removeClass(a, "blocklyNonEditableText"), a.style.cursor = this.CURSOR) : (LearnBlock.utils.dom.addClass(a, "blocklyNonEditableText"), LearnBlock.utils.dom.removeClass(a, "blocklyEditableText"), a.style.cursor = ""))
+    var group = this.getClickTarget_();
+    if (!this.EDITABLE || !group) {
+        return;
+    }
+    if (this.sourceBlock_.isEditable()) {
+        LearnBlock.utils.dom.addClass(group, 'blocklyEditableText');
+        LearnBlock.utils.dom.removeClass(group, 'blocklyNonEditableText');
+        group.style.cursor = this.CURSOR;
+    }
 };
+//Checks whether the field defines the showEditor_ function
 LearnBlock.Field.prototype.isClickable = function () {
     return !!this.sourceBlock_ && this.sourceBlock_.isEditable() && !!this.showEditor_ && "function" === typeof this.showEditor_
 };
+//Checks whether the field is currently editable
 LearnBlock.Field.prototype.isCurrentlyEditable = function () {
     return this.EDITABLE && !!this.sourceBlock_ && this.sourceBlock_.isEditable()
 };
+//Checks whether the field should be serialized by the XML renderer
 LearnBlock.Field.prototype.isSerializable = function () {
     var a = !1;
     this.name && (this.SERIALIZABLE ? a = !0 : this.EDITABLE && (console.warn("Detected an editable field that was not serializable. Please define SERIALIZABLE property as true on all editable custom fields. Proceeding with serialization."), a = !0));
     return a
 };
+//Gets whether the editable field is visible or not
 LearnBlock.Field.prototype.isVisible = function () {
     return this.visible_
 };
+//Sets whether the editable field is visible or not
 LearnBlock.Field.prototype.setVisible = function (a) {
     if (this.visible_ != a) {
         this.visible_ = a;
@@ -3512,15 +3544,19 @@ LearnBlock.Field.prototype.setVisible = function (a) {
         b && (b.style.display = a ? "block" : "none")
     }
 };
+//Sets a new validation function for editable fields, or clears a previously set validator.
 LearnBlock.Field.prototype.setValidator = function (a) {
     this.validator_ = a
 };
+//Gets the validation function
 LearnBlock.Field.prototype.getValidator = function () {
     return this.validator_
 };
+//Validates a change
 LearnBlock.Field.prototype.classValidator = function (a) {
     return a
 };
+//Calls the validation function
 LearnBlock.Field.prototype.callValidator = function (a) {
     var b = this.classValidator(a);
     if (null === b) return null;
@@ -3532,27 +3568,34 @@ LearnBlock.Field.prototype.callValidator = function (a) {
     }
     return a
 };
+//Gets the group element for the editable field
 LearnBlock.Field.prototype.getSvgRoot = function () {
     return this.fieldGroup_
 };
+//Updates the field to match the colour/style of the block
 LearnBlock.Field.prototype.updateColour = function () {};
+//Used to move/resize any DOM elements and get the new size
 LearnBlock.Field.prototype.render_ = function () {
     this.textContent_ && (this.textContent_.nodeValue = this.getDisplayText_(), this.updateSize_())
 };
+//Updates the width of the field
 LearnBlock.Field.prototype.updateWidth = function () {
     console.warn("Deprecated call to updateWidth, call LearnBlock.Field.updateSize_ to force an update to the size of the field, or LearnBlock.utils.dom.getTextWidth() to check the size of the field.");
     this.updateSize_()
 };
+//Updates the size of the field based on the text
 LearnBlock.Field.prototype.updateSize_ = function () {
     var a = LearnBlock.utils.dom.getTextWidth(this.textElement_);
     this.borderRect_ && (a += LearnBlock.Field.X_PADDING, this.borderRect_.setAttribute("width", a));
     this.size_.width = a
 };
+//Returns the height and width of the field
 LearnBlock.Field.prototype.getSize = function () {
     if (!this.isVisible()) return new LearnBlock.utils.Size(0, 0);
     this.isDirty_ ? (this.render_(), this.isDirty_ = !1) : this.visible_ && 0 == this.size_.width && (console.warn("Deprecated use of setting size_.width to 0 to rerender a field. Set field.isDirty_ to true instead."), this.render_());
     return this.size_
 };
+//Returns the bounding box of the rendered field
 LearnBlock.Field.prototype.getScaledBBox_ = function () {
     var a = this.borderRect_.getBBox(),
         b = a.height * this.sourceBlock_.workspace.scale;
@@ -3565,6 +3608,7 @@ LearnBlock.Field.prototype.getScaledBBox_ = function () {
         right: c.x + a
     }
 };
+//Gets the text from the field to display on the block
 LearnBlock.Field.prototype.getDisplayText_ = function () {
     var a = this.getText();
     if (!a) return LearnBlock.Field.NBSP;
@@ -3573,6 +3617,7 @@ LearnBlock.Field.prototype.getDisplayText_ = function () {
     this.sourceBlock_ && this.sourceBlock_.RTL && (a += "\u200f");
     return a
 };
+//Gets the text from the field
 LearnBlock.Field.prototype.getText = function () {
     if (this.getText_) {
         var a = this.getText_.call(this);
@@ -3580,9 +3625,11 @@ LearnBlock.Field.prototype.getText = function () {
     }
     return String(this.getValue())
 };
+//Sets the text in the field
 LearnBlock.Field.prototype.setText = function (a) {
     throw Error("setText method is deprecated");
 };
+//Forces a rerender of the block that the field is installed on
 LearnBlock.Field.prototype.markDirty = function () {
     this.isDirty_ = !0
 };
@@ -3590,6 +3637,7 @@ LearnBlock.Field.prototype.forceRerender = function () {
     this.isDirty_ = !0;
     this.sourceBlock_ && this.sourceBlock_.rendered && (this.sourceBlock_.render(), this.sourceBlock_.bumpNeighbours())
 };
+//Changes the value of the field
 LearnBlock.Field.prototype.setValue = function (a) {
     if (null !== a) {
         var b = this.doClassValidation_(a);
@@ -3602,38 +3650,49 @@ LearnBlock.Field.prototype.setValue = function (a) {
         }
     }
 };
+//Processes the result of the validation
 LearnBlock.Field.prototype.processValidation_ = function (a, b) {
     if (null === b) return this.doValueInvalid_(a), this.isDirty_ && this.forceRerender(), Error();
     void 0 !== b && (a = b);
     return a
 };
+//Gets the current value of the field
 LearnBlock.Field.prototype.getValue = function () {
     return this.value_
 };
+//Validates a value
 LearnBlock.Field.prototype.doClassValidation_ = function (a) {
     return null === a || void 0 === a ? null : a = this.classValidator(a)
 };
+//Updates the value of a field
 LearnBlock.Field.prototype.doValueUpdate_ = function (a) {
     this.value_ = a;
     this.isDirty_ = !0
 };
+//Notifies the field an invalid value was input
 LearnBlock.Field.prototype.doValueInvalid_ = function (a) {};
+//Handles a mouse down event on a field
 LearnBlock.Field.prototype.onMouseDown_ = function (a) {
     this.sourceBlock_ && this.sourceBlock_.workspace && (a = this.sourceBlock_.workspace.getGesture(a)) && a.setStartField(this)
 };
+//Changes the tooltip text for the field
 LearnBlock.Field.prototype.setTooltip = function (a) {
     var b = this.getClickTarget_();
     b ? b.tooltip = a || "" === a ? a : this.sourceBlock_ : this.tooltip_ = a
 };
+//The element to bind the click handler to
 LearnBlock.Field.prototype.getClickTarget_ = function () {
     return this.clickTarget_ || this.getSvgRoot()
 };
+//Returns the absolute coordinates of the top-left corner of the field
 LearnBlock.Field.prototype.getAbsoluteXY_ = function () {
     return LearnBlock.utils.style.getPageOffset(this.borderRect_)
 };
+//Whether this field references any variables
 LearnBlock.Field.prototype.referencesVariables = function () {
     return !1
 };
+//Searches to find the parent input of a field
 LearnBlock.Field.prototype.getParentInput = function () {
     for (var a = null, b = this.sourceBlock_, c = b.inputList, d = 0; d < b.inputList.length; d++)
         for (var e = c[d], f = e.fieldRow, g = 0; g < f.length; g++)
@@ -3642,23 +3701,31 @@ LearnBlock.Field.prototype.getParentInput = function () {
                 break
             } return a
 };
+//Returns whether or not we should flip the field in RTL
 LearnBlock.Field.prototype.getFlipRtl = function () {
     return !1
 };
+//Returns whether or not the field is tab navigable
 LearnBlock.Field.prototype.isTabNavigable = function () {
     return !1
 };
+//Handles the given action
 LearnBlock.Field.prototype.onBlocklyAction = function (a) {
     return !1
 };
+//Adds the cursor svg to the fields svg group
 LearnBlock.Field.prototype.setCursorSvg = function (a) {
     a ? (this.fieldGroup_.appendChild(a), this.cursorSvg_ = a) : this.cursorSvg_ = null
 };
+//Adds the marker svg to the fields svg group
 LearnBlock.Field.prototype.setMarkerSvg = function (a) {
     a ? (this.fieldGroup_.appendChild(a), this.markerSvg_ = a) : this.markerSvg_ = null
 };
+
+//Set of all registered fields, keyed by field type
 LearnBlock.fieldRegistry = {};
 LearnBlock.fieldRegistry.typeMap_ = {};
+//Registers a field type
 LearnBlock.fieldRegistry.register = function (a, b) {
     if ("string" != typeof a || "" == a.trim()) throw Error('Invalid field type "' + a + '". The type must be a non-empty string.');
     if (LearnBlock.fieldRegistry.typeMap_[a]) throw Error('Error: Field "' + a + '" is already registered.');
@@ -3666,16 +3733,18 @@ LearnBlock.fieldRegistry.register = function (a, b) {
     a = a.toLowerCase();
     LearnBlock.fieldRegistry.typeMap_[a] = b
 };
+//Unregisters the field registered with the given type
 LearnBlock.fieldRegistry.unregister = function (a) {
     LearnBlock.fieldRegistry.typeMap_[a] ? delete LearnBlock.fieldRegistry.typeMap_[a] : console.warn('No field mapping for type "' + a + '" found to unregister')
 };
+//Constructs a Field from a JSON arg object
 LearnBlock.fieldRegistry.fromJson = function (a) {
     var b = a.type.toLowerCase();
     b = LearnBlock.fieldRegistry.typeMap_[b];
     return b ? b.fromJson(a) : (console.warn("Blockly could not create a field of type " + a.type + ". The field is probably not being registered. This could be because the file is not loaded, the field does not register itself (Issue #1584), or the registration is not being reached."), null)
 };
 
-
+//Class for a non-editable text field
 LearnBlock.FieldLabel = function (a, b, c) {
     this.class_ = null;
     null == a && (a = "");
@@ -3684,23 +3753,29 @@ LearnBlock.FieldLabel = function (a, b, c) {
     this.size_ = new LearnBlock.utils.Size(0, LearnBlock.Field.TEXT_DEFAULT_HEIGHT)
 };
 LearnBlock.utils.object.inherits(LearnBlock.FieldLabel, LearnBlock.Field);
+//Constructs a FieldLabel from a JSON arg object
 LearnBlock.FieldLabel.fromJson = function (a) {
     var b = LearnBlock.utils.replaceMessageReferences(a.text);
     return new LearnBlock.FieldLabel(b, void 0, a)
 };
+//Editable fields usually show some sort of UI indicating they are editable
 LearnBlock.FieldLabel.prototype.EDITABLE = !1;
+//Override function
 LearnBlock.FieldLabel.prototype.configure_ = function (a) {
     LearnBlock.FieldLabel.superClass_.configure_.call(this, a);
     this.class_ = a["class"]
 };
+//Creates block UI for the label
 LearnBlock.FieldLabel.prototype.initView = function () {
     this.createTextElement_();
     this.textElement_.setAttribute("y", this.size_.height);
     this.class_ && LearnBlock.utils.dom.addClass(this.textElement_, this.class_)
 };
+//Ensures that the input value casts to a valid string
 LearnBlock.FieldLabel.prototype.doClassValidation_ = function (a) {
     return null === a || void 0 === a ? null : String(a)
 };
+//Sets the css class applied to the field's textElement_
 LearnBlock.FieldLabel.prototype.setClass = function (a) {
     this.textElement_ && (this.class_ && LearnBlock.utils.dom.removeClass(this.textElement_, this.class_), a && LearnBlock.utils.dom.addClass(this.textElement_, a));
     this.class_ = a
@@ -6932,13 +7007,17 @@ LearnBlock.Options.parseToolboxTree = function (a) {
     } else a = null;
     return a
 };
+
+//Blocks are moved into the SVG during a drag
 LearnBlock.WorkspaceDragSurfaceSvg = function (a) {
     this.container_ = a;
     this.createDom()
 };
+//The SVG drag surface
 LearnBlock.WorkspaceDragSurfaceSvg.prototype.SVG_ = null;
 LearnBlock.WorkspaceDragSurfaceSvg.prototype.dragGroup_ = null;
 LearnBlock.WorkspaceDragSurfaceSvg.prototype.container_ = null;
+//Dom structure when the workspace is being dragged
 LearnBlock.WorkspaceDragSurfaceSvg.prototype.createDom = function () {
     this.SVG_ || (this.SVG_ = LearnBlock.utils.dom.createSvgElement("svg", {
         xmlns: LearnBlock.utils.dom.SVG_NS,
@@ -6948,38 +7027,40 @@ LearnBlock.WorkspaceDragSurfaceSvg.prototype.createDom = function () {
         "class": "blocklyWsDragSurface blocklyOverflowVisible"
     }, null), this.container_.appendChild(this.SVG_))
 };
+//Translates the entire drag surface during a drag
 LearnBlock.WorkspaceDragSurfaceSvg.prototype.translateSurface = function (a, b) {
     var c = a.toFixed(0),
         d = b.toFixed(0);
     this.SVG_.style.display = "block";
     LearnBlock.utils.dom.setCssTransform(this.SVG_, "translate3d(" + c + "px, " + d + "px, 0px)")
 };
+//Reports the surface translation in scaled workspace coordinates
 LearnBlock.WorkspaceDragSurfaceSvg.prototype.getSurfaceTranslation = function () {
     return LearnBlock.utils.getRelativeXY(this.SVG_)
 };
+//Moves the blockCanvas out of the surface SVG and on to newSurface
 LearnBlock.WorkspaceDragSurfaceSvg.prototype.clearAndHide = function (a) {
     if (!a) throw Error("Couldn't clear and hide the drag surface: missing new surface.");
-    var b = this.SVG_.childNodes[0],
-        c = this.SVG_.childNodes[1];
-    if (!(b && c && LearnBlock.utils.dom.hasClass(b, "blocklyBlockCanvas") && LearnBlock.utils.dom.hasClass(c, "blocklyBubbleCanvas"))) throw Error("Couldn't clear and hide the drag surface. A node was missing.");
+    var b = this.SVG_.childNodes[0];
+    if (!(b && LearnBlock.utils.dom.hasClass(b, "blocklyBlockCanvas"))) throw Error("Couldn't clear and hide the drag surface. A node was missing.");
     null != this.previousSibling_ ? LearnBlock.utils.dom.insertAfter(b, this.previousSibling_) : a.insertBefore(b, a.firstChild);
-    LearnBlock.utils.dom.insertAfter(c, b);
     this.SVG_.style.display = "none";
     if (this.SVG_.childNodes.length) throw Error("Drag surface was not cleared.");
     LearnBlock.utils.dom.setCssTransform(this.SVG_, "");
     this.previousSibling_ = null
 };
-LearnBlock.WorkspaceDragSurfaceSvg.prototype.setContentsAndShow = function (a, b, c, d, e, f) {
+//Sets the SVG to have the block canvas in it and then show the surface
+LearnBlock.WorkspaceDragSurfaceSvg.prototype.setContentsAndShow = function (a, c, d, e, f) {
     if (this.SVG_.childNodes.length) throw Error("Already dragging a block.");
     this.previousSibling_ = c;
     a.setAttribute("transform", "translate(0, 0) scale(" + f + ")");
-    b.setAttribute("transform", "translate(0, 0) scale(" + f + ")");
     this.SVG_.setAttribute("width", d);
     this.SVG_.setAttribute("height", e);
     this.SVG_.appendChild(a);
-    this.SVG_.appendChild(b);
     this.SVG_.style.display = "block"
 };
+
+
 LearnBlock.blockRendering.rendererMap_ = {};
 LearnBlock.blockRendering.useDebugger = !1;
 LearnBlock.blockRendering.register = function (a, b) {
@@ -7167,48 +7248,11 @@ LearnBlock.TouchGesture.prototype.handleTouchEnd = function (a) {
 LearnBlock.TouchGesture.prototype.getTouchPoint = function (a) {
     return this.startWorkspace_ ? new LearnBlock.utils.Coordinate(a.pageX ? a.pageX : a.changedTouches[0].pageX, a.pageY ? a.pageY : a.changedTouches[0].pageY) : null
 };
-LearnBlock.WorkspaceAudio = function (a) {
-    this.parentWorkspace_ = a;
-    this.SOUNDS_ = Object.create(null)
-};
-LearnBlock.WorkspaceAudio.prototype.lastSound_ = null;
-LearnBlock.WorkspaceAudio.prototype.dispose = function () {
-    this.SOUNDS_ = this.parentWorkspace_ = null
-};
-LearnBlock.WorkspaceAudio.prototype.load = function (a, b) {
-    if (a.length) {
-        try {
-            var c = new LearnBlock.utils.global.Audio
-        } catch (h) {
-            return
-        }
-        for (var d, e = 0; e < a.length; e++) {
-            var f = a[e],
-                g = f.match(/\.(\w+)$/);
-            if (g && c.canPlayType("audio/" + g[1])) {
-                d = new LearnBlock.utils.global.Audio(f);
-                break
-            }
-        }
-        d && d.play && (this.SOUNDS_[b] = d)
-    }
-};
-LearnBlock.WorkspaceAudio.prototype.preload = function () {
-    for (var a in this.SOUNDS_) {
-        var b = this.SOUNDS_[a];
-        b.volume = .01;
-        var c = b.play();
-        void 0 !== c ? c.then(b.pause)["catch"](function () {}) : b.pause();
-        if (LearnBlock.utils.userAgent.IPAD || LearnBlock.utils.userAgent.IPHONE) break
-    }
-};
-LearnBlock.WorkspaceAudio.prototype.play = function (a, b) {
-    var c = this.SOUNDS_[a];
-    if (c) {
-        var d = new Date;
-        null != this.lastSound_ && d - this.lastSound_ < LearnBlock.SOUND_LIMIT || (this.lastSound_ = d, c = LearnBlock.utils.userAgent.IPAD || LearnBlock.utils.userAgent.ANDROID ? c : c.cloneNode(), c.volume = void 0 === b ? 1 : b, c.play())
-    } else this.parentWorkspace_ && this.parentWorkspace_.getAudioManager().play(a, b)
-};
+
+
+
+
+
 LearnBlock.WorkspaceSvg = function (a, b, c) {
     LearnBlock.WorkspaceSvg.superClass_.constructor.call(this, a);
     this.getMetrics = a.getMetrics || LearnBlock.WorkspaceSvg.getTopLevelWorkspaceMetrics_;
@@ -7218,8 +7262,6 @@ LearnBlock.WorkspaceSvg = function (a, b, c) {
     c && (this.workspaceDragSurface_ = c);
     this.useWorkspaceDragSurface_ = this.workspaceDragSurface_ && LearnBlock.utils.is3dSupported();
     this.highlightedBlocks_ = [];
-    this.audioManager_ =
-        new LearnBlock.WorkspaceAudio(a.parentWorkspace);
     this.grid_ = this.options.gridPattern ? new LearnBlock.Grid(a.gridPattern, a.gridOptions) : null;
     this.markerSvg_ = this.cursorSvg_ = null;
     LearnBlock.Variables && LearnBlock.Variables.flyoutCategory && this.registerToolboxCategoryCallback(LearnBlock.VARIABLE_CATEGORY_NAME, LearnBlock.Variables.flyoutCategory);
@@ -7471,7 +7513,7 @@ LearnBlock.WorkspaceSvg.prototype.setupDragSurface = function () {
             b = parseInt(this.getParentSvg().getAttribute("width"), 10),
             c = parseInt(this.getParentSvg().getAttribute("height"), 10),
             d = LearnBlock.utils.getRelativeXY(this.svgBlockCanvas_);
-        this.workspaceDragSurface_.setContentsAndShow(this.svgBlockCanvas_, this.svgBubbleCanvas_, a, b, c, this.scale);
+        this.workspaceDragSurface_.setContentsAndShow(this.svgBlockCanvas_, a, b, c, this.scale);
         this.workspaceDragSurface_.translateSurface(d.x,
             d.y)
     }
@@ -8149,12 +8191,10 @@ LearnBlock.init_ = function (a) {
     LearnBlock.inject.bindDocumentEvents_();
     b.languageTree && (a.toolbox_ ? a.toolbox_.init(a) : a.flyout_ && (a.flyout_.init(a), a.flyout_.show(b.languageTree.childNodes), a.flyout_.scrollToStart()));
     c = LearnBlock.Scrollbar.scrollbarThickness;
-    b.zoomOptions && b.zoomOptions.controls && a.zoomControls_.init(c);
     b.moveOptions && b.moveOptions.scrollbars ? (a.scrollbar = new LearnBlock.ScrollbarPair(a), a.scrollbar.resize()) : a.setMetrics({
         x: .5,
         y: .5
     });
-    b.hasSounds && LearnBlock.inject.loadSounds_(b.pathToMedia, a)
 };
 LearnBlock.inject.bindDocumentEvents_ = function () {
     LearnBlock.documentEventsBound_ || (LearnBlock.bindEventWithChecks_(document, "scroll", null, function () {
@@ -8165,19 +8205,6 @@ LearnBlock.inject.bindDocumentEvents_ = function () {
             LearnBlock.svgResize(LearnBlock.getMainWorkspace())
         }));
     LearnBlock.documentEventsBound_ = !0
-};
-LearnBlock.inject.loadSounds_ = function (a, b) {
-    var c = b.getAudioManager();
-    c.load([a + "click.mp3", a + "click.wav", a + "click.ogg"], "click");
-    c.load([a + "disconnect.wav", a + "disconnect.mp3", a + "disconnect.ogg"], "disconnect");
-    c.load([a + "delete.mp3", a + "delete.ogg", a + "delete.wav"], "delete");
-    var d = [],
-        e = function () {
-            for (; d.length;) LearnBlock.unbindEvent_(d.pop());
-            c.preload()
-        };
-    d.push(LearnBlock.bindEventWithChecks_(document, "mousemove", null, e, !0));
-    d.push(LearnBlock.bindEventWithChecks_(document, "touchstart", null, e, !0))
 };
 LearnBlock.Action = function (a, b) {
     this.name = a;
@@ -10494,11 +10521,12 @@ LearnBlock.FieldVariable.prototype.referencesVariables = function () {
 };
 LearnBlock.fieldRegistry.register("field_variable", LearnBlock.FieldVariable);
 
-
+//Class for a flyout cursor
 LearnBlock.FlyoutCursor = function () {
     LearnBlock.FlyoutCursor.superClass_.constructor.call(this)
 };
 LearnBlock.utils.object.inherits(LearnBlock.FlyoutCursor, LearnBlock.Cursor);
+//Finds the next connection, field, or block
 LearnBlock.FlyoutCursor.prototype.next = function () {
     var a = this.getCurNode();
     if (!a) return null;
@@ -10508,6 +10536,7 @@ LearnBlock.FlyoutCursor.prototype.next = function () {
 LearnBlock.FlyoutCursor.prototype["in"] = function () {
     return null
 };
+//Finds the previous connection, field, or block
 LearnBlock.FlyoutCursor.prototype.prev = function () {
     var a = this.getCurNode();
     if (!a) return null;
@@ -11432,6 +11461,8 @@ LearnBlock.utils.svgPaths.lineOnAxis = function (a, b) {
 LearnBlock.utils.svgPaths.arc = function (a, b, c, d) {
     return a + " " + c + " " + c + " " + b + d
 };
+
+//Inicio blockrendering
 LearnBlock.blockRendering.ConstantProvider = function () {
     this.NO_PADDING = 0;
     this.SMALL_PADDING = 3;
@@ -12270,6 +12301,8 @@ LearnBlock.geras.ConstantProvider = function () {
     this.DARK_PATH_OFFSET = 1
 };
 LearnBlock.utils.object.inherits(LearnBlock.geras.ConstantProvider, LearnBlock.blockRendering.ConstantProvider);
+//Fin blockrendering
+//Inicio geras
 LearnBlock.geras.Highlighter = function (a) {
     this.info_ = a;
     this.inlineSteps_ = this.steps_ = "";
@@ -12671,10 +12704,10 @@ LearnBlock.geras.Renderer.prototype.getHighlightConstants = function () {
     return this.highlightConstants_
 };
 LearnBlock.blockRendering.register("geras", LearnBlock.geras.Renderer);
+//Fin geras
 
 
-
-//Funciones toolbox (toolbox.js)
+//Class for the toolbox
 LearnBlock.Toolbox = function (a) {
     this.workspace_ = a;
     this.RTL = a.options.RTL;
@@ -12700,6 +12733,7 @@ LearnBlock.Toolbox.prototype.width = 0;
 LearnBlock.Toolbox.prototype.height = 0;
 LearnBlock.Toolbox.prototype.selectedOption_ = null;
 LearnBlock.Toolbox.prototype.lastCategory_ = null;
+//Initializes the toolbox
 LearnBlock.Toolbox.prototype.init = function () {
     var a = this.workspace_,
         b = this.workspace_.getParentSvg();
@@ -12738,6 +12772,7 @@ LearnBlock.Toolbox.prototype.init = function () {
     this.config_.cssCollapsedFolderIcon = "blocklyTreeIconClosed" + (a.RTL ? "Rtl" : "Ltr");
     this.renderTree(a.options.languageTree)
 };
+//Fills the toolbox with categories and blocks
 LearnBlock.Toolbox.prototype.renderTree = function (a) {
     this.tree_ && (this.tree_.dispose(), this.lastCategory_ = null);
     var b = new LearnBlock.tree.TreeControl(this, this.config_);
@@ -12755,22 +12790,22 @@ LearnBlock.Toolbox.prototype.renderTree = function (a) {
     }
     b.render(this.HtmlDiv);
     c && b.setSelectedItem(c);
-    this.addColour_();
     this.position();
     this.horizontalLayout_ && LearnBlock.utils.aria.setState(this.tree_.getElement(), LearnBlock.utils.aria.State.ORIENTATION, "horizontal")
 };
+//Handles the before tree item selected action
 LearnBlock.Toolbox.prototype.handleBeforeTreeSelected_ = function (a) {
     if (a == this.tree_) return !1;
     this.lastCategory_ && (this.lastCategory_.getRowElement().style.backgroundColor = "");
     if (a) {
         var b = a.hexColour || "#57e";
         a.getRowElement().style.backgroundColor = b;
-        this.addColour_(a)
     }
     return !0
 };
+//Handles the after tree item selected action
 LearnBlock.Toolbox.prototype.handleAfterTreeSelected_ = function (a, b) {
-    b && b.blocks && b.blocks.length ? (this.flyout_.show(b.blocks), this.lastCategory_ != b && this.flyout_.scrollToStart(), LearnBlock.keyboardAccessibilityMode && LearnBlock.navigation.setState(LearnBlock.navigation.STATE_TOOLBOX)) : (this.flyout_.hide(), !LearnBlock.keyboardAccessibilityMode || b instanceof LearnBlock.Toolbox.TreeSeparator || LearnBlock.navigation.setState(LearnBlock.navigation.STATE_WS));
+    b && b.blocks && b.blocks.length ? (this.flyout_.show(b.blocks), this.lastCategory_ != b && this.flyout_.scrollToStart(), LearnBlock.keyboardAccessibilityMode && LearnBlock.navigation.setState(LearnBlock.navigation.STATE_TOOLBOX)) : (!LearnBlock.keyboardAccessibilityMode || b instanceof LearnBlock.Toolbox.TreeSeparator || LearnBlock.navigation.setState(LearnBlock.navigation.STATE_WS));
     if (a != b && a != this) {
         var c = new LearnBlock.Events.Ui(null, "category", a && a.getText(),
             b && b.getText());
@@ -12779,9 +12814,7 @@ LearnBlock.Toolbox.prototype.handleAfterTreeSelected_ = function (a, b) {
     }
     b && (this.lastCategory_ = b)
 };
-LearnBlock.Toolbox.prototype.handleNodeSizeChanged_ = function () {
-    LearnBlock.svgResize(this.workspace_)
-};
+//Handles the given Blockly action on a toolbox
 LearnBlock.Toolbox.prototype.onBlocklyAction = function (a) {
     var b = this.tree_.getSelectedItem();
     if (!b) return !1;
@@ -12798,6 +12831,7 @@ LearnBlock.Toolbox.prototype.onBlocklyAction = function (a) {
             return !1
     }
 };
+//Dispose of the toolbox
 LearnBlock.Toolbox.prototype.dispose = function () {
     this.flyout_.dispose();
     this.tree_.dispose();
@@ -12805,12 +12839,15 @@ LearnBlock.Toolbox.prototype.dispose = function () {
     LearnBlock.utils.dom.removeNode(this.HtmlDiv);
     this.lastCategory_ = this.workspace_ = null
 };
+//Gets the width of the toolbox
 LearnBlock.Toolbox.prototype.getWidth = function () {
     return this.width
 };
+//Gets the height of the toolbox
 LearnBlock.Toolbox.prototype.getHeight = function () {
     return this.height
 };
+//Moves the toolbox to the edge
 LearnBlock.Toolbox.prototype.position = function () {
     var a = this.HtmlDiv;
     if (a) {
@@ -12820,21 +12857,18 @@ LearnBlock.Toolbox.prototype.position = function () {
         this.flyout_.position()
     }
 };
+//Syncs trees of the toolbox
 LearnBlock.Toolbox.prototype.syncTrees_ = function (a, b, c) {
     for (var d = null, e = null, f = 0, g; g = a.childNodes[f]; f++)
         if (g.tagName) switch (g.tagName.toUpperCase()) {
             case "CATEGORY":
                 e = LearnBlock.utils.replaceMessageReferences(g.getAttribute("name"));
                 var h = this.tree_.createNode(e);
-                h.onSizeChanged(this.handleNodeSizeChanged_);
                 h.blocks = [];
                 b.add(h);
                 var k = g.getAttribute("custom");
                 k ? h.blocks = k : (k = this.syncTrees_(g, h, c)) && (d = k);
                 k = g.getAttribute("categorystyle");
-                var l = g.getAttribute("colour");
-                l && k ? (h.hexColour = "", console.warn('Toolbox category "' +
-                    e + '" can not have both a style and a colour')) : k ? this.setColourFromStyle_(k, h, e) : this.setColour_(l, h, e);
                 "true" == g.getAttribute("expanded") ? (h.blocks.length && (d = h), h.setExpanded(!0)) : h.setExpanded(!1);
                 e = g;
                 break;
@@ -12844,63 +12878,25 @@ LearnBlock.Toolbox.prototype.syncTrees_ = function (a, b, c) {
                     break
                 }
                 case "BLOCK":
-                case "SHADOW":
                 case "LABEL":
                 case "BUTTON":
                     b.blocks.push(g), e = g
         }
     return d
 };
-LearnBlock.Toolbox.prototype.setColour_ = function (a, b, c) {
-    a = LearnBlock.utils.replaceMessageReferences(a);
-    if (null === a || "" === a) b.hexColour = "";
-    else {
-        var d = Number(a);
-        isNaN(d) ? (d = LearnBlock.utils.colour.parse(a)) ? (b.hexColour = d, this.hasColours_ = !0) : (b.hexColour = "", console.warn('Toolbox category "' + c + '" has unrecognized colour attribute: ' + a)) : (b.hexColour = LearnBlock.hueToHex(d), this.hasColours_ = !0)
-    }
-};
-LearnBlock.Toolbox.prototype.setColourFromStyle_ = function (a, b, c) {
-    b.styleName = a;
-    var d = this.workspace_.getTheme();
-    a && d && ((d = d.getCategoryStyle(a)) && d.colour ? this.setColour_(d.colour, b, c) : console.warn('Style "' + a + '" must exist and contain a colour value'))
-};
-LearnBlock.Toolbox.prototype.updateColourFromTheme_ = function (a) {
-    if (a = a || this.tree_) {
-        a = a.getChildren(!1);
-        for (var b = 0, c; c = a[b]; b++) c.styleName && (this.setColourFromStyle_(c.styleName, c, ""), this.addColour_()), this.updateColourFromTheme_(c)
-    }
-};
-LearnBlock.Toolbox.prototype.updateColourFromTheme = function () {
-    var a = this.tree_;
-    a && (this.updateColourFromTheme_(a), this.updateSelectedItemColour_(a))
-};
-LearnBlock.Toolbox.prototype.updateSelectedItemColour_ = function (a) {
-    if (a = a.getSelectedItem()) {
-        var b = a.hexColour || "#57e";
-        a.getRowElement().style.backgroundColor = b;
-        this.addColour_(a)
-    }
-};
-LearnBlock.Toolbox.prototype.addColour_ = function (a) {
-    a = (a || this.tree_).getChildren(!1);
-    for (var b = 0, c; c = a[b]; b++) {
-        var d = c.getRowElement();
-        if (d) {
-            var e = this.hasColours_ ? "8px solid " + (c.hexColour || "#ddd") : "none";
-            this.workspace_.RTL ? d.style.borderRight = e : d.style.borderLeft = e
-        }
-        this.addColour_(c)
-    }
-};
+//Unhighlights any previously specified option
 LearnBlock.Toolbox.prototype.clearSelection = function () {
     this.tree_.setSelectedItem(null)
 };
+//Adds a style on the toolbox
 LearnBlock.Toolbox.prototype.addStyle = function (a) {
     LearnBlock.utils.dom.addClass(this.HtmlDiv, a)
 };
+//Removes a style from the toolbox
 LearnBlock.Toolbox.prototype.removeStyle = function (a) {
     LearnBlock.utils.dom.removeClass(this.HtmlDiv, a)
 };
+//Returns the deletion rectangle for this toolbox
 LearnBlock.Toolbox.prototype.getClientRect = function () {
     if (!this.HtmlDiv) return null;
     var a = this.HtmlDiv.getBoundingClientRect(),
@@ -12910,22 +12906,22 @@ LearnBlock.Toolbox.prototype.getClientRect = function () {
     a = d + a.width;
     return this.toolboxPosition == LearnBlock.TOOLBOX_AT_TOP ? new LearnBlock.utils.Rect(-1E7, c, -1E7, 1E7) : this.toolboxPosition == LearnBlock.TOOLBOX_AT_BOTTOM ? new LearnBlock.utils.Rect(b, 1E7, -1E7, 1E7) : this.toolboxPosition == LearnBlock.TOOLBOX_AT_LEFT ? new LearnBlock.utils.Rect(-1E7, 1E7, -1E7, a) : new LearnBlock.utils.Rect(-1E7, 1E7, d, 1E7)
 };
+//Updates the flyout's contents without closing it !!!!
 LearnBlock.Toolbox.prototype.refreshSelection = function () {
     var a = this.tree_.getSelectedItem();
     a && a.blocks && this.flyout_.show(a.blocks)
 };
+//Selects the first toolbox category if no category is selected
 LearnBlock.Toolbox.prototype.selectFirstCategory = function () {
     this.tree_.getSelectedItem() || this.tree_.selectFirst()
 };
+//A blank separator node in the tree
 LearnBlock.Toolbox.TreeSeparator = function (a) {
     LearnBlock.tree.TreeNode.call(this, null, "", a)
 };
 LearnBlock.utils.object.inherits(LearnBlock.Toolbox.TreeSeparator, LearnBlock.tree.TreeNode);
-/**
- * CSS for Toolbox.  See css.js for use.
- */
+//CSS for toolbox
 LearnBlock.Css.register([
-  /* eslint-disable indent */
   '.blocklyToolboxDelete {',
     'cursor: url("<<<PATH>>>/handdelete.cur"), auto;',
   '}',
@@ -12935,15 +12931,13 @@ LearnBlock.Css.register([
     'cursor: grabbing;',
     'cursor: -webkit-grabbing;',
   '}',
-
-  /* Category tree in Toolbox. */
   '.blocklyToolboxDiv {',
     'background-color: #dbd;',
     'overflow-x: auto;',
     'overflow-y: auto;',
     'position: absolute;',
-    'z-index: 70;', /* so blocks go under toolbox when dragging */
-    '-webkit-tap-highlight-color: transparent;', /* issue #1345 */
+    'z-index: 70;',
+    '-webkit-tap-highlight-color: transparent;',
   '}',
 
   '.blocklyTreeRoot {',
@@ -12954,7 +12948,6 @@ LearnBlock.Css.register([
   '.blocklyTreeRoot:focus {',
     'outline: none;',
   '}',
-
   //Casilla de categoria
   '.blocklyTreeRow {',
     'height: 120px;',
@@ -12966,7 +12959,6 @@ LearnBlock.Css.register([
     'border-color: #000;',
     'transform: matrix(0, -1, 1, 0, -10, 0);',
   '}',
-
   '.blocklyHorizontalTree {',
     'float: left;',
     'margin: 1px 5px 8px 0;',
@@ -13014,7 +13006,6 @@ LearnBlock.Css.register([
   '.blocklyTreeSelected>.blocklyTreeIconNone {',
     'background-position: -48px -1px;',
   '}',
-
   //Texto categoria
   '.blocklyTreeLabel {',
     'cursor: default;',
@@ -13031,7 +13022,6 @@ LearnBlock.Css.register([
   '.blocklyTreeSelected .blocklyTreeLabel {',
     'color: #fff;',
   '}'
-  /* eslint-enable indent */
 ]);
 
 //Dynamic Variables

@@ -21,7 +21,7 @@ LearnBlock.utils.global = function () {
 //Msg singleton
 LearnBlock.Msg = {};
 LearnBlock.utils.global.Blockly || (LearnBlock.utils.global.Blockly = {});
-LearnBlock.utils.global.Blockly.Msg || (LearnBlock.utils.global.Blockly.Msg = LearnBlock.Msg);
+LearnBlock.utils.global.LearnBlock.Msg || (LearnBlock.utils.global.LearnBlock.Msg = LearnBlock.Msg);
 
 //Represents coordinates and positions
 LearnBlock.utils.Coordinate = function (a, b) {
@@ -421,7 +421,10 @@ LearnBlock.utils.screenToWsCoordinates = function (a, b) {
     d = a.getOriginOffsetInPixels();
     return LearnBlock.utils.Coordinate.difference(c, d).scale(1 / a.scale)
 };
+
+//Events functions
 LearnBlock.Events = {};
+//Events definitions
 LearnBlock.Events.group_ = "";
 LearnBlock.Events.recordUndo = !0;
 LearnBlock.Events.disabled_ = 0;
@@ -437,16 +440,15 @@ LearnBlock.Events.VAR_CREATE = "var_create";
 LearnBlock.Events.VAR_DELETE = "var_delete";
 LearnBlock.Events.VAR_RENAME = "var_rename";
 LearnBlock.Events.UI = "ui";
-LearnBlock.Events.COMMENT_CREATE = "comment_create";
-LearnBlock.Events.COMMENT_DELETE = "comment_delete";
-LearnBlock.Events.COMMENT_CHANGE = "comment_change";
 LearnBlock.Events.COMMENT_MOVE = "comment_move";
 LearnBlock.Events.FINISHED_LOADING = "finished_loading";
 LearnBlock.Events.BUMP_EVENTS = [LearnBlock.Events.BLOCK_CREATE, LearnBlock.Events.BLOCK_MOVE, LearnBlock.Events.COMMENT_CREATE, LearnBlock.Events.COMMENT_MOVE];
 LearnBlock.Events.FIRE_QUEUE_ = [];
+//Creates a custom event and fires it
 LearnBlock.Events.fire = function (a) {
     LearnBlock.Events.isEnabled() && (LearnBlock.Events.FIRE_QUEUE_.length || setTimeout(LearnBlock.Events.fireNow_, 0), LearnBlock.Events.FIRE_QUEUE_.push(a))
 };
+//Fires all queued events
 LearnBlock.Events.fireNow_ = function () {
     for (var a = LearnBlock.Events.filter(LearnBlock.Events.FIRE_QUEUE_, !0), b = LearnBlock.Events.FIRE_QUEUE_.length = 0, c; c = a[b]; b++)
         if (c.workspaceId) {
@@ -454,6 +456,7 @@ LearnBlock.Events.fireNow_ = function () {
             d && d.fireChangeListener(c)
         }
 };
+//Filters the queued events and merges duplicates
 LearnBlock.Events.filter = function (a, b) {
     var c = a.slice();
     b || c.reverse();
@@ -480,30 +483,38 @@ LearnBlock.Events.filter = function (a, b) {
     for (f = 1; g = c[f]; f++) g.type == LearnBlock.Events.CHANGE && "mutation" == g.element && c.unshift(c.splice(f, 1)[0]);
     return c
 };
+//Modifies pending undo events so that when they are fired they don't land in the undo stack
 LearnBlock.Events.clearPendingUndo = function () {
     for (var a = 0, b; b = LearnBlock.Events.FIRE_QUEUE_[a]; a++) b.recordUndo = !1
 };
+//Stops sending events
 LearnBlock.Events.disable = function () {
     LearnBlock.Events.disabled_++
 };
+//Starts sending events
 LearnBlock.Events.enable = function () {
     LearnBlock.Events.disabled_--
 };
+//Returns whether events may be fired or not
 LearnBlock.Events.isEnabled = function () {
     return 0 == LearnBlock.Events.disabled_
 };
+//Current group
 LearnBlock.Events.getGroup = function () {
     return LearnBlock.Events.group_
 };
+//Starts or stops a group
 LearnBlock.Events.setGroup = function (a) {
     LearnBlock.Events.group_ = "boolean" == typeof a ? a ? LearnBlock.utils.genUid() : "" : a
 };
+//Computes a list of the IDs of the specified block and all its descendants
 LearnBlock.Events.getDescendantIds = function (a) {
     var b = [];
     a = a.getDescendants(!1);
     for (var c = 0, d; d = a[c]; c++) b[c] = d.id;
     return b
 };
+//Decodes the JSON into an event
 LearnBlock.Events.fromJson = function (a, b) {
     switch (a.type) {
         case LearnBlock.Events.CREATE:
@@ -531,18 +542,6 @@ LearnBlock.Events.fromJson = function (a, b) {
         case LearnBlock.Events.UI:
             c = new LearnBlock.Events.Ui(null, "", "", "");
             break;
-        case LearnBlock.Events.COMMENT_CREATE:
-            c = new LearnBlock.Events.CommentCreate(null);
-            break;
-        case LearnBlock.Events.COMMENT_CHANGE:
-            c = new LearnBlock.Events.CommentChange(null, "", "");
-            break;
-        case LearnBlock.Events.COMMENT_MOVE:
-            c = new LearnBlock.Events.CommentMove(null);
-            break;
-        case LearnBlock.Events.COMMENT_DELETE:
-            c = new LearnBlock.Events.CommentDelete(null);
-            break;
         default:
             throw Error("Unknown event type.");
     }
@@ -551,11 +550,13 @@ LearnBlock.Events.fromJson = function (a, b) {
         b.id;
     return c
 };
+//Abstract class for an event
 LearnBlock.Events.Abstract = function () {
     this.workspaceId = void 0;
     this.group = LearnBlock.Events.getGroup();
     this.recordUndo = LearnBlock.Events.recordUndo
 };
+//Encodes the event as JSON
 LearnBlock.Events.Abstract.prototype.toJson = function () {
     var a = {
         type: this.type
@@ -563,18 +564,25 @@ LearnBlock.Events.Abstract.prototype.toJson = function () {
     this.group && (a.group = this.group);
     return a
 };
+//Decodes the JSON event
 LearnBlock.Events.Abstract.prototype.fromJson = function (a) {
     this.group = a.group
 };
+//Does this event record any change of state?
 LearnBlock.Events.Abstract.prototype.isNull = function () {
     return !1
 };
+//Runs an event
 LearnBlock.Events.Abstract.prototype.run = function (a) {};
+//Gets workspace the event belongs to
 LearnBlock.Events.Abstract.prototype.getEventWorkspace_ = function () {
     if (this.workspaceId) var a = LearnBlock.Workspace.getById(this.workspaceId);
     if (!a) throw Error("Workspace is null. Event must have been generated from real Blockly events.");
     return a
 };
+
+
+
 LearnBlock.utils.object = {};
 LearnBlock.utils.object.inherits = function (a, b) {
     a.superClass_ = b.prototype;
@@ -1641,7 +1649,6 @@ LearnBlock.blockAnimations.disconnectGroup_ = null;
 LearnBlock.blockAnimations.disposeUiEffect = function (a) {
     var b = a.workspace,
         c = a.getSvgRoot();
-    b.getAudioManager().play("delete");
     a = b.getSvgXY(c);
     c = c.cloneNode(!0);
     c.translateX_ = a.x;
@@ -1677,7 +1684,6 @@ LearnBlock.blockAnimations.connectionUiStep_ = function (a, b, c) {
     1 < d ? LearnBlock.utils.dom.removeNode(a) : (a.setAttribute("r", 25 * d * c), a.style.opacity = 1 - d, LearnBlock.blockAnimations.disconnectPid_ = setTimeout(LearnBlock.blockAnimations.connectionUiStep_, 10, a, b, c))
 };
 LearnBlock.blockAnimations.disconnectUiEffect = function (a) {
-    a.workspace.getAudioManager().play("disconnect");
     if (!(1 > a.workspace.scale)) {
         var b = a.getHeightWidth().height;
         b = Math.atan(10 / b) / Math.PI * 180;
@@ -1956,49 +1962,48 @@ LearnBlock.BlockDragger.prototype.pixelsToWorkspaceUnits_ = function (a) {
 LearnBlock.BlockDragger.prototype.getInsertionMarkers = function () {
     return this.draggedConnectionManager_ && this.draggedConnectionManager_.getInsertionMarkers ? this.draggedConnectionManager_.getInsertionMarkers() : []
 };
+
+//Class for touch on the workspace events (mouse)
 LearnBlock.Touch = {};
-LearnBlock.Touch.TOUCH_ENABLED = "ontouchstart" in LearnBlock.utils.global || !!(LearnBlock.utils.global.document && document.documentElement && "ontouchstart" in document.documentElement) || !(!LearnBlock.utils.global.navigator || !LearnBlock.utils.global.navigator.maxTouchPoints && !LearnBlock.utils.global.navigator.msMaxTouchPoints);
 LearnBlock.Touch.touchIdentifier_ = null;
+//Dictionary that specifies additional touch (mouse) events to fire
 LearnBlock.Touch.TOUCH_MAP = {};
-LearnBlock.utils.global.PointerEvent ? LearnBlock.Touch.TOUCH_MAP = {
-    mousedown: ["pointerdown"],
-    mouseenter: ["pointerenter"],
-    mouseleave: ["pointerleave"],
-    mousemove: ["pointermove"],
-    mouseout: ["pointerout"],
-    mouseover: ["pointerover"],
-    mouseup: ["pointerup", "pointercancel"],
-    touchend: ["pointerup"],
-    touchcancel: ["pointercancel"]
-} : LearnBlock.Touch.TOUCH_ENABLED && (LearnBlock.Touch.TOUCH_MAP = {
-    mousedown: ["touchstart"],
-    mousemove: ["touchmove"],
-    mouseup: ["touchend", "touchcancel"]
-});
+if (LearnBlock.utils.global.PointerEvent) {
+    LearnBlock.Touch.TOUCH_MAP = {
+        mousedown: ["pointerdown"],
+        mouseenter: ["pointerenter"],
+        mouseleave: ["pointerleave"],
+        mousemove: ["pointermove"],
+        mouseout: ["pointerout"],
+        mouseover: ["pointerover"],
+        mouseup: ["pointerup", "pointercancel"],
+        touchend: ["pointerup"],
+        touchcancel: ["pointercancel"]
+    };
+}
 LearnBlock.longPid_ = 0;
-LearnBlock.longStart_ = function (a, b) {
-    LearnBlock.longStop_();
-    a.changedTouches && 1 != a.changedTouches.length || (LearnBlock.longPid_ = setTimeout(function () {
-        a.changedTouches && (a.button = 2, a.clientX = a.changedTouches[0].clientX, a.clientY = a.changedTouches[0].clientY);
-        b && b.handleRightClick(a)
-    }, LearnBlock.LONGPRESS))
-};
+//Kills the queued long-press task
 LearnBlock.longStop_ = function () {
     LearnBlock.longPid_ && (clearTimeout(LearnBlock.longPid_), LearnBlock.longPid_ = 0)
 };
+//Clears the touch identifier that tracks which touch stream to pay attention to
 LearnBlock.Touch.clearTouchIdentifier = function () {
     LearnBlock.Touch.touchIdentifier_ = null
 };
+//Decides whether should handle or ignore the event
 LearnBlock.Touch.shouldHandleEvent = function (a) {
     return !LearnBlock.Touch.isMouseOrTouchEvent(a) || LearnBlock.Touch.checkTouchIdentifier(a)
 };
+//Gets the touch (mouse) identifier from the given event
 LearnBlock.Touch.getTouchIdentifierFromEvent = function (a) {
     return void 0 != a.pointerId ? a.pointerId : a.changedTouches && a.changedTouches[0] && void 0 !== a.changedTouches[0].identifier && null !== a.changedTouches[0].identifier ? a.changedTouches[0].identifier : "mouse"
 };
+//Checks whether the touch identifier on the event matches the current saved identifier
 LearnBlock.Touch.checkTouchIdentifier = function (a) {
     var b = LearnBlock.Touch.getTouchIdentifierFromEvent(a);
-    return void 0 !== LearnBlock.Touch.touchIdentifier_ && null !== LearnBlock.Touch.touchIdentifier_ ? LearnBlock.Touch.touchIdentifier_ == b : "mousedown" == a.type || "touchstart" == a.type || "pointerdown" == a.type ? (LearnBlock.Touch.touchIdentifier_ = b, !0) : !1
+    return void 0 !== LearnBlock.Touch.touchIdentifier_ && null !== LearnBlock.Touch.touchIdentifier_ ? LearnBlock.Touch.touchIdentifier_ == b : "mousedown" == a.type || "pointerdown" == a.type ? (LearnBlock.Touch.touchIdentifier_ = b, !0) : !1
 };
+//Makes a touch event work in a mouse event handler
 LearnBlock.Touch.setClientFromTouch = function (a) {
     if (LearnBlock.utils.string.startsWith(a.type, "touch")) {
         var b = a.changedTouches[0];
@@ -2006,12 +2011,15 @@ LearnBlock.Touch.setClientFromTouch = function (a) {
         a.clientY = b.clientY
     }
 };
+//Check whether a given event is a mouse or pointer event
 LearnBlock.Touch.isMouseOrTouchEvent = function (a) {
-    return LearnBlock.utils.string.startsWith(a.type, "touch") || LearnBlock.utils.string.startsWith(a.type, "mouse") || LearnBlock.utils.string.startsWith(a.type, "pointer")
+    return LearnBlock.utils.string.startsWith(a.type, "mouse") || LearnBlock.utils.string.startsWith(a.type, "pointer")
 };
+//Checks when a given event is a pointer event
 LearnBlock.Touch.isTouchEvent = function (a) {
-    return LearnBlock.utils.string.startsWith(a.type, "touch") || LearnBlock.utils.string.startsWith(a.type, "pointer")
+    return LearnBlock.utils.string.startsWith(a.type, "pointer")
 };
+//Splits an event into an array of events
 LearnBlock.Touch.splitEventByTouches = function (a) {
     var b = [];
     if (a.changedTouches)
@@ -2029,6 +2037,8 @@ LearnBlock.Touch.splitEventByTouches = function (a) {
     else b.push(a);
     return b
 };
+
+
 LearnBlock.ScrollbarPair = function (a) {
     this.workspace_ = a;
     this.hScroll = new LearnBlock.Scrollbar(a, !0, !0, "blocklyMainWorkspaceScrollbar");
@@ -2597,6 +2607,7 @@ LearnBlock.VariableMap.prototype.getVariableUsesById = function (a) {
 };
 
 
+//Class for a workspace
 LearnBlock.Workspace = function (a) {
     this.id = LearnBlock.utils.genUid();
     LearnBlock.Workspace.WorkspaceDB_[this.id] = this;
@@ -2619,29 +2630,40 @@ LearnBlock.Workspace = function (a) {
     this.themeManager_ = this.options.parentWorkspace ? this.options.parentWorkspace.getThemeManager() : new LearnBlock.ThemeManager(this.options.theme || LearnBlock.Themes.Classic);
     this.themeManager_.subscribeWorkspace(this)
 };
+//Returns if the workspace is visible
 LearnBlock.Workspace.prototype.rendered = !1;
+//Returns if the workspace is currently in a clear process
 LearnBlock.Workspace.prototype.isClearing = !1;
+//Max of undo events
 LearnBlock.Workspace.prototype.MAX_UNDO = 1024;
+//DBs list
 LearnBlock.Workspace.prototype.connectionDBList = null;
+//Sets the cursor for keyboard navigation
 LearnBlock.Workspace.prototype.setCursor = function (a) {
     this.cursor_ = a
 };
+//Sets the marker for keyboard navigation
 LearnBlock.Workspace.prototype.setMarker = function (a) {
     this.marker_ = a
 };
+//Gets the cursor for keyboard navigation
 LearnBlock.Workspace.prototype.getCursor = function () {
     return this.cursor_
 };
+//Gets the marker for keyboard navigation
 LearnBlock.Workspace.prototype.getMarker = function () {
     return this.marker_
 };
+//Gets the workspace theme
 LearnBlock.Workspace.prototype.getTheme = function () {
     return this.themeManager_.getTheme()
 };
+//Sets the workspace theme
 LearnBlock.Workspace.prototype.setTheme = function (a) {
     a || (a = LearnBlock.Themes.Classic);
     this.themeManager_.setTheme(a)
 };
+//Refreshes all blocks on the workspace after a theme update
 LearnBlock.Workspace.prototype.refreshTheme = function () {
     this.updateBlockStyles_(this.getAllBlocks().filter(function (a) {
         return void 0 !== a.getStyleName()
@@ -2650,6 +2672,7 @@ LearnBlock.Workspace.prototype.refreshTheme = function () {
     a.workspaceId = this.id;
     LearnBlock.Events.fire(a)
 };
+//Updates all the blocks with a new style
 LearnBlock.Workspace.prototype.updateBlockStyles_ = function (a) {
     for (var b = 0, c; c = a[b]; b++) {
         var d = c.getStyleName();
@@ -2657,6 +2680,7 @@ LearnBlock.Workspace.prototype.updateBlockStyles_ = function (a) {
         c.mutator && c.mutator.updateBlockStyle(d)
     }
 };
+//Dispose of the workspace
 LearnBlock.Workspace.prototype.dispose = function () {
     this.listeners_.length = 0;
     this.clear();
@@ -2664,50 +2688,44 @@ LearnBlock.Workspace.prototype.dispose = function () {
     this.themeManager_ && (this.themeManager_.unsubscribeWorkspace(this), this.themeManager_.unsubscribe(this.svgBackground_), this.options.parentWorkspace || (this.themeManager_.dispose(), this.themeManager_ = null))
 };
 LearnBlock.Workspace.SCAN_ANGLE = 3;
+//Compare function for sorting objects
 LearnBlock.Workspace.prototype.sortObjects_ = function (a, b) {
     var c = a.getRelativeToSurfaceXY(),
         d = b.getRelativeToSurfaceXY();
     return c.y + LearnBlock.Workspace.prototype.sortObjects_.offset * c.x - (d.y + LearnBlock.Workspace.prototype.sortObjects_.offset * d.x)
 };
+//Adds a block to the list of top blocks
 LearnBlock.Workspace.prototype.addTopBlock = function (a) {
     this.topBlocks_.push(a)
 };
+//Removes a block from the list of top blocks
 LearnBlock.Workspace.prototype.removeTopBlock = function (a) {
     if (!LearnBlock.utils.arrayRemove(this.topBlocks_, a)) throw Error("Block not present in workspace's list of top-most blocks.");
 };
+//Returns the top-level blocks
 LearnBlock.Workspace.prototype.getTopBlocks = function (a) {
     var b = [].concat(this.topBlocks_);
     a && 1 < b.length && (this.sortObjects_.offset = Math.sin(LearnBlock.utils.math.toRadians(LearnBlock.Workspace.SCAN_ANGLE)), this.RTL && (this.sortObjects_.offset *= -1), b.sort(this.sortObjects_));
     return b
 };
+//Adds a block to the list of blocks keyed by type
 LearnBlock.Workspace.prototype.addTypedBlock = function (a) {
     this.typedBlocksDB_[a.type] || (this.typedBlocksDB_[a.type] = []);
     this.typedBlocksDB_[a.type].push(a)
 };
+//Removes a block to the list of blocks keyed by type
 LearnBlock.Workspace.prototype.removeTypedBlock = function (a) {
     this.typedBlocksDB_[a.type].splice(this.typedBlocksDB_[a.type].indexOf(a), 1);
     this.typedBlocksDB_[a.type].length || delete this.typedBlocksDB_[a.type]
 };
+//Returns the blocks with the associated type
 LearnBlock.Workspace.prototype.getBlocksByType = function (a, b) {
     if (!this.typedBlocksDB_[a]) return [];
     var c = this.typedBlocksDB_[a].slice(0);
     b && 1 < c.length && (this.sortObjects_.offset = Math.sin(LearnBlock.utils.math.toRadians(LearnBlock.Workspace.SCAN_ANGLE)), this.RTL && (this.sortObjects_.offset *= -1), c.sort(this.sortObjects_));
     return c
 };
-LearnBlock.Workspace.prototype.addTopComment = function (a) {
-    this.topComments_.push(a);
-    this.commentDB_[a.id] && console.warn('Overriding an existing comment on this workspace, with id "' + a.id + '"');
-    this.commentDB_[a.id] = a
-};
-LearnBlock.Workspace.prototype.removeTopComment = function (a) {
-    if (!LearnBlock.utils.arrayRemove(this.topComments_, a)) throw Error("Comment not present in workspace's list of top-most comments.");
-    delete this.commentDB_[a.id]
-};
-LearnBlock.Workspace.prototype.getTopComments = function (a) {
-    var b = [].concat(this.topComments_);
-    a && 1 < b.length && (this.sortObjects_.offset = Math.sin(LearnBlock.utils.math.toRadians(LearnBlock.Workspace.SCAN_ANGLE)), this.RTL && (this.sortObjects_.offset *= -1), b.sort(this.sortObjects_));
-    return b
-};
+//Finds all blocks in workspace
 LearnBlock.Workspace.prototype.getAllBlocks = function (a) {
     if (a) {
         a = this.getTopBlocks(!0);
@@ -2718,12 +2736,12 @@ LearnBlock.Workspace.prototype.getAllBlocks = function (a) {
         return !a.isInsertionMarker()
     })
 };
+//Dispose of all blocks and comments in workspace
 LearnBlock.Workspace.prototype.clear = function () {
     this.isClearing = !0;
     try {
         var a = LearnBlock.Events.getGroup();
         for (a || LearnBlock.Events.setGroup(!0); this.topBlocks_.length;) this.topBlocks_[0].dispose();
-        for (; this.topComments_.length;) this.topComments_[this.topComments_.length - 1].dispose();
         a || LearnBlock.Events.setGroup(!1);
         this.variableMap_.clear();
         this.potentialVariableMap_ && this.potentialVariableMap_.clear()
@@ -2731,6 +2749,7 @@ LearnBlock.Workspace.prototype.clear = function () {
         this.isClearing = !1
     }
 };
+//Pass-throughs to the variable map functions
 LearnBlock.Workspace.prototype.renameVariableById = function (a, b) {
     this.variableMap_.renameVariableById(a, b)
 };
@@ -2771,12 +2790,15 @@ LearnBlock.Workspace.prototype.getWidth = function () {
 LearnBlock.Workspace.prototype.newBlock = function (a, b) {
     return new LearnBlock.Block(this, a, b)
 };
+//Number of blocks that may be added to the workspace before reaching the maxBlocks
 LearnBlock.Workspace.prototype.remainingCapacity = function () {
     return isNaN(this.options.maxBlocks) ? Infinity : this.options.maxBlocks - this.getAllBlocks().length
 };
+//Number of blocks of a given type that may be added to the workspace before reaching the maxInstances allowed for that type
 LearnBlock.Workspace.prototype.remainingCapacityOfType = function (a) {
     return this.options.maxInstances ? (this.options.maxInstances[a] || Infinity) - this.getBlocksByType(a).length : Infinity
 };
+//Checks if there's remaining capacity for blocks
 LearnBlock.Workspace.prototype.isCapacityAvailable = function (a) {
     if (!this.hasBlockLimits()) return !0;
     var b = 0,
@@ -2787,9 +2809,11 @@ LearnBlock.Workspace.prototype.isCapacityAvailable = function (a) {
     }
     return b > this.remainingCapacity() ? !1 : !0
 };
+//Checks if the workspace has any limits on the maximum number of blocks or block types
 LearnBlock.Workspace.prototype.hasBlockLimits = function () {
     return Infinity != this.options.maxBlocks || !!this.options.maxInstances
 };
+//Undo or redo the previous action
 LearnBlock.Workspace.prototype.undo = function (a) {
     var b = a ? this.redoStack_ : this.undoStack_,
         c = a ? this.undoStack_ : this.redoStack_,
@@ -2806,235 +2830,68 @@ LearnBlock.Workspace.prototype.undo = function (a) {
         }
     }
 };
+//Clears the undo/redo stacks
 LearnBlock.Workspace.prototype.clearUndo = function () {
     this.undoStack_.length = 0;
     this.redoStack_.length = 0;
     LearnBlock.Events.clearPendingUndo()
 };
+//Creates a change listener function when something in the workspace changes
 LearnBlock.Workspace.prototype.addChangeListener = function (a) {
     this.listeners_.push(a);
     return a
 };
+//Removes the listener
 LearnBlock.Workspace.prototype.removeChangeListener = function (a) {
     LearnBlock.utils.arrayRemove(this.listeners_, a)
 };
+//Fires a change event
 LearnBlock.Workspace.prototype.fireChangeListener = function (a) {
     if (a.recordUndo)
         for (this.undoStack_.push(a), this.redoStack_.length = 0; this.undoStack_.length > this.MAX_UNDO && 0 <= this.MAX_UNDO;) this.undoStack_.shift();
     for (var b = 0, c; c = this.listeners_[b]; b++) c(a)
 };
+//Finds the block with the specified ID
 LearnBlock.Workspace.prototype.getBlockById = function (a) {
     return this.blockDB_[a] || null
 };
-LearnBlock.Workspace.prototype.getCommentById = function (a) {
-    return this.commentDB_[a] || null
-};
+//Checks whether all value and statement inputs in the workspace are filled with blocks
 LearnBlock.Workspace.prototype.allInputsFilled = function (a) {
     for (var b = this.getTopBlocks(!1), c = 0, d; d = b[c]; c++)
         if (!d.allInputsFilled(a)) return !1;
     return !0
 };
+//Returns the variable map that contains "potential" variables
 LearnBlock.Workspace.prototype.getPotentialVariableMap = function () {
     return this.potentialVariableMap_
 };
+//Creates and stores the potential variable map for this workspace
 LearnBlock.Workspace.prototype.createPotentialVariableMap = function () {
     this.potentialVariableMap_ = new LearnBlock.VariableMap(this)
 };
+//Returns the map of all variables on the workspace
 LearnBlock.Workspace.prototype.getVariableMap = function () {
     return this.variableMap_
 };
+//Database of all workspaces
 LearnBlock.Workspace.WorkspaceDB_ = Object.create(null);
+//Finds the workspace with the specified ID
 LearnBlock.Workspace.getById = function (a) {
     return LearnBlock.Workspace.WorkspaceDB_[a] || null
 };
+//Finds all workspaces
 LearnBlock.Workspace.getAll = function () {
     var a = [],
         b;
     for (b in LearnBlock.Workspace.WorkspaceDB_) a.push(LearnBlock.Workspace.WorkspaceDB_[b]);
     return a
 };
+//Gets the theme manager for the workspace
 LearnBlock.Workspace.prototype.getThemeManager = function () {
     return this.themeManager_
 };
 
-
-LearnBlock.Events.CommentBase = function (a) {
-    this.commentId = a.id;
-    this.workspaceId = a.workspace.id;
-    this.group = LearnBlock.Events.getGroup();
-    this.recordUndo = LearnBlock.Events.recordUndo
-};
-LearnBlock.utils.object.inherits(LearnBlock.Events.CommentBase, LearnBlock.Events.Abstract);
-LearnBlock.Events.CommentBase.prototype.toJson = function () {
-    var a = LearnBlock.Events.CommentBase.superClass_.toJson.call(this);
-    this.commentId && (a.commentId = this.commentId);
-    return a
-};
-LearnBlock.Events.CommentBase.prototype.fromJson = function (a) {
-    LearnBlock.Events.CommentBase.superClass_.fromJson.call(this, a);
-    this.commentId = a.commentId
-};
-LearnBlock.Events.CommentChange = function (a, b, c) {
-    a && (LearnBlock.Events.CommentChange.superClass_.constructor.call(this, a), this.oldContents_ = b, this.newContents_ = c)
-};
-LearnBlock.utils.object.inherits(LearnBlock.Events.CommentChange, LearnBlock.Events.CommentBase);
-LearnBlock.Events.CommentChange.prototype.type = LearnBlock.Events.COMMENT_CHANGE;
-LearnBlock.Events.CommentChange.prototype.toJson = function () {
-    var a = LearnBlock.Events.CommentChange.superClass_.toJson.call(this);
-    a.newContents = this.newContents_;
-    return a
-};
-LearnBlock.Events.CommentChange.prototype.fromJson = function (a) {
-    LearnBlock.Events.CommentChange.superClass_.fromJson.call(this, a);
-    this.newContents_ = a.newValue
-};
-LearnBlock.Events.CommentChange.prototype.isNull = function () {
-    return this.oldContents_ == this.newContents_
-};
-LearnBlock.Events.CommentChange.prototype.run = function (a) {
-    var b = this.getEventWorkspace_().getCommentById(this.commentId);
-    b ? b.setContent(a ? this.newContents_ : this.oldContents_) : console.warn("Can't change non-existent comment: " + this.commentId)
-};
-LearnBlock.Events.CommentCreate = function (a) {
-    a && (LearnBlock.Events.CommentCreate.superClass_.constructor.call(this, a), this.xml = a.toXmlWithXY())
-};
-LearnBlock.utils.object.inherits(LearnBlock.Events.CommentCreate, LearnBlock.Events.CommentBase);
-LearnBlock.Events.CommentCreate.prototype.type = LearnBlock.Events.COMMENT_CREATE;
-LearnBlock.Events.CommentCreate.prototype.toJson = function () {
-    var a = LearnBlock.Events.CommentCreate.superClass_.toJson.call(this);
-    a.xml = LearnBlock.Xml.domToText(this.xml);
-    return a
-};
-LearnBlock.Events.CommentCreate.prototype.fromJson = function (a) {
-    LearnBlock.Events.CommentCreate.superClass_.fromJson.call(this, a);
-    this.xml = LearnBlock.Xml.textToDom(a.xml)
-};
-LearnBlock.Events.CommentCreate.prototype.run = function (a) {
-    LearnBlock.Events.CommentCreateDeleteHelper(this, a)
-};
-LearnBlock.Events.CommentCreateDeleteHelper = function (a, b) {
-    var c = a.getEventWorkspace_();
-    if (b) {
-        var d = LearnBlock.utils.xml.createElement("xml");
-        d.appendChild(a.xml);
-        LearnBlock.Xml.domToWorkspace(d, c)
-    } else(c = c.getCommentById(a.commentId)) ? c.dispose(!1, !1) : console.warn("Can't uncreate non-existent comment: " + a.commentId)
-};
-LearnBlock.Events.CommentDelete = function (a) {
-    a && (LearnBlock.Events.CommentDelete.superClass_.constructor.call(this, a), this.xml = a.toXmlWithXY())
-};
-LearnBlock.utils.object.inherits(LearnBlock.Events.CommentDelete, LearnBlock.Events.CommentBase);
-LearnBlock.Events.CommentDelete.prototype.type = LearnBlock.Events.COMMENT_DELETE;
-LearnBlock.Events.CommentDelete.prototype.toJson = function () {
-    return LearnBlock.Events.CommentDelete.superClass_.toJson.call(this)
-};
-LearnBlock.Events.CommentDelete.prototype.fromJson = function (a) {
-    LearnBlock.Events.CommentDelete.superClass_.fromJson.call(this, a)
-};
-LearnBlock.Events.CommentDelete.prototype.run = function (a) {
-    LearnBlock.Events.CommentCreateDeleteHelper(this, !a)
-};
-LearnBlock.Events.CommentMove = function (a) {
-    a && (LearnBlock.Events.CommentMove.superClass_.constructor.call(this, a), this.comment_ = a, this.oldCoordinate_ = a.getXY(), this.newCoordinate_ = null)
-};
-LearnBlock.utils.object.inherits(LearnBlock.Events.CommentMove, LearnBlock.Events.CommentBase);
-LearnBlock.Events.CommentMove.prototype.recordNew = function () {
-    if (!this.comment_) throw Error("Tried to record the new position of a comment on the same event twice.");
-    this.newCoordinate_ = this.comment_.getXY();
-    this.comment_ = null
-};
-LearnBlock.Events.CommentMove.prototype.type = LearnBlock.Events.COMMENT_MOVE;
-LearnBlock.Events.CommentMove.prototype.setOldCoordinate = function (a) {
-    this.oldCoordinate_ = a
-};
-LearnBlock.Events.CommentMove.prototype.toJson = function () {
-    var a = LearnBlock.Events.CommentMove.superClass_.toJson.call(this);
-    this.newCoordinate_ && (a.newCoordinate = Math.round(this.newCoordinate_.x) + "," + Math.round(this.newCoordinate_.y));
-    return a
-};
-LearnBlock.Events.CommentMove.prototype.fromJson = function (a) {
-    LearnBlock.Events.CommentMove.superClass_.fromJson.call(this, a);
-    a.newCoordinate && (a = a.newCoordinate.split(","), this.newCoordinate_ = new LearnBlock.utils.Coordinate(Number(a[0]), Number(a[1])))
-};
-LearnBlock.Events.CommentMove.prototype.isNull = function () {
-    return LearnBlock.utils.Coordinate.equals(this.oldCoordinate_, this.newCoordinate_)
-};
-LearnBlock.Events.CommentMove.prototype.run = function (a) {
-    var b = this.getEventWorkspace_().getCommentById(this.commentId);
-    if (b) {
-        a = a ? this.newCoordinate_ : this.oldCoordinate_;
-        var c = b.getXY();
-        b.moveBy(a.x - c.x, a.y - c.y)
-    } else console.warn("Can't move non-existent comment: " + this.commentId)
-};
-LearnBlock.BubbleDragger = function (a, b) {
-    this.draggingBubble_ = a;
-    this.workspace_ = b;
-    this.deleteArea_ = null;
-    this.wouldDeleteBubble_ = !1;
-    this.startXY_ = this.draggingBubble_.getRelativeToSurfaceXY();
-    this.dragSurface_ = LearnBlock.utils.is3dSupported() && b.getBlockDragSurface() ? b.getBlockDragSurface() : null
-};
-LearnBlock.BubbleDragger.prototype.dispose = function () {
-    this.dragSurface_ = this.workspace_ = this.draggingBubble_ = null
-};
-LearnBlock.BubbleDragger.prototype.startBubbleDrag = function () {
-    LearnBlock.Events.getGroup() || LearnBlock.Events.setGroup(!0);
-    this.workspace_.setResizesEnabled(!1);
-    this.draggingBubble_.setAutoLayout(!1);
-    this.dragSurface_ && this.moveToDragSurface_();
-    this.draggingBubble_.setDragging && this.draggingBubble_.setDragging(!0);
-    var a = this.workspace_.getToolbox();
-    if (a) {
-        var b = this.draggingBubble_.isDeletable() ? "blocklyToolboxDelete" : "blocklyToolboxGrab";
-        a.addStyle(b)
-    }
-};
-LearnBlock.BubbleDragger.prototype.dragBubble = function (a, b) {
-    var c = this.pixelsToWorkspaceUnits_(b);
-    c = LearnBlock.utils.Coordinate.sum(this.startXY_, c);
-    this.draggingBubble_.moveDuringDrag(this.dragSurface_, c);
-    this.draggingBubble_.isDeletable() && (this.deleteArea_ = this.workspace_.isDeleteArea(a), this.updateCursorDuringBubbleDrag_())
-};
-LearnBlock.BubbleDragger.prototype.maybeDeleteBubble_ = function () {
-    var a = this.workspace_.trashcan;
-    this.wouldDeleteBubble_ ? (a && setTimeout(a.close.bind(a), 100), this.fireMoveEvent_(), this.draggingBubble_.dispose(!1, !0)) : a && a.close();
-    return this.wouldDeleteBubble_
-};
-LearnBlock.BubbleDragger.prototype.updateCursorDuringBubbleDrag_ = function () {
-    this.wouldDeleteBubble_ = this.deleteArea_ != LearnBlock.DELETE_AREA_NONE;
-    var a = this.workspace_.trashcan;
-    this.wouldDeleteBubble_ ? (this.draggingBubble_.setDeleteStyle(!0), this.deleteArea_ == LearnBlock.DELETE_AREA_TRASH && a && a.setOpen_(!0)) : (this.draggingBubble_.setDeleteStyle(!1), a && a.setOpen_(!1))
-};
-LearnBlock.BubbleDragger.prototype.endBubbleDrag = function (a, b) {
-    this.dragBubble(a, b);
-    var c = this.pixelsToWorkspaceUnits_(b);
-    c = LearnBlock.utils.Coordinate.sum(this.startXY_, c);
-    this.draggingBubble_.moveTo(c.x, c.y);
-    this.maybeDeleteBubble_() || (this.dragSurface_ && this.dragSurface_.clearAndHide(this.workspace_.getBubbleCanvas()), this.draggingBubble_.setDragging && this.draggingBubble_.setDragging(!1), this.fireMoveEvent_());
-    this.workspace_.setResizesEnabled(!0);
-    this.workspace_.toolbox_ && (c = this.draggingBubble_.isDeletable() ?
-        "blocklyToolboxDelete" : "blocklyToolboxGrab", this.workspace_.toolbox_.removeStyle(c));
-    LearnBlock.Events.setGroup(!1)
-};
-LearnBlock.BubbleDragger.prototype.fireMoveEvent_ = function () {
-    if (this.draggingBubble_.isComment) {
-        var a = new LearnBlock.Events.CommentMove(this.draggingBubble_);
-        a.setOldCoordinate(this.startXY_);
-        a.recordNew();
-        LearnBlock.Events.fire(a)
-    }
-};
-LearnBlock.BubbleDragger.prototype.pixelsToWorkspaceUnits_ = function (a) {
-    a = new LearnBlock.utils.Coordinate(a.x / this.workspace_.scale, a.y / this.workspace_.scale);
-    this.workspace_.isMutator && a.scale(1 / this.workspace_.options.parentWorkspace.scale);
-    return a
-};
-LearnBlock.BubbleDragger.prototype.moveToDragSurface_ = function () {
-    this.draggingBubble_.moveTo(0, 0);
-    this.dragSurface_.translateSurface(this.startXY_.x, this.startXY_.y);
-    this.dragSurface_.setBlocksAndShow(this.draggingBubble_.getSvgRoot())
-};
+//LearnBlock constants
 LearnBlock.constants = {};
 LearnBlock.LINE_MODE_MULTIPLIER = 40;
 LearnBlock.PAGE_MODE_MULTIPLIER = 125;
@@ -3086,6 +2943,8 @@ LearnBlock.VARIABLE_DYNAMIC_CATEGORY_NAME = "VARIABLE_DYNAMIC";
 LearnBlock.PROCEDURE_CATEGORY_NAME = "PROCEDURE";
 LearnBlock.RENAME_VARIABLE_ID = "RENAME_VARIABLE_ID";
 LearnBlock.DELETE_VARIABLE_ID = "DELETE_VARIABLE_ID";
+
+
 LearnBlock.Events.Ui = function (a, b, c, d) {
     LearnBlock.Events.Ui.superClass_.constructor.call(this);
     this.blockId = a ? a.id : null;
@@ -3110,34 +2969,30 @@ LearnBlock.Events.Ui.prototype.fromJson = function (a) {
     this.newValue = a.newValue;
     this.blockId = a.blockId
 };
+
+//Class that moves the workspace around when being dragged by mouse
 LearnBlock.WorkspaceDragger = function (a) {
     this.workspace_ = a;
     this.startScrollXY_ = new LearnBlock.utils.Coordinate(a.scrollX, a.scrollY)
 };
+//Severs all links from this object
 LearnBlock.WorkspaceDragger.prototype.dispose = function () {
     this.workspace_ = null
 };
+//Starts dragging the workspace
 LearnBlock.WorkspaceDragger.prototype.startDrag = function () {
     LearnBlock.selected && LearnBlock.selected.unselect();
     this.workspace_.setupDragSurface()
 };
+//Finishes dragging the workspace and puts everything back where it belongs
 LearnBlock.WorkspaceDragger.prototype.endDrag = function (a) {
     this.drag(a);
     this.workspace_.resetDragSurface()
 };
+//Moves the workspace based on the most recent mouse movements
 LearnBlock.WorkspaceDragger.prototype.drag = function (a) {
     a = LearnBlock.utils.Coordinate.sum(this.startScrollXY_, a);
     this.workspace_.scroll(a.x, a.y)
-};
-LearnBlock.FlyoutDragger = function (a) {
-    LearnBlock.FlyoutDragger.superClass_.constructor.call(this, a.getWorkspace());
-    this.scrollbar_ = a.scrollbar_;
-    this.horizontalLayout_ = a.horizontalLayout_
-};
-LearnBlock.utils.object.inherits(LearnBlock.FlyoutDragger, LearnBlock.WorkspaceDragger);
-LearnBlock.FlyoutDragger.prototype.drag = function (a) {
-    a = LearnBlock.utils.Coordinate.sum(this.startScrollXY_, a);
-    this.horizontalLayout_ ? this.scrollbar_.set(-a.x) : this.scrollbar_.set(-a.y)
 };
 
 
@@ -3275,7 +3130,15 @@ LearnBlock.Gesture.prototype.updateIsDraggingBlock_ = function () {
     return this.isDraggingBlock_ ? (this.startDraggingBlock_(), !0) : !1
 };
 LearnBlock.Gesture.prototype.updateIsDraggingWorkspace_ = function () {
-    if (this.flyout_ ? this.flyout_.isScrollable() : this.startWorkspace_ && this.startWorkspace_.isDraggable()) this.workspaceDragger_ = this.flyout_ ? new LearnBlock.FlyoutDragger(this.flyout_) : new LearnBlock.WorkspaceDragger(this.startWorkspace_), this.isDraggingWorkspace_ = !0, this.workspaceDragger_.startDrag()
+    var wsMovable = this.startWorkspace_ && this.startWorkspace_.isDraggable();
+    if (!wsMovable) {
+        return;
+    }
+    if (!this.flyout_) {
+        this.workspaceDragger_ = new LearnBlock.WorkspaceDragger(this.startWorkspace_);
+    }
+    this.isDraggingWorkspace_ = true;
+    this.workspaceDragger_.startDrag();
 };
 LearnBlock.Gesture.prototype.updateIsDragging_ = function () {
     if (this.calledUpdateIsDragging_) throw Error("updateIsDragging_ should only be called once per gesture.");
@@ -5355,6 +5218,8 @@ LearnBlock.utils.Rect = function (a, b, c, d) {
 LearnBlock.utils.Rect.prototype.contains = function (a, b) {
     return a >= this.left && a <= this.right && b >= this.top && b <= this.bottom
 };
+
+
 LearnBlock.Icon = function (a) {
     this.block_ = a
 };
@@ -5398,77 +5263,6 @@ LearnBlock.Icon.prototype.getIconLocation = function () {
 };
 LearnBlock.Icon.prototype.getCorrectedSize = function () {
     return new LearnBlock.utils.Size(LearnBlock.Icon.prototype.SIZE, LearnBlock.Icon.prototype.SIZE - 2)
-};
-LearnBlock.Warning = function (a) {
-    LearnBlock.Warning.superClass_.constructor.call(this, a);
-    this.createIcon();
-    this.text_ = {}
-};
-LearnBlock.utils.object.inherits(LearnBlock.Warning, LearnBlock.Icon);
-LearnBlock.Warning.prototype.collapseHidden = !1;
-LearnBlock.Warning.prototype.drawIcon_ = function (a) {
-    LearnBlock.utils.dom.createSvgElement("path", {
-        "class": "blocklyIconShape",
-        d: "M2,15Q-1,15 0.5,12L6.5,1.7Q8,-1 9.5,1.7L15.5,12Q17,15 14,15z"
-    }, a);
-    LearnBlock.utils.dom.createSvgElement("path", {
-        "class": "blocklyIconSymbol",
-        d: "m7,4.8v3.16l0.27,2.27h1.46l0.27,-2.27v-3.16z"
-    }, a);
-    LearnBlock.utils.dom.createSvgElement("rect", {
-        "class": "blocklyIconSymbol",
-        x: "7",
-        y: "11",
-        height: "2",
-        width: "2"
-    }, a)
-};
-LearnBlock.Warning.textToDom_ = function (a) {
-    var b = LearnBlock.utils.dom.createSvgElement("text", {
-        "class": "blocklyText blocklyBubbleText",
-        y: LearnBlock.Bubble.BORDER_WIDTH
-    }, null);
-    a = a.split("\n");
-    for (var c = 0; c < a.length; c++) {
-        var d = LearnBlock.utils.dom.createSvgElement("tspan", {
-                dy: "1em",
-                x: LearnBlock.Bubble.BORDER_WIDTH
-            }, b),
-            e = document.createTextNode(a[c]);
-        d.appendChild(e)
-    }
-    return b
-};
-LearnBlock.Warning.prototype.setVisible = function (a) {
-    a != this.isVisible() && (LearnBlock.Events.fire(new LearnBlock.Events.Ui(this.block_, "warningOpen", !a, a)), a ? this.createBubble() : this.disposeBubble())
-};
-LearnBlock.Warning.prototype.createBubble = function () {
-    this.paragraphElement_ = LearnBlock.Warning.textToDom_(this.getText());
-    this.bubble_ = new LearnBlock.Bubble(this.block_.workspace, this.paragraphElement_, this.block_.svgPath_, this.iconXY_, null, null);
-    this.bubble_.setSvgId(this.block_.id);
-    if (this.block_.RTL)
-        for (var a = this.paragraphElement_.getBBox().width, b = 0, c; c = this.paragraphElement_.childNodes[b]; b++) c.setAttribute("text-anchor", "end"), c.setAttribute("x", a + LearnBlock.Bubble.BORDER_WIDTH);
-    this.updateColour()
-};
-LearnBlock.Warning.prototype.disposeBubble = function () {
-    this.bubble_.dispose();
-    this.paragraphElement_ = this.body_ = this.bubble_ = null
-};
-LearnBlock.Warning.prototype.bodyFocus_ = function (a) {
-    this.bubble_.promote_()
-};
-LearnBlock.Warning.prototype.setText = function (a, b) {
-    this.text_[b] != a && (a ? this.text_[b] = a : delete this.text_[b], this.isVisible() && (this.setVisible(!1), this.setVisible(!0)))
-};
-LearnBlock.Warning.prototype.getText = function () {
-    var a = [],
-        b;
-    for (b in this.text_) a.push(this.text_[b]);
-    return a.join("\n")
-};
-LearnBlock.Warning.prototype.dispose = function () {
-    this.block_.warning = null;
-    LearnBlock.Icon.prototype.dispose.call(this)
 };
 
 
@@ -5926,14 +5720,17 @@ LearnBlock.BlockSvg.prototype.highlightForReplacement = function (a) {
 };
 
 
-//Funciones CSS (css.js)
+//CSS Functions
 LearnBlock.Css = {};
+//Has CSS already been injected?
 LearnBlock.Css.injected_ = !1;
+//Adds some CSS
 LearnBlock.Css.register = function (a) {
     if (LearnBlock.Css.injected_) throw Error("CSS already injected");
     Array.prototype.push.apply(LearnBlock.Css.CONTENT, a);
     a.length = 0
 };
+//Injects the CSS into the DOM
 LearnBlock.Css.inject = function (a, b) {
     if (!LearnBlock.Css.injected_) {
         LearnBlock.Css.injected_ = !0;
@@ -5949,12 +5746,7 @@ LearnBlock.Css.inject = function (a, b) {
         }
     }
 };
-LearnBlock.Css.setCursor = function (a) {
-    console.warn("Deprecated call to LearnBlock.Css.setCursor. See https://github.com/google/blockly/issues/981 for context")
-};
-/**
- * Array making up the CSS content for LearnBlock.
- */
+//CSS content
 LearnBlock.Css.CONTENT = [
   /* eslint-disable indent */
   '.blocklySvg {',
@@ -5964,39 +5756,32 @@ LearnBlock.Css.CONTENT = [
     'position: absolute;',
     'display: block;',
   '}',
-
   '.blocklyWidgetDiv {',
     'display: none;',
     'position: absolute;',
     'z-index: 99999;', /* big value for bootstrap3 compatibility */
   '}',
-
   '.injectionDiv {',
     'height: 100%;',
     'position: relative;',
     'overflow: hidden;', /* So blocks in drag surface disappear at edges */
     'touch-action: none;',
   '}',
-
   '.blocklyNonSelectable {',
     'user-select: none;',
     '-ms-user-select: none;',
     '-webkit-user-select: none;',
   '}',
-
   '.blocklyWsDragSurface {',
     'display: none;',
     'position: absolute;',
     'top: 0;',
     'left: 0;',
   '}',
-  /* Added as a separate rule with multiple classes to make it more specific
-     than a bootstrap rule that selects svg:root. See issue #1275 for context.
-  */
+  //Added as a separate rule with multiple classes to make it more specific than a bootstrap rule that selects svg:root. See issue #1275 for context.
   '.blocklyWsDragSurface.blocklyOverflowVisible {',
     'overflow: visible;',
   '}',
-
   '.blocklyBlockDragSurface {',
     'display: none;',
     'position: absolute;',
@@ -6007,12 +5792,10 @@ LearnBlock.Css.CONTENT = [
     'overflow: visible !important;',
     'z-index: 50;', /* Display below toolbox, but above everything else. */
   '}',
-
   '.blocklyBlockCanvas.blocklyCanvasTransitioning,',
   '.blocklyBubbleCanvas.blocklyCanvasTransitioning {',
     'transition: transform .5s;',
   '}',
-
   '.blocklyTooltipDiv {',
     'background-color: #ffffc7;',
     'border: 1px solid #ddc;',
@@ -6026,7 +5809,6 @@ LearnBlock.Css.CONTENT = [
     'position: absolute;',
     'z-index: 100000;', /* big value for bootstrap3 compatibility */
   '}',
-
   '.blocklyDropDownDiv {',
     'position: fixed;',
     'left: 0;',
@@ -6038,17 +5820,14 @@ LearnBlock.Css.CONTENT = [
     'padding: 4px;',
     'box-shadow: 0px 0px 3px 1px rgba(0,0,0,.3);',
   '}',
-
   '.blocklyDropDownDiv.focused {',
     'box-shadow: 0px 0px 6px 1px rgba(0,0,0,.3);',
   '}',
-
   '.blocklyDropDownContent {',
     'max-height: 300px;', // @todo: spec for maximum height.
     'overflow: auto;',
     'overflow-x: hidden;',
   '}',
-
   '.blocklyDropDownArrow {',
     'position: absolute;',
     'left: 0;',
@@ -6059,7 +5838,6 @@ LearnBlock.Css.CONTENT = [
     'background-color: inherit;',
     'border-color: inherit;',
   '}',
-
   '.blocklyDropDownButton {',
     'display: inline-block;',
     'float: left;',
@@ -6071,64 +5849,53 @@ LearnBlock.Css.CONTENT = [
     'transition: box-shadow .1s;',
     'cursor: pointer;',
   '}',
-
   '.arrowTop {',
     'border-top: 1px solid;',
     'border-left: 1px solid;',
     'border-top-left-radius: 4px;',
     'border-color: inherit;',
   '}',
-
   '.arrowBottom {',
     'border-bottom: 1px solid;',
     'border-right: 1px solid;',
     'border-bottom-right-radius: 4px;',
     'border-color: inherit;',
   '}',
-
   '.blocklyResizeSE {',
     'cursor: se-resize;',
     'fill: #aaa;',
   '}',
-
   '.blocklyResizeSW {',
     'cursor: sw-resize;',
     'fill: #aaa;',
   '}',
-
   '.blocklyResizeLine {',
     'stroke: #515A5A;',
     'stroke-width: 1;',
   '}',
-
   '.blocklyHighlightedConnectionPath {',
     'fill: none;',
     'stroke: #fc3;',
     'stroke-width: 4px;',
   '}',
-
   '.blocklyPathLight {',
     'fill: none;',
     'stroke-linecap: round;',
     'stroke-width: 1;',
   '}',
-
   '.blocklySelected>.blocklyPath {',
     'stroke: #fc3;',
     'stroke-width: 3px;',
   '}',
-
   '.blocklySelected>.blocklyPathLight {',
     'display: none;',
   '}',
-
   '.blocklyDraggable {',
     /* backup for browsers (e.g. IE11) that don't support grab */
     'cursor: url("<<<PATH>>>/handopen.cur"), auto;',
     'cursor: grab;',
     'cursor: -webkit-grab;',
   '}',
-
   '.blocklyDragging {',
     /* backup for browsers (e.g. IE11) that don't support grabbing */
     'cursor: url("<<<PATH>>>/handclosed.cur"), auto;',
@@ -6152,169 +5919,132 @@ LearnBlock.Css.CONTENT = [
     'cursor: grabbing;',
     'cursor: -webkit-grabbing;',
   '}',
-
   '.blocklyDragging.blocklyDraggingDelete {',
     'cursor: url("<<<PATH>>>/handdelete.cur"), auto;',
   '}',
-
   '.blocklyDragging>.blocklyPath,',
   '.blocklyDragging>.blocklyPathLight {',
     'fill-opacity: .8;',
     'stroke-opacity: .8;',
   '}',
-
   '.blocklyDragging>.blocklyPathDark {',
     'display: none;',
   '}',
-
   '.blocklyDisabled>.blocklyPath {',
     'fill-opacity: .5;',
     'stroke-opacity: .5;',
   '}',
-
   '.blocklyDisabled>.blocklyPathLight,',
   '.blocklyDisabled>.blocklyPathDark {',
     'display: none;',
   '}',
-
   '.blocklyInsertionMarker>.blocklyPath,',
   '.blocklyInsertionMarker>.blocklyPathLight,',
   '.blocklyInsertionMarker>.blocklyPathDark {',
     'fill-opacity: .2;',
     'stroke: none',
   '}',
-
   '.blocklyReplaceable .blocklyPath {',
     'fill-opacity: .5;',
   '}',
-
   '.blocklyReplaceable .blocklyPathLight,',
   '.blocklyReplaceable .blocklyPathDark {',
     'display: none;',
   '}',
-
   '.blocklyText {',
     'cursor: default;',
     'fill: #fff;',
     'font-family: sans-serif;',
     'font-size: 11pt;',
   '}',
-
   '.blocklyMultilineText {',
     'font-family: monospace;',
   '}',
-
   '.blocklyNonEditableText>text {',
     'pointer-events: none;',
   '}',
-
   '.blocklyNonEditableText>rect,',
   '.blocklyEditableText>rect {',
     'fill: #fff;',
     'fill-opacity: .6;',
   '}',
-
   '.blocklyNonEditableText>text,',
   '.blocklyEditableText>text {',
     'fill: #000;',
   '}',
-
   '.blocklyEditableText:hover>rect {',
     'stroke: #fff;',
     'stroke-width: 2;',
   '}',
-
   '.blocklyBubbleText {',
     'fill: #000;',
   '}',
-
   '.blocklyFlyout {',
     'position: absolute;',
     'z-index: 20;',
   '}',
-
-  /*
-    Don't allow users to select text.  It gets annoying when trying to
-    drag a block and selected text moves instead.
-  */
+  //Don't allow users to select text.  It gets annoying when trying to drag a block and selected text moves instead.
   '.blocklySvg text, .blocklyBlockDragSurface text {',
     'user-select: none;',
     '-ms-user-select: none;',
     '-webkit-user-select: none;',
     'cursor: inherit;',
   '}',
-
   '.blocklyHidden {',
     'display: none;',
   '}',
-
   '.blocklyFieldDropdown:not(.blocklyHidden) {',
     'display: block;',
   '}',
-
   '.blocklyIconGroup {',
     'cursor: default;',
   '}',
-
   '.blocklyIconGroup:not(:hover),',
   '.blocklyIconGroupReadonly {',
     'opacity: .6;',
   '}',
-
   '.blocklyIconShape {',
     'fill: #00f;',
     'stroke: #fff;',
     'stroke-width: 1px;',
   '}',
-
   '.blocklyIconSymbol {',
     'fill: #fff;',
   '}',
-
   '.blocklyMinimalBody {',
     'margin: 0;',
     'padding: 0;',
   '}',
-
   '.blocklyCommentForeignObject {',
     'position: relative;',
     'z-index: 0;',
   '}',
-
   '.blocklyCommentRect {',
     'fill: #E7DE8E;',
     'stroke: #bcA903;',
     'stroke-width: 1px',
   '}',
-
   '.blocklyCommentTarget {',
     'fill: transparent;',
     'stroke: #bcA903;',
   '}',
-
   '.blocklyCommentTargetFocused {',
     'fill: none;',
   '}',
-
   '.blocklyCommentHandleTarget {',
     'fill: none;',
   '}',
-
   '.blocklyCommentHandleTargetFocused {',
     'fill: transparent;',
   '}',
-
   '.blocklyFocused>.blocklyCommentRect {',
     'fill: #B9B272;',
     'stroke: #B9B272;',
   '}',
-
   '.blocklySelected>.blocklyCommentTarget {',
     'stroke: #fc3;',
     'stroke-width: 3px;',
   '}',
-
-
   '.blocklyCommentTextarea {',
     'background-color: #fef49c;',
     'border: 0;',
@@ -6325,27 +6055,22 @@ LearnBlock.Css.CONTENT = [
     'display: block;',
     'overflow: hidden;',
   '}',
-
   '.blocklyCommentDeleteIcon {',
     'cursor: pointer;',
     'fill: #000;',
     'display: none',
   '}',
-
   '.blocklySelected > .blocklyCommentDeleteIcon {',
     'display: block',
   '}',
-
   '.blocklyDeleteIconShape {',
     'fill: #000;',
     'stroke: #000;',
     'stroke-width: 1px;',
   '}',
-
   '.blocklyDeleteIconShape.blocklyDeleteIconHighlighted {',
     'stroke: #fc3;',
   '}',
-
   '.blocklyHtmlInput {',
     'border: none;',
     'border-radius: 4px;',
@@ -6357,122 +6082,83 @@ LearnBlock.Css.CONTENT = [
     'width: 100%;',
     'text-align: center;',
   '}',
-
-  /* Edge and IE introduce a close icon when the input value is longer than a
-     certain length. This affects our sizing calculations of the text input.
-     Hiding the close icon to avoid that. */
+  //Edge and IE introduce a close icon when the input value is longer than acertain length. This affects our sizing calculations of the text input. Hiding the close icon to avoid that.
   '.blocklyHtmlInput::-ms-clear {',
     'display: none;',
   '}',
-
   '.blocklyMainBackground {',
     'stroke-width: 1;',
     'stroke: #c6c6c6;', /* Equates to #ddd due to border being off-pixel. */
   '}',
-
   '.blocklyMutatorBackground {',
     'fill: #fff;',
     'stroke: #ddd;',
     'stroke-width: 1;',
   '}',
-
   '.blocklyFlyoutBackground {',
     'fill: #dbd;',
     'fill-opacity: .8;',
   '}',
-
   '.blocklyMainWorkspaceScrollbar {',
     'z-index: 20;',
   '}',
-
   '.blocklyFlyoutScrollbar {',
     'z-index: 30;',
   '}',
-
   '.blocklyScrollbarHorizontal, .blocklyScrollbarVertical {',
     'position: absolute;',
     'outline: none;',
   '}',
-
   '.blocklyScrollbarBackground {',
     'opacity: 0;',
   '}',
-
   '.blocklyScrollbarHandle {',
     'fill: #ccc;',
   '}',
-
   '.blocklyScrollbarBackground:hover+.blocklyScrollbarHandle,',
   '.blocklyScrollbarHandle:hover {',
     'fill: #bbb;',
   '}',
-
-  /* Darken flyout scrollbars due to being on a grey background. */
-  /* By contrast, workspace scrollbars are on a white background. */
+  //Darken flyout scrollbars due to being on a grey background. By contrast, workspace scrollbars are on a white background.
   '.blocklyFlyout .blocklyScrollbarHandle {',
     'fill: #bbb;',
   '}',
-
   '.blocklyFlyout .blocklyScrollbarBackground:hover+.blocklyScrollbarHandle,',
   '.blocklyFlyout .blocklyScrollbarHandle:hover {',
     'fill: #aaa;',
   '}',
-
   '.blocklyInvalidInput {',
     'background: #faa;',
   '}',
-
   '.blocklyContextMenu {',
     'border-radius: 4px;',
     'max-height: 100%;',
   '}',
-
   '.blocklyDropdownMenu {',
     'border-radius: 2px;',
     'padding: 0 !important;',
   '}',
 
   '.blocklyWidgetDiv .blocklyDropdownMenu .goog-menuitem,',
-  '.blocklyDropDownDiv .blocklyDropdownMenu .goog-menuitem {',
-    /* 28px on the left for icon or checkbox. */
+  '.blocklyDropDownDiv .blocklyDropdownMenu .goog-menuitem {', /* 28px on the left for icon or checkbox. */
     'padding-left: 28px;',
   '}',
-
-  /* BiDi override for the resting state. */
-  /* #noflip */
+  // BiDi override for the resting state. #noflip
   '.blocklyWidgetDiv .blocklyDropdownMenu .goog-menuitem.goog-menuitem-rtl,',
-  '.blocklyDropDownDiv .blocklyDropdownMenu .goog-menuitem.goog-menuitem-rtl {',
-     /* Flip left/right padding for BiDi. */
+  '.blocklyDropDownDiv .blocklyDropdownMenu .goog-menuitem.goog-menuitem-rtl {', // Flip left/right padding for BiDi.
     'padding-left: 5px;',
     'padding-right: 28px;',
   '}',
-
   '.blocklyVerticalCursor {',
     'stroke-width: 3px;',
     'fill: rgba(255,255,255,.5);',
   '}',
-
   '.blocklyWidgetDiv .goog-option-selected .goog-menuitem-checkbox,',
   '.blocklyWidgetDiv .goog-option-selected .goog-menuitem-icon,',
   '.blocklyDropDownDiv .goog-option-selected .goog-menuitem-checkbox,',
   '.blocklyDropDownDiv .goog-option-selected .goog-menuitem-icon {',
     'background: url(<<<PATH>>>/sprites.png) no-repeat -48px -16px;',
   '}',
-
-  /* Copied from: goog/css/menu.css */
-  /*
-  * Copyright 2009 The Closure Library Authors. All Rights Reserved.
-  *
-  * Use of this source code is governed by the Apache License, Version 2.0.
-  * See the COPYING file for details.
-  */
-
-  /**
-  * Standard styling for menus created by goog.ui.MenuRenderer.
-  *
-  * @author attila@google.com (Attila Bodis)
-  */
-
   '.blocklyWidgetDiv .goog-menu {',
     'background: #fff;',
     'border-color: transparent;',
@@ -6490,107 +6176,63 @@ LearnBlock.Css.CONTENT = [
     'z-index: 20000;', /* Arbitrary, but some apps depend on it... */
     'box-shadow: 0px 0px 3px 1px rgba(0,0,0,.3);',
   '}',
-
   '.blocklyWidgetDiv .goog-menu.focused {',
     'box-shadow: 0px 0px 6px 1px rgba(0,0,0,.3);',
   '}',
-
   '.blocklyDropDownDiv .goog-menu {',
     'cursor: default;',
     'font: normal 13px "Helvetica Neue", Helvetica, sans-serif;',
     'outline: none;',
     'z-index: 20000;', /* Arbitrary, but some apps depend on it... */
   '}',
-
-  /* Copied from: goog/css/menuitem.css */
-  /*
-  * Copyright 2009 The Closure Library Authors. All Rights Reserved.
-  *
-  * Use of this source code is governed by the Apache License, Version 2.0.
-  * See the COPYING file for details.
-  */
-
-  /**
-  * Standard styling for menus created by goog.ui.MenuItemRenderer.
-  *
-  * @author attila@google.com (Attila Bodis)
-  */
-
-  /**
-  * State: resting.
-  *
-  * NOTE(mleibman,chrishenry):
-  * The RTL support in Closure is provided via two mechanisms -- "rtl" CSS
-  * classes and BiDi flipping done by the CSS compiler.  Closure supports RTL
-  * with or without the use of the CSS compiler.  In order for them not to
-  * conflict with each other, the "rtl" CSS classes need to have the #noflip
-  * annotation.  The non-rtl counterparts should ideally have them as well,
-  * but, since .goog-menuitem existed without .goog-menuitem-rtl for so long
-  * before being added, there is a risk of people having templates where they
-  * are not rendering the .goog-menuitem-rtl class when in RTL and instead
-  * rely solely on the BiDi flipping by the CSS compiler.  That's why we're
-  * not adding the #noflip to .goog-menuitem.
-  */
   '.blocklyWidgetDiv .goog-menuitem,',
   '.blocklyDropDownDiv .goog-menuitem {',
     'color: #000;',
     'font: normal 13px Arial, sans-serif;',
     'list-style: none;',
-    'margin: 0;',
-     /* 7em on the right for shortcut. */
+    'margin: 0;', /* 7em on the right for shortcut. */
     'min-width: 7em;',
     'border: none;',
     'padding: 6px 15px;',
     'white-space: nowrap;',
     'cursor: pointer;',
   '}',
-
-  /* If a menu doesn't have checkable items or items with icons,
-  * remove padding.
-  */
+  // If a menu doesn't have checkable items or items with icons,remove padding.
   '.blocklyWidgetDiv .goog-menu-nocheckbox .goog-menuitem,',
   '.blocklyWidgetDiv .goog-menu-noicon .goog-menuitem,',
   '.blocklyDropDownDiv .goog-menu-nocheckbox .goog-menuitem,',
   '.blocklyDropDownDiv .goog-menu-noicon .goog-menuitem {',
     'padding-left: 12px;',
   '}',
-
   '.blocklyWidgetDiv .goog-menuitem-content,',
   '.blocklyDropDownDiv .goog-menuitem-content {',
     'font: normal 13px Arial, sans-serif;',
   '}',
-
   '.blocklyWidgetDiv .goog-menuitem-content {',
     'color: #000;',
   '}',
-
   '.blocklyDropDownDiv .goog-menuitem-content {',
     'color: #000;',
   '}',
-
   /* State: disabled. */
   '.blocklyWidgetDiv .goog-menuitem-disabled,',
   '.blocklyDropDownDiv .goog-menuitem-disabled {',
     'cursor: inherit;',
   '}',
-
   '.blocklyWidgetDiv .goog-menuitem-disabled .goog-menuitem-content,',
   '.blocklyDropDownDiv .goog-menuitem-disabled .goog-menuitem-content {',
     'color: #ccc !important;',
   '}',
-
   '.blocklyWidgetDiv .goog-menuitem-disabled .goog-menuitem-icon,',
   '.blocklyDropDownDiv .goog-menuitem-disabled .goog-menuitem-icon {',
     'opacity: .3;',
     'filter: alpha(opacity=30);',
   '}',
-
   /* State: hover. */
   '.blocklyWidgetDiv .goog-menuitem-highlight ,',
   '.blocklyDropDownDiv .goog-menuitem-highlight {',
     'background-color: rgba(0,0,0,.1);',
   '}',
-
   /* State: selected/checked. */
   '.blocklyWidgetDiv .goog-menuitem-checkbox,',
   '.blocklyWidgetDiv .goog-menuitem-icon,',
@@ -6604,18 +6246,14 @@ LearnBlock.Css.CONTENT = [
     'vertical-align: middle;',
     'width: 16px;',
   '}',
-
-  /* BiDi override for the selected/checked state. */
-  /* #noflip */
+  //BiDi override for the selected/checked state. #noflip
   '.blocklyWidgetDiv .goog-menuitem-rtl .goog-menuitem-checkbox,',
   '.blocklyWidgetDiv .goog-menuitem-rtl .goog-menuitem-icon,',
   '.blocklyDropDownDiv .goog-menuitem-rtl .goog-menuitem-checkbox,',
-  '.blocklyDropDownDiv .goog-menuitem-rtl .goog-menuitem-icon {',
-     /* Flip left/right positioning. */
+  '.blocklyDropDownDiv .goog-menuitem-rtl .goog-menuitem-icon {', /* Flip left/right positioning. */
     'left: auto;',
     'right: 6px;',
   '}',
-
   '.blocklyWidgetDiv .goog-option-selected .goog-menuitem-checkbox,',
   '.blocklyWidgetDiv .goog-option-selected .goog-menuitem-icon,',
   '.blocklyDropDownDiv .goog-option-selected .goog-menuitem-checkbox,',
@@ -6624,18 +6262,16 @@ LearnBlock.Css.CONTENT = [
     'float: left;',
     'margin-left: -24px;',
   '}',
-
   '.blocklyWidgetDiv .goog-menuitem-rtl .goog-menuitem-checkbox,',
   '.blocklyWidgetDiv .goog-menuitem-rtl .goog-menuitem-icon,',
   '.blocklyDropDownDiv .goog-menuitem-rtl .goog-menuitem-checkbox,',
   '.blocklyDropDownDiv .goog-menuitem-rtl .goog-menuitem-icon {',
     'float: right;',
     'margin-right: -24px;',
-  '}'
-  /* eslint-enable indent */
+  '}' /* eslint-enable indent */
 ];
 
-
+//Dropdown class
 LearnBlock.DropDownDiv = function () {};
 LearnBlock.DropDownDiv.DIV_ = null;
 LearnBlock.DropDownDiv.boundsElement_ = null;
@@ -6650,6 +6286,7 @@ LearnBlock.DropDownDiv.DEFAULT_DROPDOWN_BORDER_COLOR = "#dadce0";
 LearnBlock.DropDownDiv.DEFAULT_DROPDOWN_COLOR = "#fff";
 LearnBlock.DropDownDiv.animateOutTimer_ = null;
 LearnBlock.DropDownDiv.onHide_ = null;
+//Creates and inserts the dom element for the div
 LearnBlock.DropDownDiv.createDom = function () {
     if (!LearnBlock.DropDownDiv.DIV_) {
         var a = document.createElement("div");
@@ -6676,23 +6313,29 @@ LearnBlock.DropDownDiv.createDom = function () {
         })
     }
 };
+//Sets an element to maintain bounds within
 LearnBlock.DropDownDiv.setBoundsElement = function (a) {
     LearnBlock.DropDownDiv.boundsElement_ = a
 };
+//Provides the div for inserting content into the drop-down
 LearnBlock.DropDownDiv.getContentDiv = function () {
     return LearnBlock.DropDownDiv.content_
 };
+//Clears the content of the drop-down
 LearnBlock.DropDownDiv.clearContent = function () {
     LearnBlock.DropDownDiv.content_.innerHTML = "";
     LearnBlock.DropDownDiv.content_.style.width = ""
 };
+//Sets the colour for the drop-down
 LearnBlock.DropDownDiv.setColour = function (a, b) {
     LearnBlock.DropDownDiv.DIV_.style.backgroundColor = a;
     LearnBlock.DropDownDiv.DIV_.style.borderColor = b
 };
+//Sets the category for the drop-down
 LearnBlock.DropDownDiv.setCategory = function (a) {
     LearnBlock.DropDownDiv.DIV_.setAttribute("data-category", a)
 };
+//Shows and places the drop-down with positioning determined by a particular block
 LearnBlock.DropDownDiv.showPositionedByBlock = function (a, b, c, d) {
     var e = b.workspace.scale,
         f = b.width,
@@ -6707,6 +6350,7 @@ LearnBlock.DropDownDiv.showPositionedByBlock = function (a, b, c, d) {
     LearnBlock.DropDownDiv.setBoundsElement(b.workspace.getParentSvg().parentNode);
     return LearnBlock.DropDownDiv.show(a, b.RTL, f, g, f, e, c)
 };
+//Shows and places the drop-down with positioning determined by a particular field
 LearnBlock.DropDownDiv.showPositionedByField = function (a, b, c) {
     var d = a.getSvgRoot().getBoundingClientRect(),
         e = d.left + d.width / 2,
@@ -6718,6 +6362,7 @@ LearnBlock.DropDownDiv.showPositionedByField = function (a, b, c) {
     LearnBlock.DropDownDiv.setBoundsElement(c.workspace.getParentSvg().parentNode);
     return LearnBlock.DropDownDiv.show(a, c.RTL, e, f, e, d, b)
 };
+//Shows and places the drop-down
 LearnBlock.DropDownDiv.show = function (a, b, c, d, e, f, g) {
     LearnBlock.DropDownDiv.owner_ = a;
     LearnBlock.DropDownDiv.onHide_ = g || null;
@@ -6727,6 +6372,7 @@ LearnBlock.DropDownDiv.show = function (a, b, c, d, e, f, g) {
     LearnBlock.DropDownDiv.positionInternal_(a.initialX, a.initialY, a.finalX, a.finalY);
     return a.arrowAtTop
 };
+//Gets sizing info about the bounding element
 LearnBlock.DropDownDiv.getBoundsInfo_ = function () {
     var a = LearnBlock.DropDownDiv.boundsElement_.getBoundingClientRect(),
         b = LearnBlock.utils.style.getSize(LearnBlock.DropDownDiv.boundsElement_);
@@ -6739,12 +6385,14 @@ LearnBlock.DropDownDiv.getBoundsInfo_ = function () {
         height: b.height
     }
 };
+//Helper to position the drop-down and the arrow, maintaining bounds
 LearnBlock.DropDownDiv.getPositionMetrics = function (a, b, c, d) {
     var e = LearnBlock.DropDownDiv.getBoundsInfo_(),
         f = LearnBlock.utils.style.getSize(LearnBlock.DropDownDiv.DIV_);
     return b + f.height < e.bottom ? LearnBlock.DropDownDiv.getPositionBelowMetrics(a, b, e, f) : d - f.height > e.top ? LearnBlock.DropDownDiv.getPositionAboveMetrics(c, d, e, f) : b + f.height < document.documentElement.clientHeight ? LearnBlock.DropDownDiv.getPositionBelowMetrics(a, b, e, f) : d - f.height > document.documentElement.clientTop ? LearnBlock.DropDownDiv.getPositionAboveMetrics(c, d,
         e, f) : LearnBlock.DropDownDiv.getPositionTopOfPageMetrics(a, e, f)
 };
+//Gets the metrics for positioning the div below the source
 LearnBlock.DropDownDiv.getPositionBelowMetrics = function (a, b, c, d) {
     a = LearnBlock.DropDownDiv.getPositionX(a, c.left, c.right, d.width);
     return {
@@ -6758,6 +6406,7 @@ LearnBlock.DropDownDiv.getPositionBelowMetrics = function (a, b, c, d) {
         arrowVisible: !0
     }
 };
+//Gets the metrics for positioning the div above the source
 LearnBlock.DropDownDiv.getPositionAboveMetrics = function (a, b, c, d) {
     a = LearnBlock.DropDownDiv.getPositionX(a, c.left, c.right, d.width);
     return {
@@ -6771,6 +6420,7 @@ LearnBlock.DropDownDiv.getPositionAboveMetrics = function (a, b, c, d) {
         arrowVisible: !0
     }
 };
+//Gets the metrics for positioning the div at the top of the page
 LearnBlock.DropDownDiv.getPositionTopOfPageMetrics = function (a, b, c) {
     a = LearnBlock.DropDownDiv.getPositionX(a, b.left, b.right, c.width);
     return {
@@ -6781,6 +6431,7 @@ LearnBlock.DropDownDiv.getPositionTopOfPageMetrics = function (a, b, c) {
         arrowVisible: !1
     }
 };
+//Gets the x positions for the left side of the DropDownDiv
 LearnBlock.DropDownDiv.getPositionX = function (a, b, c, d) {
     var e = a;
     a = LearnBlock.utils.math.clamp(b, a - d / 2, c - d);
@@ -6792,12 +6443,15 @@ LearnBlock.DropDownDiv.getPositionX = function (a, b, c, d) {
         divX: a
     }
 };
+//Is the container visible?
 LearnBlock.DropDownDiv.isVisible = function () {
     return !!LearnBlock.DropDownDiv.owner_
 };
+//Hides the menu only if it is owned by the provided object
 LearnBlock.DropDownDiv.hideIfOwner = function (a, b) {
     return LearnBlock.DropDownDiv.owner_ === a ? (b ? LearnBlock.DropDownDiv.hideWithoutAnimation() : LearnBlock.DropDownDiv.hide(), !0) : !1
 };
+//Hides the menu triggering an animation
 LearnBlock.DropDownDiv.hide = function () {
     var a = LearnBlock.DropDownDiv.DIV_;
     a.style.transform = "translate(0, 0)";
@@ -6807,6 +6461,7 @@ LearnBlock.DropDownDiv.hide = function () {
     }, 1E3 * LearnBlock.DropDownDiv.ANIMATION_TIME);
     LearnBlock.DropDownDiv.onHide_ && (LearnBlock.DropDownDiv.onHide_(), LearnBlock.DropDownDiv.onHide_ = null)
 };
+//Hides the menu without animation
 LearnBlock.DropDownDiv.hideWithoutAnimation = function () {
     if (LearnBlock.DropDownDiv.isVisible()) {
         LearnBlock.DropDownDiv.animateOutTimer_ && clearTimeout(LearnBlock.DropDownDiv.animateOutTimer_);
@@ -6824,6 +6479,7 @@ LearnBlock.DropDownDiv.hideWithoutAnimation = function () {
         LearnBlock.DropDownDiv.owner_ = null
     }
 };
+//Sets the dropdown div's position
 LearnBlock.DropDownDiv.positionInternal_ = function (a, b, c, d) {
     a = Math.floor(a);
     b = Math.floor(b);
@@ -6836,6 +6492,7 @@ LearnBlock.DropDownDiv.positionInternal_ = function (a, b, c, d) {
     e.style.opacity = 1;
     e.style.transform = "translate(" + (c - a) + "px," + (d - b) + "px)"
 };
+//Repositions the dropdownDiv on window resize
 LearnBlock.DropDownDiv.repositionForWindowResize = function () {
     if (LearnBlock.DropDownDiv.owner_) {
         var a = LearnBlock.DropDownDiv.owner_.getSourceBlock(),
@@ -6851,6 +6508,9 @@ LearnBlock.DropDownDiv.repositionForWindowResize = function () {
         LearnBlock.DropDownDiv.positionInternal_(d.initialX, d.initialY, d.finalX, d.finalY)
     } else LearnBlock.DropDownDiv.hide()
 };
+
+
+
 LearnBlock.Grid = function (a, b) {
     this.gridPattern_ = a;
     this.spacing_ = b.spacing;
@@ -7086,9 +6746,12 @@ LearnBlock.blockRendering.init = function (a) {
     a.init();
     return a
 };
+
+//Database for blocks connections
 LearnBlock.ConnectionDB = function () {
     this.connections_ = []
 };
+//Adds a connection
 LearnBlock.ConnectionDB.prototype.addConnection = function (a) {
     if (a.inDB_) throw Error("Connection already in database.");
     if (!a.getSourceBlock().isInFlyout) {
@@ -7097,6 +6760,7 @@ LearnBlock.ConnectionDB.prototype.addConnection = function (a) {
         a.inDB_ = !0
     }
 };
+//Finds the given connection
 LearnBlock.ConnectionDB.prototype.findConnection = function (a) {
     if (!this.connections_.length) return -1;
     var b = this.findPositionForConnection_(a);
@@ -7111,6 +6775,7 @@ LearnBlock.ConnectionDB.prototype.findConnection = function (a) {
     }
     return -1
 };
+//Finds a candidate position for inserting this connection into the list
 LearnBlock.ConnectionDB.prototype.findPositionForConnection_ = function (a) {
     if (!this.connections_.length) return 0;
     for (var b = 0, c = this.connections_.length; b < c;) {
@@ -7124,6 +6789,7 @@ LearnBlock.ConnectionDB.prototype.findPositionForConnection_ = function (a) {
     }
     return b
 };
+//Removes a connection from the database
 LearnBlock.ConnectionDB.prototype.removeConnection_ = function (a) {
     if (!a.inDB_) throw Error("Connection not in database.");
     var b = this.findConnection(a);
@@ -7131,6 +6797,7 @@ LearnBlock.ConnectionDB.prototype.removeConnection_ = function (a) {
     a.inDB_ = !1;
     this.connections_.splice(b, 1)
 };
+//Finds all nearby connections to the given connection
 LearnBlock.ConnectionDB.prototype.getNeighbours = function (a, b) {
     function c(a) {
         var c = e - d[a].x_,
@@ -7147,9 +6814,11 @@ LearnBlock.ConnectionDB.prototype.getNeighbours = function (a, b) {
     }
     return l
 };
+//Is the candidate connection close to the reference connection?
 LearnBlock.ConnectionDB.prototype.isInYRange_ = function (a, b, c) {
     return Math.abs(this.connections_[a].y_ - b) <= c
 };
+//Finds the closest compatible connection to this connection
 LearnBlock.ConnectionDB.prototype.searchForClosest = function (a, b, c) {
     if (!this.connections_.length) return {
         connection: null,
@@ -7171,6 +6840,7 @@ LearnBlock.ConnectionDB.prototype.searchForClosest = function (a, b, c) {
         radius: g
     }
 };
+//Initializes a set of connection DBs for a workspace
 LearnBlock.ConnectionDB.init = function () {
     var a = [];
     a[LearnBlock.INPUT_VALUE] = new LearnBlock.ConnectionDB;
@@ -7179,6 +6849,8 @@ LearnBlock.ConnectionDB.init = function () {
     a[LearnBlock.PREVIOUS_STATEMENT] = new LearnBlock.ConnectionDB;
     return a
 };
+
+//Class for a gesture
 LearnBlock.TouchGesture = function (a, b) {
     LearnBlock.TouchGesture.superClass_.constructor.call(this, a, b);
     this.isMultiTouch_ = !1;
@@ -7187,12 +6859,12 @@ LearnBlock.TouchGesture = function (a, b) {
     this.onStartWrapper_ = null
 };
 LearnBlock.utils.object.inherits(LearnBlock.TouchGesture, LearnBlock.Gesture);
-LearnBlock.TouchGesture.ZOOM_IN_MULTIPLIER = 5;
-LearnBlock.TouchGesture.ZOOM_OUT_MULTIPLIER = 6;
+//Starts a gesture
 LearnBlock.TouchGesture.prototype.doStart = function (a) {
     LearnBlock.TouchGesture.superClass_.doStart.call(this, a);
-    !this.isEnding_ && LearnBlock.Touch.isTouchEvent(a) && this.handleTouchStart(a)
+    !this.isEnding_ && LearnBlock.Touch.isTouchEvent(a)
 };
+//Binds gesture events
 LearnBlock.TouchGesture.prototype.bindMouseEvents = function (a) {
     this.onStartWrapper_ = LearnBlock.bindEventWithChecks_(document, "mousedown", null, this.handleStart.bind(this), !0);
     this.onMoveWrapper_ = LearnBlock.bindEventWithChecks_(document, "mousemove", null, this.handleMove.bind(this), !0);
@@ -7200,56 +6872,34 @@ LearnBlock.TouchGesture.prototype.bindMouseEvents = function (a) {
     a.preventDefault();
     a.stopPropagation()
 };
+//Handles a mouse down or pointer down event
 LearnBlock.TouchGesture.prototype.handleStart = function (a) {
     !this.isDragging() && LearnBlock.Touch.isTouchEvent(a) && (this.handleTouchStart(a), this.isMultiTouch() && LearnBlock.longStop_())
 };
+//Handles a mouse move or pointer move event
 LearnBlock.TouchGesture.prototype.handleMove = function (a) {
     this.isDragging() ? LearnBlock.Touch.shouldHandleEvent(a) && LearnBlock.TouchGesture.superClass_.handleMove.call(this, a) : this.isMultiTouch() ? (LearnBlock.Touch.isTouchEvent(a) && this.handleTouchMove(a), LearnBlock.longStop_()) : LearnBlock.TouchGesture.superClass_.handleMove.call(this, a)
 };
+//Handles a mouse up or pointer up event
 LearnBlock.TouchGesture.prototype.handleUp = function (a) {
     LearnBlock.Touch.isTouchEvent(a) && !this.isDragging() && this.handleTouchEnd(a);
     !this.isMultiTouch() || this.isDragging() ? LearnBlock.Touch.shouldHandleEvent(a) && LearnBlock.TouchGesture.superClass_.handleUp.call(this, a) : (a.preventDefault(), a.stopPropagation(), this.dispose())
 };
+//Whether the gesture is part of a multi-touch gesture
 LearnBlock.TouchGesture.prototype.isMultiTouch = function () {
     return this.isMultiTouch_
 };
+//Severs all links from this object
 LearnBlock.TouchGesture.prototype.dispose = function () {
     LearnBlock.TouchGesture.superClass_.dispose.call(this);
     this.onStartWrapper_ && LearnBlock.unbindEvent_(this.onStartWrapper_)
 };
-LearnBlock.TouchGesture.prototype.handleTouchStart = function (a) {
-    var b = LearnBlock.Touch.getTouchIdentifierFromEvent(a);
-    this.cachedPoints_[b] = this.getTouchPoint(a);
-    b = Object.keys(this.cachedPoints_);
-    2 == b.length && (this.startDistance_ = LearnBlock.utils.Coordinate.distance(this.cachedPoints_[b[0]], this.cachedPoints_[b[1]]), this.isMultiTouch_ = !0, a.preventDefault())
-};
-LearnBlock.TouchGesture.prototype.handleTouchMove = function (a) {
-    var b = LearnBlock.Touch.getTouchIdentifierFromEvent(a);
-    this.cachedPoints_[b] = this.getTouchPoint(a);
-    b = Object.keys(this.cachedPoints_);
-    if (2 == b.length) {
-        b = this.touchScale_ = LearnBlock.utils.Coordinate.distance(this.cachedPoints_[b[0]], this.cachedPoints_[b[1]]) / this.startDistance_;
-        if (0 < this.previousScale_ && Infinity > this.previousScale_) {
-            var c = b - this.previousScale_;
-            c = 0 < c ? c * LearnBlock.TouchGesture.ZOOM_IN_MULTIPLIER : c * LearnBlock.TouchGesture.ZOOM_OUT_MULTIPLIER;
-            var d = this.startWorkspace_,
-                e = LearnBlock.utils.mouseToSvg(a, d.getParentSvg(), d.getInverseScreenCTM());
-            d.zoom(e.x, e.y, c)
-        }
-        this.previousScale_ = b;
-        a.preventDefault()
-    }
-};
-LearnBlock.TouchGesture.prototype.handleTouchEnd = function (a) {
-    a = LearnBlock.Touch.getTouchIdentifierFromEvent(a);
-    this.cachedPoints_[a] && delete this.cachedPoints_[a];
-    2 > Object.keys(this.cachedPoints_).length && (this.cachedPoints_ = {}, this.previousScale_ = 0)
-};
+//Handles a touch end or pointer end event
+LearnBlock.TouchGesture.prototype.handleTouchEnd = function (a) {};
+//Helper function returning the current touch point coordinate
 LearnBlock.TouchGesture.prototype.getTouchPoint = function (a) {
     return this.startWorkspace_ ? new LearnBlock.utils.Coordinate(a.pageX ? a.pageX : a.changedTouches[0].pageX, a.pageY ? a.pageY : a.changedTouches[0].pageY) : null
 };
-
-
 
 
 
@@ -7674,11 +7324,9 @@ LearnBlock.WorkspaceSvg.prototype.onMouseWheel_ = function (a) {
     }
 };
 LearnBlock.WorkspaceSvg.prototype.getBlocksBoundingBox = function () {
-    var a = this.getTopBlocks(!1),
-        b = this.getTopComments(!1);
-    a = a.concat(b);
+    var a = this.getTopBlocks(!1);
     if (!a.length) return new LearnBlock.utils.Rect(0, 0, 0, 0);
-    b = a[0].getBoundingRectangle();
+    var b = a[0].getBoundingRectangle();
     for (var c = 1; c < a.length; c++) {
         var d = a[c].getBoundingRectangle();
         d.top < b.top && (b.top = d.top);
@@ -9212,14 +8860,16 @@ LearnBlock.Variables.getAddedVariables = function (a, b) {
     return d
 };
 
-
+//The HTML container
 LearnBlock.WidgetDiv = {};
 LearnBlock.WidgetDiv.DIV = null;
 LearnBlock.WidgetDiv.owner_ = null;
 LearnBlock.WidgetDiv.dispose_ = null;
+//Creates the widget div and injects it onto the page
 LearnBlock.WidgetDiv.createDom = function () {
     LearnBlock.WidgetDiv.DIV || (LearnBlock.WidgetDiv.DIV = document.createElement("div"), LearnBlock.WidgetDiv.DIV.className = "blocklyWidgetDiv", document.body.appendChild(LearnBlock.WidgetDiv.DIV))
 };
+//Initializes and displays the widget div
 LearnBlock.WidgetDiv.show = function (a, b, c) {
     LearnBlock.WidgetDiv.hide();
     LearnBlock.WidgetDiv.owner_ = a;
@@ -9229,33 +8879,42 @@ LearnBlock.WidgetDiv.show = function (a, b, c) {
     LearnBlock.WidgetDiv.DIV.style.direction = b ? "rtl" : "ltr";
     LearnBlock.WidgetDiv.DIV.style.display = "block"
 };
+//Destroys the widget and hides the div
 LearnBlock.WidgetDiv.hide = function () {
     LearnBlock.WidgetDiv.owner_ && (LearnBlock.WidgetDiv.owner_ = null, LearnBlock.WidgetDiv.DIV.style.display = "none", LearnBlock.WidgetDiv.DIV.style.left = "", LearnBlock.WidgetDiv.DIV.style.top = "", LearnBlock.WidgetDiv.dispose_ && LearnBlock.WidgetDiv.dispose_(), LearnBlock.WidgetDiv.dispose_ = null, LearnBlock.WidgetDiv.DIV.innerHTML = "")
 };
+//Is the container visible?
 LearnBlock.WidgetDiv.isVisible = function () {
     return !!LearnBlock.WidgetDiv.owner_
 };
+//Destroys the widget and hides the div if it is being used by the specified object
 LearnBlock.WidgetDiv.hideIfOwner = function (a) {
     LearnBlock.WidgetDiv.owner_ == a && LearnBlock.WidgetDiv.hide()
 };
+//Sets the widget div's position and height
 LearnBlock.WidgetDiv.positionInternal_ = function (a, b, c) {
     LearnBlock.WidgetDiv.DIV.style.left = a + "px";
     LearnBlock.WidgetDiv.DIV.style.top = b + "px";
     LearnBlock.WidgetDiv.DIV.style.height = c + "px"
 };
+//Positions the widget div based on an anchor rectangle
 LearnBlock.WidgetDiv.positionWithAnchor = function (a, b, c, d) {
     var e = LearnBlock.WidgetDiv.calculateY_(a, b, c);
     a = LearnBlock.WidgetDiv.calculateX_(a, b, c, d);
     0 > e ? LearnBlock.WidgetDiv.positionInternal_(a, 0, c.height + e) : LearnBlock.WidgetDiv.positionInternal_(a, e, c.height)
 };
+//Calculates an x position such that the widget will not be offscreen on the right or left
 LearnBlock.WidgetDiv.calculateX_ = function (a, b, c, d) {
     if (d) return b = Math.max(b.right - c.width, a.left), Math.min(b, a.right - c.width);
     b = Math.min(b.left, a.right - c.width);
     return Math.max(b, a.left)
 };
+//Calculates an y position such that the widget will not be offscreen on the top or bottom
 LearnBlock.WidgetDiv.calculateY_ = function (a, b, c) {
     return b.bottom + c.height >= a.bottom ? b.top - c.height : b.bottom
 };
+
+
 LearnBlock.VERSION = "3.20191014.4";
 LearnBlock.mainWorkspace = null;
 LearnBlock.selected = null;
@@ -9996,6 +9655,7 @@ LearnBlock.FieldTextInput = function (a, b, c) {
     LearnBlock.FieldTextInput.superClass_.constructor.call(this, a, b, c)
 };
 LearnBlock.utils.object.inherits(LearnBlock.FieldTextInput, LearnBlock.Field);
+//Constructs a FieldTextInput from a JSON arg object
 LearnBlock.FieldTextInput.fromJson = function (a) {
     var b = LearnBlock.utils.replaceMessageReferences(a.text);
     return new LearnBlock.FieldTextInput(b, void 0, a)
@@ -10004,45 +9664,55 @@ LearnBlock.FieldTextInput.prototype.SERIALIZABLE = !0;
 LearnBlock.FieldTextInput.FONTSIZE = 11;
 LearnBlock.FieldTextInput.BORDERRADIUS = 4;
 LearnBlock.FieldTextInput.prototype.CURSOR = "text";
+//Override configuration function
 LearnBlock.FieldTextInput.prototype.configure_ = function (a) {
     LearnBlock.FieldTextInput.superClass_.configure_.call(this, a);
     "boolean" == typeof a.spellcheck && (this.spellcheck_ = a.spellcheck)
 };
+//Ensures that the input value casts to a valid string
 LearnBlock.FieldTextInput.prototype.doClassValidation_ = function (a) {
     return null === a || void 0 === a ? null : String(a)
 };
+//Called by setValue if the text input is not valid
 LearnBlock.FieldTextInput.prototype.doValueInvalid_ = function (a) {
     this.isBeingEdited_ && (this.isTextValid_ = !1, a = this.value_, this.value_ = this.htmlInput_.untypedDefaultValue_, this.sourceBlock_ && LearnBlock.Events.isEnabled() && LearnBlock.Events.fire(new LearnBlock.Events.BlockChange(this.sourceBlock_, "field", this.name || null, a, this.value_)))
 };
+//Called by setValue if the text input is valid
 LearnBlock.FieldTextInput.prototype.doValueUpdate_ = function (a) {
     this.isTextValid_ = !0;
     this.value_ = a;
     this.isBeingEdited_ || (this.isDirty_ = !0)
 };
+//Updates the colour of the htmlInput given the current validity of the field's value
 LearnBlock.FieldTextInput.prototype.render_ = function () {
     LearnBlock.FieldTextInput.superClass_.render_.call(this);
     this.isBeingEdited_ && (this.sourceBlock_.RTL ? setTimeout(this.resizeEditor_.bind(this), 0) : this.resizeEditor_(), this.isTextValid_ ? (LearnBlock.utils.dom.removeClass(this.htmlInput_, "blocklyInvalidInput"), LearnBlock.utils.aria.setState(this.htmlInput_, "invalid", !1)) : (LearnBlock.utils.dom.addClass(this.htmlInput_, "blocklyInvalidInput"), LearnBlock.utils.aria.setState(this.htmlInput_, "invalid", !0)))
 };
+//Sets whether this field is spellchecked by the browser
 LearnBlock.FieldTextInput.prototype.setSpellcheck = function (a) {
     a != this.spellcheck_ && (this.spellcheck_ = a, this.htmlInput_ && this.htmlInput_.setAttribute("spellcheck", this.spellcheck_))
 };
+//Shows the inline free-text editor on top of the text
 LearnBlock.FieldTextInput.prototype.showEditor_ = function (a) {
     this.workspace_ = this.sourceBlock_.workspace;
     a = a || !1;
     !a && (LearnBlock.utils.userAgent.MOBILE || LearnBlock.utils.userAgent.ANDROID || LearnBlock.utils.userAgent.IPAD) ? this.showPromptEditor_() : this.showInlineEditor_(a)
 };
+//Creates and shows a text input editor that is a prompt
 LearnBlock.FieldTextInput.prototype.showPromptEditor_ = function () {
     var a = this;
     LearnBlock.prompt(LearnBlock.Msg.CHANGE_VALUE_TITLE, this.getText(), function (b) {
         a.setValue(b)
     })
 };
+//Creates and shows a text input editor that sits directly over the text input
 LearnBlock.FieldTextInput.prototype.showInlineEditor_ = function (a) {
     LearnBlock.WidgetDiv.show(this, this.sourceBlock_.RTL, this.widgetDispose_.bind(this));
     this.htmlInput_ = this.widgetCreate_();
     this.isBeingEdited_ = !0;
     a || (this.htmlInput_.focus(), this.htmlInput_.select())
 };
+//Creates the text input editor widget
 LearnBlock.FieldTextInput.prototype.widgetCreate_ = function () {
     var a = LearnBlock.WidgetDiv.DIV,
         b = document.createElement("input");
@@ -10061,6 +9731,7 @@ LearnBlock.FieldTextInput.prototype.widgetCreate_ = function () {
     this.bindInputEvents_(b);
     return b
 };
+//Closes the editor, saves the results, and disposes any events bound to the text input's editor
 LearnBlock.FieldTextInput.prototype.widgetDispose_ = function () {
     this.isBeingEdited_ = !1;
     this.isTextValid_ = !0;
@@ -10072,26 +9743,32 @@ LearnBlock.FieldTextInput.prototype.widgetDispose_ = function () {
     a.height = "auto";
     a.fontSize = ""
 };
+//Binds handlers for user input on the text input field's editor
 LearnBlock.FieldTextInput.prototype.bindInputEvents_ = function (a) {
     this.onKeyDownWrapper_ = LearnBlock.bindEventWithChecks_(a, "keydown", this, this.onHtmlInputKeyDown_);
     this.onKeyInputWrapper_ = LearnBlock.bindEventWithChecks_(a, "input", this, this.onHtmlInputChange_)
 };
+//Unbinds handlers for user input and workspace size changes
 LearnBlock.FieldTextInput.prototype.unbindInputEvents_ = function () {
     LearnBlock.unbindEvent_(this.onKeyDownWrapper_);
     LearnBlock.unbindEvent_(this.onKeyInputWrapper_)
 };
+//Handles key down to the editor
 LearnBlock.FieldTextInput.prototype.onHtmlInputKeyDown_ = function (a) {
     a.keyCode == LearnBlock.utils.KeyCodes.ENTER ? (LearnBlock.WidgetDiv.hide(), LearnBlock.DropDownDiv.hideWithoutAnimation()) : a.keyCode == LearnBlock.utils.KeyCodes.ESC ? (this.htmlInput_.value = this.htmlInput_.defaultValue, LearnBlock.WidgetDiv.hide(), LearnBlock.DropDownDiv.hideWithoutAnimation()) : a.keyCode == LearnBlock.utils.KeyCodes.TAB && (LearnBlock.WidgetDiv.hide(), LearnBlock.DropDownDiv.hideWithoutAnimation(), this.sourceBlock_.tab(this, !a.shiftKey), a.preventDefault())
 };
+//Handles a change to the editor
 LearnBlock.FieldTextInput.prototype.onHtmlInputChange_ = function (a) {
     a = this.htmlInput_.value;
     a !== this.htmlInput_.oldValue_ && (this.htmlInput_.oldValue_ = a, LearnBlock.Events.setGroup(!0), a = this.getValueFromEditorText_(a), this.setValue(a), this.forceRerender(), LearnBlock.Events.setGroup(!1))
 };
+//Sets the html input value and the field's internal value
 LearnBlock.FieldTextInput.prototype.setEditorValue_ = function (a) {
     this.isDirty_ = !0;
     this.isBeingEdited_ && (this.htmlInput_.value = this.getEditorText_(a));
     this.setValue(a)
 };
+//Resizes the editor to fit the text
 LearnBlock.FieldTextInput.prototype.resizeEditor_ = function () {
     var a = LearnBlock.WidgetDiv.DIV,
         b = this.getScaledBBox_();
@@ -10104,6 +9781,7 @@ LearnBlock.FieldTextInput.prototype.resizeEditor_ = function () {
     a.style.left = b.x + "px";
     a.style.top = b.y + "px"
 };
+//Ensures that only a number may be entered
 LearnBlock.FieldTextInput.numberValidator = function (a) {
     console.warn("LearnBlock.FieldTextInput.numberValidator is deprecated. Use LearnBlock.FieldNumber instead.");
     if (null === a) return null;
@@ -10113,19 +9791,24 @@ LearnBlock.FieldTextInput.numberValidator = function (a) {
     a = Number(a || 0);
     return isNaN(a) ? null : String(a)
 };
+//Ensures that only a non-negative integer may be entered
 LearnBlock.FieldTextInput.nonnegativeIntegerValidator = function (a) {
     (a = LearnBlock.FieldTextInput.numberValidator(a)) && (a = String(Math.max(0, Math.floor(a))));
     return a
 };
+//Returns whether or not the field is tab navigable
 LearnBlock.FieldTextInput.prototype.isTabNavigable = function () {
     return !0
 };
+//Overrides the field's text representation
 LearnBlock.FieldTextInput.prototype.getText_ = function () {
     return this.isBeingEdited_ && this.htmlInput_ ? this.htmlInput_.value : null
 };
+//Transforms the provided value into a text to show in the html input
 LearnBlock.FieldTextInput.prototype.getEditorText_ = function (a) {
     return String(a)
 };
+//Transforms the text received from the html input into a value to store in this field
 LearnBlock.FieldTextInput.prototype.getValueFromEditorText_ = function (a) {
     return a
 };
@@ -10143,6 +9826,7 @@ LearnBlock.FieldDropdown = function (a, b, c) {
     this.selectedMenuItem_ = this.imageElement_ = null
 };
 LearnBlock.utils.object.inherits(LearnBlock.FieldDropdown, LearnBlock.Field);
+//Constructs a FieldDropdown from a JSON arg object
 LearnBlock.FieldDropdown.fromJson = function (a) {
     return new LearnBlock.FieldDropdown(a.options, void 0, a)
 };
@@ -10151,8 +9835,9 @@ LearnBlock.FieldDropdown.CHECKMARK_OVERHANG = 25;
 LearnBlock.FieldDropdown.MAX_MENU_HEIGHT_VH = .45;
 LearnBlock.FieldDropdown.IMAGE_Y_OFFSET = 5;
 LearnBlock.FieldDropdown.IMAGE_Y_PADDING = 2 * LearnBlock.FieldDropdown.IMAGE_Y_OFFSET;
-LearnBlock.FieldDropdown.ARROW_CHAR = LearnBlock.utils.userAgent.ANDROID ? "\u25bc" : "\u25be";
+LearnBlock.FieldDropdown.ARROW_CHAR = "\u25be";
 LearnBlock.FieldDropdown.prototype.CURSOR = "default";
+//Creates the block UI for this dropdown
 LearnBlock.FieldDropdown.prototype.initView = function () {
     LearnBlock.FieldDropdown.superClass_.initView.call(this);
     this.imageElement_ = LearnBlock.utils.dom.createSvgElement("image", {
@@ -10163,6 +9848,7 @@ LearnBlock.FieldDropdown.prototype.initView = function () {
     this.sourceBlock_.RTL ? this.textElement_.insertBefore(this.arrow_,
         this.textContent_) : this.textElement_.appendChild(this.arrow_)
 };
+//Creates a dropdown menu under the text
 LearnBlock.FieldDropdown.prototype.showEditor_ = function () {
     this.menu_ = this.dropdownCreate_();
     this.menu_.render(LearnBlock.DropDownDiv.getContentDiv());
@@ -10171,6 +9857,7 @@ LearnBlock.FieldDropdown.prototype.showEditor_ = function () {
     this.menu_.focus();
     this.selectedMenuItem_ && LearnBlock.utils.style.scrollIntoContainerView(this.selectedMenuItem_.getElement(), this.menu_.getElement())
 };
+//Creates the dropdown editor
 LearnBlock.FieldDropdown.prototype.dropdownCreate_ = function () {
     var a = new LearnBlock.Menu;
     a.setRightToLeft(this.sourceBlock_.RTL);
@@ -10199,17 +9886,21 @@ LearnBlock.FieldDropdown.prototype.dropdownCreate_ = function () {
     LearnBlock.utils.aria.setState(a.getElement(), LearnBlock.utils.aria.State.ACTIVEDESCENDANT, this.selectedMenuItem_ ? this.selectedMenuItem_.getId() : "");
     return a
 };
+//Dispose of events belonging to the dropdown editor
 LearnBlock.FieldDropdown.prototype.dropdownDispose_ = function () {
     this.menu_.dispose();
     this.menu_ = null
 };
+//Handles an action in the dropdown menu
 LearnBlock.FieldDropdown.prototype.handleMenuActionEvent_ = function (a) {
     LearnBlock.DropDownDiv.hideIfOwner(this, !0);
     this.onItemSelected(this.menu_, a)
 };
+//Handles the selection of an item in the dropdown menu
 LearnBlock.FieldDropdown.prototype.onItemSelected = function (a, b) {
     this.setValue(b.getValue())
 };
+//Factors out common words in statically defined options
 LearnBlock.FieldDropdown.prototype.trimOptions_ = function () {
     this.suffixField = this.prefixField = null;
     var a = this.menuGenerator_;
@@ -10229,6 +9920,7 @@ LearnBlock.FieldDropdown.prototype.trimOptions_ = function () {
         }
     }
 };
+//Uses the calculated prefix and suffix lengths to trim all of the options in the given array
 LearnBlock.FieldDropdown.applyTrim_ = function (a, b, c) {
     for (var d = [], e = 0; e < a.length; e++) {
         var f = a[e][0],
@@ -10238,12 +9930,15 @@ LearnBlock.FieldDropdown.applyTrim_ = function (a, b, c) {
     }
     return d
 };
+//True if the option list is generated by a function
 LearnBlock.FieldDropdown.prototype.isOptionListDynamic = function () {
     return "function" == typeof this.menuGenerator_
 };
+//Returns a list of the options for this dropdown
 LearnBlock.FieldDropdown.prototype.getOptions = function (a) {
     return this.isOptionListDynamic() ? (this.generatedOptions_ && a || (this.generatedOptions_ = this.menuGenerator_.call(this), LearnBlock.FieldDropdown.validateOptions_(this.generatedOptions_)), this.generatedOptions_) : this.menuGenerator_
 };
+//Ensures that the input value is a valid language-neutral option
 LearnBlock.FieldDropdown.prototype.doClassValidation_ = function (a) {
     for (var b = !1, c = this.getOptions(!0), d = 0, e; e = c[d]; d++)
         if (e[1] == a) {
@@ -10251,14 +9946,17 @@ LearnBlock.FieldDropdown.prototype.doClassValidation_ = function (a) {
             break
         } return b ? a : (this.sourceBlock_ && console.warn("Cannot set the dropdown's value to an unavailable option. Block type: " + this.sourceBlock_.type + ", Field name: " + this.name + ", Value: " + a), null)
 };
+//Updates the value of the dropdown field
 LearnBlock.FieldDropdown.prototype.doValueUpdate_ = function (a) {
     LearnBlock.FieldDropdown.superClass_.doValueUpdate_.call(this, a);
     a = this.getOptions(!0);
     for (var b = 0, c; c = a[b]; b++) c[1] == this.value_ && (this.selectedIndex_ = b)
 };
+//Updates the dropdown arrow to match the colour/style of the block
 LearnBlock.FieldDropdown.prototype.updateColour = function () {
     this.sourceBlock_ && this.arrow_ && (this.sourceBlock_.isShadow() ? this.arrow_.style.fill = this.sourceBlock_.getColourShadow() : this.arrow_.style.fill = this.sourceBlock_.getColour())
 };
+//Draws the border with the correct width
 LearnBlock.FieldDropdown.prototype.render_ = function () {
     this.textContent_.nodeValue = "";
     this.imageElement_.style.display = "none";
@@ -10267,18 +9965,7 @@ LearnBlock.FieldDropdown.prototype.render_ = function () {
     this.borderRect_.setAttribute("height", this.size_.height);
     this.borderRect_.setAttribute("width", this.size_.width)
 };
-LearnBlock.FieldDropdown.prototype.renderSelectedImage_ = function (a) {
-    this.imageElement_.style.display = "";
-    this.imageElement_.setAttributeNS(LearnBlock.utils.dom.XLINK_NS, "xlink:href", a.src);
-    this.imageElement_.setAttribute("height", a.height);
-    this.imageElement_.setAttribute("width", a.width);
-    var b = LearnBlock.utils.dom.getTextWidth(this.arrow_),
-        c = Number(a.width);
-    this.size_.height = Number(a.height) + LearnBlock.FieldDropdown.IMAGE_Y_PADDING;
-    this.size_.width = c + b + LearnBlock.Field.X_PADDING;
-    this.sourceBlock_.RTL ? (a = LearnBlock.Field.DEFAULT_TEXT_OFFSET -
-        1, this.imageElement_.setAttribute("x", LearnBlock.Field.DEFAULT_TEXT_OFFSET + b), this.textElement_.setAttribute("x", a)) : (a = c + b + LearnBlock.Field.DEFAULT_TEXT_OFFSET + 1, this.textElement_.setAttribute("text-anchor", "end"), this.textElement_.setAttribute("x", a), this.imageElement_.setAttribute("x", LearnBlock.Field.DEFAULT_TEXT_OFFSET))
-};
+//Renders the selected option, which must be text
 LearnBlock.FieldDropdown.prototype.renderSelectedText_ = function () {
     this.textContent_.nodeValue = this.getDisplayText_();
     this.textElement_.setAttribute("text-anchor", "start");
@@ -10286,11 +9973,13 @@ LearnBlock.FieldDropdown.prototype.renderSelectedText_ = function () {
     this.size_.height = LearnBlock.Field.BORDER_RECT_DEFAULT_HEIGHT;
     this.size_.width = LearnBlock.utils.dom.getTextWidth(this.textElement_) + LearnBlock.Field.X_PADDING
 };
+//Overrides the field's text representation
 LearnBlock.FieldDropdown.prototype.getText_ = function () {
     if (0 > this.selectedIndex_) return null;
     var a = this.getOptions(!0)[this.selectedIndex_][0];
     return "object" == typeof a ? a.alt : a
 };
+//Validates the data structure to be processed as an options list
 LearnBlock.FieldDropdown.validateOptions_ = function (a) {
     if (!Array.isArray(a)) throw TypeError("FieldDropdown options must be an array.");
     if (!a.length) throw TypeError("FieldDropdown options must not be an empty array.");
@@ -10301,6 +9990,7 @@ LearnBlock.FieldDropdown.validateOptions_ = function (a) {
     }
     if (b) throw TypeError("Found invalid FieldDropdown options.");
 };
+//Handles the given action
 LearnBlock.FieldDropdown.prototype.onBlocklyAction = function (a) {
     if (this.menu_) {
         if (a === LearnBlock.navigation.ACTION_PREVIOUS) return this.menu_.highlightPrevious(), !0;
@@ -10320,55 +10010,68 @@ LearnBlock.FieldNumber = function (a, b, c, d, e, f) {
     f || this.setConstraints(b, c, d)
 };
 LearnBlock.utils.object.inherits(LearnBlock.FieldNumber, LearnBlock.FieldTextInput);
+//Constructs a FieldNumber from a JSON arg object
 LearnBlock.FieldNumber.fromJson = function (a) {
     return new LearnBlock.FieldNumber(a.value, void 0, void 0, void 0, void 0, a)
 };
 LearnBlock.FieldNumber.prototype.SERIALIZABLE = !0;
+//Configures the field based on the given map of options
 LearnBlock.FieldNumber.prototype.configure_ = function (a) {
     LearnBlock.FieldNumber.superClass_.configure_.call(this, a);
     this.setMinInternal_(a.min);
     this.setMaxInternal_(a.max);
     this.setPrecisionInternal_(a.precision)
 };
+//Sets the maximum, minimum and precision constraints on the field
 LearnBlock.FieldNumber.prototype.setConstraints = function (a, b, c) {
     this.setMinInternal_(a);
     this.setMaxInternal_(b);
     this.setPrecisionInternal_(c);
     this.setValue(this.getValue())
 };
+//Sets the minimum value the field can contain
 LearnBlock.FieldNumber.prototype.setMin = function (a) {
     this.setMinInternal_(a);
     this.setValue(this.getValue())
 };
+//Sets the minimum value the field can contain. Called internally
 LearnBlock.FieldNumber.prototype.setMinInternal_ = function (a) {
     null == a ? this.min_ = -Infinity : (a = Number(a), isNaN(a) || (this.min_ = a))
 };
+//Returns the current minimum value the field can contain
 LearnBlock.FieldNumber.prototype.getMin = function () {
     return this.min_
 };
+//Sets the maximum value the field can contain
 LearnBlock.FieldNumber.prototype.setMax = function (a) {
     this.setMaxInternal_(a);
     this.setValue(this.getValue())
 };
+//Sets the maximum value the field can contain. Called internally
 LearnBlock.FieldNumber.prototype.setMaxInternal_ = function (a) {
     null == a ? this.max_ = Infinity : (a = Number(a), isNaN(a) || (this.max_ = a))
 };
+//Returns the current maximum value the field can contain
 LearnBlock.FieldNumber.prototype.getMax = function () {
     return this.max_
 };
+//Sets the precision of the field's value
 LearnBlock.FieldNumber.prototype.setPrecision = function (a) {
     this.setPrecisionInternal_(a);
     this.setValue(this.getValue())
 };
+//Sets the precision of the field's value. Called internally
 LearnBlock.FieldNumber.prototype.setPrecisionInternal_ = function (a) {
     null == a ? this.precision_ = 0 : (a = Number(a), isNaN(a) || (this.precision_ = a));
     var b = this.precision_.toString(),
         c = b.indexOf(".");
     this.decimalPlaces_ = -1 == c ? a ? 0 : null : b.length - c - 1
 };
+//Returns the current precision of the field
 LearnBlock.FieldNumber.prototype.getPrecision = function () {
     return this.precision_
 };
+//Ensures that the input value is a valid number
 LearnBlock.FieldNumber.prototype.doClassValidation_ = function (a) {
     if (null === a) return null;
     a = String(a);
@@ -10381,6 +10084,7 @@ LearnBlock.FieldNumber.prototype.doClassValidation_ = function (a) {
     null != this.decimalPlaces_ && (a = Number(a.toFixed(this.decimalPlaces_)));
     return a
 };
+//Creates the number input editor widget
 LearnBlock.FieldNumber.prototype.widgetCreate_ = function () {
     var a = LearnBlock.FieldNumber.superClass_.widgetCreate_.call(this); - Infinity < this.min_ && LearnBlock.utils.aria.setState(a, LearnBlock.utils.aria.State.VALUEMIN, this.min_);
     Infinity > this.max_ && LearnBlock.utils.aria.setState(a, LearnBlock.utils.aria.State.VALUEMAX, this.max_);
@@ -10398,16 +10102,19 @@ LearnBlock.FieldVariable = function (a, b, c, d, e) {
     e || this.setTypes_(c, d)
 };
 LearnBlock.utils.object.inherits(LearnBlock.FieldVariable, LearnBlock.FieldDropdown);
+//Constructs a FieldVariable from a JSON arg object
 LearnBlock.FieldVariable.fromJson = function (a) {
     var b = LearnBlock.utils.replaceMessageReferences(a.variable);
     return new LearnBlock.FieldVariable(b, void 0, void 0, void 0, a)
 };
 LearnBlock.FieldVariable.prototype.workspace_ = null;
 LearnBlock.FieldVariable.prototype.SERIALIZABLE = !0;
+//Configures the field based on the given map of options
 LearnBlock.FieldVariable.prototype.configure_ = function (a) {
     LearnBlock.FieldVariable.superClass_.configure_.call(this, a);
     this.setTypes_(a.variableTypes, a.defaultType)
 };
+//Initializes the model for the field
 LearnBlock.FieldVariable.prototype.initModel = function () {
     if (!this.variable_) {
         var a = LearnBlock.Variables.getOrCreateVariablePackage(this.sourceBlock_.workspace, null, this.defaultVariableName, this.defaultType_);
@@ -10416,6 +10123,7 @@ LearnBlock.FieldVariable.prototype.initModel = function () {
         LearnBlock.Events.enable()
     }
 };
+//Initializes the field based on the given XML
 LearnBlock.FieldVariable.prototype.fromXml = function (a) {
     var b = a.getAttribute("id"),
         c = a.textContent,
@@ -10424,6 +10132,7 @@ LearnBlock.FieldVariable.prototype.fromXml = function (a) {
     if (null != d && d !== b.type) throw Error("Serialized variable type with id '" + b.getId() + "' had type " + b.type + ", and does not match variable field that references it: " + LearnBlock.Xml.domToText(a) + ".");
     this.setValue(b.getId())
 };
+//Serializes the field to XML
 LearnBlock.FieldVariable.prototype.toXml = function (a) {
     this.initModel();
     a.id = this.variable_.getId();
@@ -10431,22 +10140,28 @@ LearnBlock.FieldVariable.prototype.toXml = function (a) {
     this.variable_.type && a.setAttribute("variabletype", this.variable_.type);
     return a
 };
+//Attaches the field to a block
 LearnBlock.FieldVariable.prototype.setSourceBlock = function (a) {
     if (a.isShadow()) throw Error("Variable fields are not allowed to exist on shadow blocks.");
     LearnBlock.FieldVariable.superClass_.setSourceBlock.call(this, a)
 };
+//Gets the variable's ID
 LearnBlock.FieldVariable.prototype.getValue = function () {
     return this.variable_ ? this.variable_.getId() : null
 };
+//Gets the text from the field
 LearnBlock.FieldVariable.prototype.getText = function () {
     return this.variable_ ? this.variable_.name : ""
 };
+//Gets the variable model for the selected variable
 LearnBlock.FieldVariable.prototype.getVariable = function () {
     return this.variable_
 };
+//Gets the validation function for the field
 LearnBlock.FieldVariable.prototype.getValidator = function () {
     return this.variable_ ? this.validator_ : null
 };
+//Ensures that the id belongs to a valid variable of an allowed type
 LearnBlock.FieldVariable.prototype.doClassValidation_ = function (a) {
     if (null === a) return null;
     var b = LearnBlock.Variables.getVariable(this.sourceBlock_.workspace, a);
@@ -10454,10 +10169,12 @@ LearnBlock.FieldVariable.prototype.doClassValidation_ = function (a) {
     b = b.type;
     return this.typeIsAllowed_(b) ? a : (console.warn("Variable type doesn't match this field!  Type was " + b), null)
 };
+//Updates the value of the variable field, as well as its variable and text
 LearnBlock.FieldVariable.prototype.doValueUpdate_ = function (a) {
     this.variable_ = LearnBlock.Variables.getVariable(this.sourceBlock_.workspace, a);
     LearnBlock.FieldVariable.superClass_.doValueUpdate_.call(this, a)
 };
+//Checks whether the given variable type is allowed on the field
 LearnBlock.FieldVariable.prototype.typeIsAllowed_ = function (a) {
     var b = this.getVariableTypes_();
     if (!b) return !0;
@@ -10465,6 +10182,7 @@ LearnBlock.FieldVariable.prototype.typeIsAllowed_ = function (a) {
         if (a == b[c]) return !0;
     return !1
 };
+//Returns a list of variable types to include in the dropdown
 LearnBlock.FieldVariable.prototype.getVariableTypes_ = function () {
     var a = this.variableTypes;
     if (null === a && this.sourceBlock_ && this.sourceBlock_.workspace) return this.sourceBlock_.workspace.getVariableTypes();
@@ -10472,6 +10190,7 @@ LearnBlock.FieldVariable.prototype.getVariableTypes_ = function () {
     if (0 == a.length) throw a = this.getText(), Error("'variableTypes' of field variable " + a + " was an empty list");
     return a
 };
+//Parses the optional arguments representing the allowed variable types and the default variable type
 LearnBlock.FieldVariable.prototype.setTypes_ = function (a, b) {
     var c = b || "";
     if (null == a || void 0 == a) var d = null;
@@ -10483,9 +10202,11 @@ LearnBlock.FieldVariable.prototype.setTypes_ = function (a, b) {
     this.defaultType_ = c;
     this.variableTypes = d
 };
+//Refreshes the name of the variable by grabbing the name of the model
 LearnBlock.FieldVariable.prototype.refreshVariableName = function () {
     this.forceRerender()
 };
+//Returns a sorted list of variable names for variable dropdown menus
 LearnBlock.FieldVariable.dropdownCreate = function () {
     if (!this.variable_) throw Error("Tried to call dropdownCreate on a variable field with no variable selected.");
     var a = this.getText(),
@@ -10502,6 +10223,7 @@ LearnBlock.FieldVariable.dropdownCreate = function () {
     LearnBlock.Msg.DELETE_VARIABLE && c.push([LearnBlock.Msg.DELETE_VARIABLE.replace("%1", a), LearnBlock.DELETE_VARIABLE_ID]);
     return c
 };
+//Handles the selection of an item in the variable dropdown menu
 LearnBlock.FieldVariable.prototype.onItemSelected = function (a, b) {
     var c = b.getValue();
     if (this.sourceBlock_ && this.sourceBlock_.workspace) {
@@ -10516,6 +10238,7 @@ LearnBlock.FieldVariable.prototype.onItemSelected = function (a, b) {
     }
     this.setValue(c)
 };
+//Indicates the field refers to a variable
 LearnBlock.FieldVariable.prototype.referencesVariables = function () {
     return !0
 };

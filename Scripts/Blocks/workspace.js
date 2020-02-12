@@ -73,6 +73,8 @@ LearnBlock.utils.Coordinate.prototype.translate = function (a, b) {
     this.y += b;
     return this
 };
+
+
 LearnBlock.utils.string = {};
 LearnBlock.utils.string.startsWith = function (a, b) {
     return 0 == a.lastIndexOf(b, 0)
@@ -1270,7 +1272,6 @@ LearnBlock.Xml.deleteNext = function (a) {
         }
 };
 
-
 //Class for connection between blocks
 LearnBlock.Connection = function (a, b) {
     this.sourceBlock_ = a;
@@ -1532,72 +1533,39 @@ LearnBlock.Connection.prototype.toString = function () {
     return b + a.toDevString()
 };
 
-
-
+//Set of all registered extensions
 LearnBlock.Extensions = {};
 LearnBlock.Extensions.ALL_ = {};
+//Registers a new extension function
 LearnBlock.Extensions.register = function (a, b) {
     if ("string" != typeof a || "" == a.trim()) throw Error('Error: Invalid extension name "' + a + '"');
     if (LearnBlock.Extensions.ALL_[a]) throw Error('Error: Extension "' + a + '" is already registered.');
     if ("function" != typeof b) throw Error('Error: Extension "' + a + '" must be a function');
     LearnBlock.Extensions.ALL_[a] = b
 };
+//Registers a new extension function that adds all key/value of mixinObj
 LearnBlock.Extensions.registerMixin = function (a, b) {
     if (!b || "object" != typeof b) throw Error('Error: Mixin "' + a + '" must be a object');
     LearnBlock.Extensions.register(a, function () {
         this.mixin(b)
     })
 };
+//Unregisters the extension registered with the given name
 LearnBlock.Extensions.unregister = function (a) {
     LearnBlock.Extensions.ALL_[a] ? delete LearnBlock.Extensions.ALL_[a] : console.warn('No extension mapping for name "' + a + '" found to unregister')
 };
+//Applies an extension method to a block
 LearnBlock.Extensions.apply = function (a, b, c) {
     var d = LearnBlock.Extensions.ALL_[a];
     if ("function" != typeof d) throw Error('Error: Extension "' + a + '" not found.');
-    if (c) LearnBlock.Extensions.checkNoMutatorProperties_(a, b);
-    else var e = LearnBlock.Extensions.getMutatorProperties_(b);
     d.apply(b);
-    if (c) LearnBlock.Extensions.checkBlockHasMutatorProperties_('Error after applying mutator "' + a + '": ', b);
-    else if (!LearnBlock.Extensions.mutatorPropertiesMatch_(e, b)) throw Error('Error when applying extension "' + a + '": mutation properties changed when applying a non-mutator extension.');
 };
+//Checks that the given value is a function
 LearnBlock.Extensions.checkHasFunction_ = function (a, b, c) {
     if (!b) throw Error(a + 'missing required property "' + c + '"');
     if ("function" != typeof b) throw Error(a + '" required property "' + c + '" must be a function');
 };
-LearnBlock.Extensions.checkNoMutatorProperties_ = function (a, b) {
-    if (LearnBlock.Extensions.getMutatorProperties_(b).length) throw Error('Error: tried to apply mutation "' + a + '" to a block that already has mutator functions.  Block id: ' + b.id);
-};
-LearnBlock.Extensions.checkMutatorDialog_ = function (a, b) {
-    var c = void 0 !== a.compose,
-        d = void 0 !== a.decompose;
-    if (c && d) {
-        if ("function" != typeof a.compose) throw Error(b + "compose must be a function.");
-        if ("function" != typeof a.decompose) throw Error(b + "decompose must be a function.");
-        return !0
-    }
-    if (c || d) throw Error(b + 'Must have both or neither of "compose" and "decompose"');
-    return !1
-};
-LearnBlock.Extensions.checkBlockHasMutatorProperties_ = function (a, b) {
-    if ("function" != typeof b.domToMutation) throw Error(a + 'Applying a mutator didn\'t add "domToMutation"');
-    if ("function" != typeof b.mutationToDom) throw Error(a + 'Applying a mutator didn\'t add "mutationToDom"');
-    LearnBlock.Extensions.checkMutatorDialog_(b, a)
-};
-LearnBlock.Extensions.getMutatorProperties_ = function (a) {
-    var b = [];
-    void 0 !== a.domToMutation && b.push(a.domToMutation);
-    void 0 !== a.mutationToDom && b.push(a.mutationToDom);
-    void 0 !== a.compose && b.push(a.compose);
-    void 0 !== a.decompose && b.push(a.decompose);
-    return b
-};
-LearnBlock.Extensions.mutatorPropertiesMatch_ = function (a, b) {
-    var c = LearnBlock.Extensions.getMutatorProperties_(b);
-    if (c.length != a.length) return !1;
-    for (var d = 0; d < c.length; d++)
-        if (a[d] != c[d]) return !1;
-    return !0
-};
+//Builds an extension function that will map a dropdown value to a tooltip string
 LearnBlock.Extensions.buildTooltipForDropdown = function (a, b) {
     var c = [];
     "object" == typeof document && LearnBlock.utils.runAfterPageLoad(function () {
@@ -1614,6 +1582,7 @@ LearnBlock.Extensions.buildTooltipForDropdown = function (a, b) {
         }.bind(this))
     }
 };
+//Checks all options keys are present in the provided string lookup table
 LearnBlock.Extensions.checkDropdownOptionsInTable_ = function (a, b, c) {
     var d = a.getField(b);
     if (!d.isOptionListDynamic()) {
@@ -1624,6 +1593,7 @@ LearnBlock.Extensions.checkDropdownOptionsInTable_ = function (a, b, c) {
         }
     }
 };
+//Builds an extension function that will install a dynamic tooltip
 LearnBlock.Extensions.buildTooltipWithFieldText = function (a, b) {
     "object" == typeof document && LearnBlock.utils.runAfterPageLoad(function () {
         LearnBlock.utils.checkMessageReferences(a)
@@ -1635,6 +1605,7 @@ LearnBlock.Extensions.buildTooltipWithFieldText = function (a, b) {
         }.bind(this))
     }
 };
+//Configures the tooltip to mimic the parent block when connected
 LearnBlock.Extensions.extensionParentTooltip_ = function () {
     this.tooltipWhenNotConnected_ = this.tooltip;
     this.setTooltip(function () {
@@ -1643,9 +1614,12 @@ LearnBlock.Extensions.extensionParentTooltip_ = function () {
     }.bind(this))
 };
 LearnBlock.Extensions.register("parent_tooltip_when_inline", LearnBlock.Extensions.extensionParentTooltip_);
+
+//Class for blocks animations
 LearnBlock.blockAnimations = {};
 LearnBlock.blockAnimations.disconnectPid_ = 0;
 LearnBlock.blockAnimations.disconnectGroup_ = null;
+//Plays some UI effects when disposing of a block
 LearnBlock.blockAnimations.disposeUiEffect = function (a) {
     var b = a.workspace,
         c = a.getSvgRoot();
@@ -1658,53 +1632,13 @@ LearnBlock.blockAnimations.disposeUiEffect = function (a) {
     c.bBox_ = c.getBBox();
     LearnBlock.blockAnimations.disposeUiStep_(c, b.RTL, new Date, b.scale)
 };
+//Animates a cloned block and eventually dispose of it
 LearnBlock.blockAnimations.disposeUiStep_ = function (a, b, c, d) {
     var e = (new Date - c) / 150;
     1 < e ? LearnBlock.utils.dom.removeNode(a) : (a.setAttribute("transform", "translate(" + (a.translateX_ + (b ? -1 : 1) * a.bBox_.width * d / 2 * e) + "," + (a.translateY_ + a.bBox_.height * d * e) + ") scale(" + (1 - e) * d + ")"), setTimeout(LearnBlock.blockAnimations.disposeUiStep_, 10, a, b, c, d))
 };
-LearnBlock.blockAnimations.connectionUiEffect = function (a) {
-    var b = a.workspace,
-        c = b.scale;
-    if (!(1 > c)) {
-        var d = b.getSvgXY(a.getSvgRoot());
-        a.outputConnection ? (d.x += (a.RTL ? 3 : -3) * c, d.y += 13 * c) : a.previousConnection && (d.x += (a.RTL ? -23 : 23) * c, d.y += 3 * c);
-        a = LearnBlock.utils.dom.createSvgElement("circle", {
-            cx: d.x,
-            cy: d.y,
-            r: 0,
-            fill: "none",
-            stroke: "#888",
-            "stroke-width": 10
-        }, b.getParentSvg());
-        LearnBlock.blockAnimations.connectionUiStep_(a, new Date, c)
-    }
-};
-LearnBlock.blockAnimations.connectionUiStep_ = function (a, b, c) {
-    var d = (new Date - b) / 150;
-    1 < d ? LearnBlock.utils.dom.removeNode(a) : (a.setAttribute("r", 25 * d * c), a.style.opacity = 1 - d, LearnBlock.blockAnimations.disconnectPid_ = setTimeout(LearnBlock.blockAnimations.connectionUiStep_, 10, a, b, c))
-};
-LearnBlock.blockAnimations.disconnectUiEffect = function (a) {
-    if (!(1 > a.workspace.scale)) {
-        var b = a.getHeightWidth().height;
-        b = Math.atan(10 / b) / Math.PI * 180;
-        a.RTL || (b *= -1);
-        LearnBlock.blockAnimations.disconnectUiStep_(a.getSvgRoot(), b, new Date)
-    }
-};
-LearnBlock.blockAnimations.disconnectUiStep_ = function (a, b, c) {
-    var d = (new Date - c) / 200;
-    1 < d ? a.skew_ = "" : (a.skew_ = "skewX(" + Math.round(Math.sin(d * Math.PI * 3) * (1 - d) * b) + ")", LearnBlock.blockAnimations.disconnectGroup_ = a, LearnBlock.blockAnimations.disconnectPid_ = setTimeout(LearnBlock.blockAnimations.disconnectUiStep_, 10, a, b, c));
-    a.setAttribute("transform", a.translate_ + a.skew_)
-};
-LearnBlock.blockAnimations.disconnectUiStop = function () {
-    if (LearnBlock.blockAnimations.disconnectGroup_) {
-        clearTimeout(LearnBlock.blockAnimations.disconnectPid_);
-        var a = LearnBlock.blockAnimations.disconnectGroup_;
-        a.skew_ = "";
-        a.setAttribute("transform", a.translate_);
-        LearnBlock.blockAnimations.disconnectGroup_ = null
-    }
-};
+
+
 LearnBlock.InsertionMarkerManager = function (a) {
     this.topBlock_ = LearnBlock.selected = a;
     this.workspace_ = a.workspace;
@@ -1738,7 +1672,6 @@ LearnBlock.InsertionMarkerManager.prototype.wouldConnectBlock = function () {
 LearnBlock.InsertionMarkerManager.prototype.applyConnections = function () {
     if (this.closestConnection_ && (LearnBlock.Events.disable(), this.hidePreview_(), LearnBlock.Events.enable(), this.localConnection_.connect(this.closestConnection_), this.topBlock_.rendered)) {
         var a = this.localConnection_.isSuperior() ? this.closestConnection_ : this.localConnection_;
-        LearnBlock.blockAnimations.connectionUiEffect(a.getSourceBlock());
         this.topBlock_.getRootBlock().bringToFront()
     }
 };
@@ -1884,6 +1817,8 @@ LearnBlock.InsertionMarkerManager.prototype.getInsertionMarkers = function () {
     this.lastMarker_ && a.push(this.lastMarker_);
     return a
 };
+
+//Class for a block dragger
 LearnBlock.BlockDragger = function (a, b) {
     this.draggingBlock_ = a;
     this.workspace_ = b;
@@ -1892,23 +1827,22 @@ LearnBlock.BlockDragger = function (a, b) {
     this.wouldDeleteBlock_ = !1;
     this.startXY_ = this.draggingBlock_.getRelativeToSurfaceXY()
 };
+//Severs all links from this object
 LearnBlock.BlockDragger.prototype.dispose = function () {
     this.startWorkspace_ = this.workspace_ = this.draggingBlock_ = null;
     this.draggedConnectionManager_ && (this.draggedConnectionManager_.dispose(), this.draggedConnectionManager_ = null)
 };
+//Starts dragging a block
 LearnBlock.BlockDragger.prototype.startBlockDrag = function (a, b) {
     LearnBlock.Events.getGroup() || LearnBlock.Events.setGroup(!0);
-    this.workspace_.isMutator && this.draggingBlock_.bringToFront();
     LearnBlock.utils.dom.startTextWidthCache();
     this.workspace_.setResizesEnabled(!1);
-    LearnBlock.blockAnimations.disconnectUiStop();
     if (this.draggingBlock_.getParent() || b && this.draggingBlock_.nextConnection && this.draggingBlock_.nextConnection.targetBlock()) {
         this.draggingBlock_.unplug(b);
         var c = this.pixelsToWorkspaceUnits_(a);
         c = LearnBlock.utils.Coordinate.sum(this.startXY_,
             c);
         this.draggingBlock_.translate(c.x, c.y);
-        LearnBlock.blockAnimations.disconnectUiEffect(this.draggingBlock_)
     }
     this.draggingBlock_.setDragging(!0);
     this.draggingBlock_.moveToDragSurface_();
@@ -1917,48 +1851,50 @@ LearnBlock.BlockDragger.prototype.startBlockDrag = function (a, b) {
         c.addStyle(d)
     }
 };
+//Executes a step of block dragging based on the given event
 LearnBlock.BlockDragger.prototype.dragBlock = function (a, b) {
     var c = this.pixelsToWorkspaceUnits_(b),
         d = LearnBlock.utils.Coordinate.sum(this.startXY_, c);
     this.draggingBlock_.moveDuringDrag(d);
     this.deleteArea_ = this.workspace_.isDeleteArea(a);
     this.draggedConnectionManager_.update(c, this.deleteArea_);
-    this.updateCursorDuringBlockDrag_()
 };
-LearnBlock.BlockDragger.prototype.endBlockDrag = function (a, b) {
-    this.dragBlock(a, b);
+//Finishes a block drag and puts the block back on the workspace
+LearnBlock.BlockDragger.prototype.endBlockDrag = function (e, currentDragDeltaXY) {
+    this.dragBlock(e, currentDragDeltaXY);
     LearnBlock.utils.dom.stopTextWidthCache();
-    LearnBlock.blockAnimations.disconnectUiStop();
-    var c = this.pixelsToWorkspaceUnits_(b),
-        d = LearnBlock.utils.Coordinate.sum(this.startXY_, c);
-    this.draggingBlock_.moveOffDragSurface_(d);
-    this.maybeDeleteBlock_() || (this.draggingBlock_.moveConnections_(c.x, c.y), this.draggingBlock_.setDragging(!1), this.fireMoveEvent_(), this.draggedConnectionManager_.wouldConnectBlock() ? this.draggedConnectionManager_.applyConnections() :
-        this.draggingBlock_.render(), this.draggingBlock_.scheduleSnapAndBump());
-    this.workspace_.setResizesEnabled(!0);
-    if (c = this.workspace_.getToolbox()) d = this.draggingBlock_.isDeletable() ? "blocklyToolboxDelete" : "blocklyToolboxGrab", c.removeStyle(d);
-    LearnBlock.Events.setGroup(!1)
+    var delta = this.pixelsToWorkspaceUnits_(currentDragDeltaXY);
+    var newLoc = LearnBlock.utils.Coordinate.sum(this.startXY_, delta);
+    this.draggingBlock_.moveOffDragSurface_(newLoc);
+    this.draggingBlock_.moveConnections_(delta.x, delta.y);
+    this.draggingBlock_.setDragging(false);
+    this.fireMoveEvent_();
+    if (this.draggedConnectionManager_.wouldConnectBlock()) this.draggedConnectionManager_.applyConnections();
+    else this.draggingBlock_.render();
+    this.draggingBlock_.scheduleSnapAndBump();
+    this.workspace_.setResizesEnabled(true);
+    var toolbox = this.workspace_.getToolbox();
+    if (toolbox) {
+        var style = this.draggingBlock_.isDeletable() ? 'blocklyToolboxDelete' :
+            'blocklyToolboxGrab';
+        toolbox.removeStyle(style);
+    }
+    LearnBlock.Events.setGroup(false);
 };
+//Fires a move event at the end of a block drag
 LearnBlock.BlockDragger.prototype.fireMoveEvent_ = function () {
     var a = new LearnBlock.Events.BlockMove(this.draggingBlock_);
     a.oldCoordinate = this.startXY_;
     a.recordNew();
     LearnBlock.Events.fire(a)
 };
-LearnBlock.BlockDragger.prototype.maybeDeleteBlock_ = function () {
-    var a = this.workspace_.trashcan;
-    this.wouldDeleteBlock_ ? (a && setTimeout(a.close.bind(a), 100), this.fireMoveEvent_(), this.draggingBlock_.dispose(!1, !0)) : a && a.close();
-    return this.wouldDeleteBlock_
-};
-LearnBlock.BlockDragger.prototype.updateCursorDuringBlockDrag_ = function () {
-    this.wouldDeleteBlock_ = this.draggedConnectionManager_.wouldDeleteBlock();
-    var a = this.workspace_.trashcan;
-    this.wouldDeleteBlock_ ? (this.draggingBlock_.setDeleteStyle(!0), this.deleteArea_ == LearnBlock.DELETE_AREA_TRASH && a && a.setOpen_(!0)) : (this.draggingBlock_.setDeleteStyle(!1), a && a.setOpen_(!1))
-};
+//Converts a coordinate object from pixels to workspace units
 LearnBlock.BlockDragger.prototype.pixelsToWorkspaceUnits_ = function (a) {
     a = new LearnBlock.utils.Coordinate(a.x / this.workspace_.scale, a.y / this.workspace_.scale);
     this.workspace_.isMutator && a.scale(1 / this.workspace_.options.parentWorkspace.scale);
     return a
 };
+//Gets a list of the insertion markers that currently exist
 LearnBlock.BlockDragger.prototype.getInsertionMarkers = function () {
     return this.draggedConnectionManager_ && this.draggedConnectionManager_.getInsertionMarkers ? this.draggedConnectionManager_.getInsertionMarkers() : []
 };
@@ -3084,7 +3020,7 @@ LearnBlock.Tooltip.show_ = function () {
     }
 };
 
-
+//Class for one gesture
 LearnBlock.Gesture = function (a, b) {
     this.startWorkspace_ = this.targetBlock_ = this.startBlock_ = this.startField_ = this.startBubble_ = this.currentDragDeltaXY_ = this.mouseDownXY_ = null;
     this.creatorWorkspace_ = b;
@@ -3094,6 +3030,7 @@ LearnBlock.Gesture = function (a, b) {
     this.isEnding_ = this.hasStarted_ = this.calledUpdateIsDragging_ = !1;
     this.healStack_ = !LearnBlock.DRAG_STACK
 };
+//Severs all links from this object
 LearnBlock.Gesture.prototype.dispose = function () {
     LearnBlock.Touch.clearTouchIdentifier();
     LearnBlock.Tooltip.unblock();
@@ -3106,29 +3043,28 @@ LearnBlock.Gesture.prototype.dispose = function () {
         null);
     this.bubbleDragger_ && (this.bubbleDragger_.dispose(), this.bubbleDragger_ = null)
 };
+//Updates internal state based on an event
 LearnBlock.Gesture.prototype.updateFromEvent_ = function (a) {
     var b = new LearnBlock.utils.Coordinate(a.clientX, a.clientY);
     this.updateDragDelta_(b) && (this.updateIsDragging_(), LearnBlock.longStop_());
     this.mostRecentEvent_ = a
 };
+//DO MATH to set currentDragDeltaXY_ based on the most recent mouse position
 LearnBlock.Gesture.prototype.updateDragDelta_ = function (a) {
     this.currentDragDeltaXY_ = LearnBlock.utils.Coordinate.difference(a, this.mouseDownXY_);
     return this.hasExceededDragRadius_ ? !1 : this.hasExceededDragRadius_ = LearnBlock.utils.Coordinate.magnitude(this.currentDragDeltaXY_) > (this.flyout_ ? LearnBlock.FLYOUT_DRAG_RADIUS : LearnBlock.DRAG_RADIUS)
 };
+//Updates the gesture to record whether a block is being dragged from the flyout
 LearnBlock.Gesture.prototype.updateIsDraggingFromFlyout_ = function () {
     return this.flyout_.isBlockCreatable_(this.targetBlock_) ? !this.flyout_.isScrollable() || this.flyout_.isDragTowardWorkspace(this.currentDragDeltaXY_) ? (this.startWorkspace_ = this.flyout_.targetWorkspace_, this.startWorkspace_.updateScreenCalculationsIfScrolled(), LearnBlock.Events.getGroup() || LearnBlock.Events.setGroup(!0), this.startBlock_ = null, this.targetBlock_ = this.flyout_.createBlock(this.targetBlock_), this.targetBlock_.select(), !0) : !1 : !1
 };
-LearnBlock.Gesture.prototype.updateIsDraggingBubble_ = function () {
-    if (!this.startBubble_) return !1;
-    this.isDraggingBubble_ = !0;
-    this.startDraggingBubble_();
-    return !0
-};
+//Updates the gesture to record whether a block is being dragged
 LearnBlock.Gesture.prototype.updateIsDraggingBlock_ = function () {
     if (!this.targetBlock_) return !1;
     this.flyout_ ? this.isDraggingBlock_ = this.updateIsDraggingFromFlyout_() : this.targetBlock_.isMovable() && (this.isDraggingBlock_ = !0);
     return this.isDraggingBlock_ ? (this.startDraggingBlock_(), !0) : !1
 };
+//Updates the gesture to record whether a workspace is being dragged
 LearnBlock.Gesture.prototype.updateIsDraggingWorkspace_ = function () {
     var wsMovable = this.startWorkspace_ && this.startWorkspace_.isDraggable();
     if (!wsMovable) {
@@ -3140,52 +3076,80 @@ LearnBlock.Gesture.prototype.updateIsDraggingWorkspace_ = function () {
     this.isDraggingWorkspace_ = true;
     this.workspaceDragger_.startDrag();
 };
+//Updates the gesture to record whether anything is being dragged
 LearnBlock.Gesture.prototype.updateIsDragging_ = function () {
     if (this.calledUpdateIsDragging_) throw Error("updateIsDragging_ should only be called once per gesture.");
     this.calledUpdateIsDragging_ = !0;
-    this.updateIsDraggingBubble_() || this.updateIsDraggingBlock_() || this.updateIsDraggingWorkspace_()
+    this.updateIsDraggingBlock_() || this.updateIsDraggingWorkspace_()
 };
+//Creates a block dragger and starts dragging the selected block
 LearnBlock.Gesture.prototype.startDraggingBlock_ = function () {
     this.blockDragger_ = new LearnBlock.BlockDragger(this.targetBlock_, this.startWorkspace_);
     this.blockDragger_.startBlockDrag(this.currentDragDeltaXY_, this.healStack_);
     this.blockDragger_.dragBlock(this.mostRecentEvent_, this.currentDragDeltaXY_)
 };
-LearnBlock.Gesture.prototype.startDraggingBubble_ = function () {
-    this.bubbleDragger_ = new LearnBlock.BubbleDragger(this.startBubble_, this.startWorkspace_);
-    this.bubbleDragger_.startBubbleDrag();
-    this.bubbleDragger_.dragBubble(this.mostRecentEvent_, this.currentDragDeltaXY_)
-};
+//Starts a gesture
 LearnBlock.Gesture.prototype.doStart = function (a) {
-    LearnBlock.utils.isTargetInput(a) ? this.cancel() : (this.hasStarted_ = !0, LearnBlock.blockAnimations.disconnectUiStop(), this.startWorkspace_.updateScreenCalculationsIfScrolled(), this.startWorkspace_.isMutator && this.startWorkspace_.resize(), this.startWorkspace_.markFocused(), this.mostRecentEvent_ = a, LearnBlock.hideChaff(!!this.flyout_), LearnBlock.Tooltip.block(), this.targetBlock_ && (!this.targetBlock_.isInFlyout && a.shiftKey ? (LearnBlock.navigation.enableKeyboardAccessibility(),
+    LearnBlock.utils.isTargetInput(a) ? this.cancel() : (this.hasStarted_ = !0, this.startWorkspace_.updateScreenCalculationsIfScrolled(), this.startWorkspace_.isMutator && this.startWorkspace_.resize(), this.startWorkspace_.markFocused(), this.mostRecentEvent_ = a, LearnBlock.hideChaff(!!this.flyout_), LearnBlock.Tooltip.block(), this.targetBlock_ && (!this.targetBlock_.isInFlyout && a.shiftKey ? (LearnBlock.navigation.enableKeyboardAccessibility(),
         this.creatorWorkspace_.getCursor().setCurNode(LearnBlock.navigation.getTopNode(this.targetBlock_))) : this.targetBlock_.select()), LearnBlock.utils.isRightButton(a) ? this.handleRightClick(a) : ("touchstart" != a.type.toLowerCase() && "pointerdown" != a.type.toLowerCase() || "mouse" == a.pointerType || LearnBlock.longStart_(a, this), this.mouseDownXY_ = new LearnBlock.utils.Coordinate(a.clientX, a.clientY), this.healStack_ = a.altKey || a.ctrlKey || a.metaKey, this.bindMouseEvents(a)))
 };
+//Binds gesture events
 LearnBlock.Gesture.prototype.bindMouseEvents = function (a) {
     this.onMoveWrapper_ = LearnBlock.bindEventWithChecks_(document, "mousemove", null, this.handleMove.bind(this));
     this.onUpWrapper_ = LearnBlock.bindEventWithChecks_(document, "mouseup", null, this.handleUp.bind(this));
     a.preventDefault();
     a.stopPropagation()
 };
-LearnBlock.Gesture.prototype.handleMove = function (a) {
-    this.updateFromEvent_(a);
-    this.isDraggingWorkspace_ ? this.workspaceDragger_.drag(this.currentDragDeltaXY_) : this.isDraggingBlock_ ? this.blockDragger_.dragBlock(this.mostRecentEvent_, this.currentDragDeltaXY_) : this.isDraggingBubble_ && this.bubbleDragger_.dragBubble(this.mostRecentEvent_, this.currentDragDeltaXY_);
-    a.preventDefault();
-    a.stopPropagation()
+//Handles a mouse move event
+LearnBlock.Gesture.prototype.handleMove = function (e) {
+    this.updateFromEvent_(e);
+    if (this.isDraggingWorkspace_) {
+        this.workspaceDragger_.drag(this.currentDragDeltaXY_);
+    } else if (this.isDraggingBlock_) {
+        this.blockDragger_.dragBlock(this.mostRecentEvent_,
+            this.currentDragDeltaXY_);
+    }
+    e.preventDefault();
+    e.stopPropagation();
 };
-LearnBlock.Gesture.prototype.handleUp = function (a) {
-    this.updateFromEvent_(a);
+//Handles a mouse up event
+LearnBlock.Gesture.prototype.handleUp = function (e) {
+    this.updateFromEvent_(e);
     LearnBlock.longStop_();
-    this.isEnding_ ? console.log("Trying to end a gesture recursively.") : (this.isEnding_ = !0, this.isDraggingBubble_ ? this.bubbleDragger_.endBubbleDrag(a, this.currentDragDeltaXY_) : this.isDraggingBlock_ ? this.blockDragger_.endBlockDrag(a, this.currentDragDeltaXY_) : this.isDraggingWorkspace_ ? this.workspaceDragger_.endDrag(this.currentDragDeltaXY_) : this.isBubbleClick_() ? this.doBubbleClick_() : this.isFieldClick_() ? this.doFieldClick_() :
-        this.isBlockClick_() ? this.doBlockClick_() : this.isWorkspaceClick_() && this.doWorkspaceClick_(a), a.preventDefault(), a.stopPropagation(), this.dispose())
+    if (this.isEnding_) {
+        console.log('Trying to end a gesture recursively.');
+        return;
+    }
+    this.isEnding_ = true;
+    if (this.isDraggingBubble_) {
+        this.bubbleDragger_.endBubbleDrag(e, this.currentDragDeltaXY_);
+    } else if (this.isDraggingBlock_) {
+        this.blockDragger_.endBlockDrag(e, this.currentDragDeltaXY_);
+    } else if (this.isDraggingWorkspace_) {
+        this.workspaceDragger_.endDrag(this.currentDragDeltaXY_);
+    } else if (this.isFieldClick_()) {
+        this.doFieldClick_();
+    } else if (this.isBlockClick_()) {
+        this.doBlockClick_();
+    } else if (this.isWorkspaceClick_()) {
+        this.doWorkspaceClick_(e);
+    }
+    e.preventDefault();
+    e.stopPropagation();
+    this.dispose();
 };
+//Cancels an in-progress gesture
 LearnBlock.Gesture.prototype.cancel = function () {
     this.isEnding_ || (LearnBlock.longStop_(), this.isDraggingBubble_ ? this.bubbleDragger_.endBubbleDrag(this.mostRecentEvent_, this.currentDragDeltaXY_) : this.isDraggingBlock_ ? this.blockDragger_.endBlockDrag(this.mostRecentEvent_, this.currentDragDeltaXY_) : this.isDraggingWorkspace_ && this.workspaceDragger_.endDrag(this.currentDragDeltaXY_), this.dispose())
 };
+//Handles a real or faked right-click event by showing a context menu
 LearnBlock.Gesture.prototype.handleRightClick = function (a) {
     this.targetBlock_ ? (this.bringBlockToFront_(), LearnBlock.hideChaff(this.flyout_), this.targetBlock_.showContextMenu_(a)) : this.startBubble_ ? this.startBubble_.showContextMenu_(a) : this.startWorkspace_ && !this.flyout_ && (LearnBlock.hideChaff(), this.startWorkspace_.showContextMenu_(a));
     a.preventDefault();
     a.stopPropagation();
     this.dispose()
 };
+//Handles a mousedown event on a workspace
 LearnBlock.Gesture.prototype.handleWsStart = function (a, b) {
     if (this.hasStarted_) throw Error("Tried to call gesture.handleWsStart, but the gesture had already been started.");
     this.setStartWorkspace_(b);
@@ -3193,81 +3157,84 @@ LearnBlock.Gesture.prototype.handleWsStart = function (a, b) {
     this.doStart(a);
     LearnBlock.keyboardAccessibilityMode && LearnBlock.navigation.setState(LearnBlock.navigation.STATE_WS)
 };
+//Handles a mousedown event on a flyout
 LearnBlock.Gesture.prototype.handleFlyoutStart = function (a, b) {
     if (this.hasStarted_) throw Error("Tried to call gesture.handleFlyoutStart, but the gesture had already been started.");
     this.setStartFlyout_(b);
     this.handleWsStart(a, b.getWorkspace())
 };
+//Handles a mousedown event on a block
 LearnBlock.Gesture.prototype.handleBlockStart = function (a, b) {
     if (this.hasStarted_) throw Error("Tried to call gesture.handleBlockStart, but the gesture had already been started.");
     this.setStartBlock(b);
     this.mostRecentEvent_ = a
 };
-LearnBlock.Gesture.prototype.handleBubbleStart = function (a, b) {
-    if (this.hasStarted_) throw Error("Tried to call gesture.handleBubbleStart, but the gesture had already been started.");
-    this.setStartBubble(b);
-    this.mostRecentEvent_ = a
-};
-LearnBlock.Gesture.prototype.doBubbleClick_ = function () {
-    this.startBubble_.setFocus && this.startBubble_.setFocus();
-    this.startBubble_.select && this.startBubble_.select()
-};
+//Executes a field click
 LearnBlock.Gesture.prototype.doFieldClick_ = function () {
     this.startField_.showEditor_();
     this.bringBlockToFront_()
 };
+//Executes a block click.
 LearnBlock.Gesture.prototype.doBlockClick_ = function () {
     this.flyout_ && this.flyout_.autoClose ? this.targetBlock_.isEnabled() && (LearnBlock.Events.getGroup() || LearnBlock.Events.setGroup(!0), this.flyout_.createBlock(this.targetBlock_).scheduleSnapAndBump()) : LearnBlock.Events.fire(new LearnBlock.Events.Ui(this.startBlock_, "click", void 0, void 0));
     this.bringBlockToFront_();
     LearnBlock.Events.setGroup(!1)
 };
+//Executes a workspace click
 LearnBlock.Gesture.prototype.doWorkspaceClick_ = function (a) {
     var b = this.creatorWorkspace_;
     a.shiftKey ? (LearnBlock.navigation.enableKeyboardAccessibility(), a = new LearnBlock.utils.Coordinate(a.clientX, a.clientY), a = LearnBlock.utils.screenToWsCoordinates(b, a), a = LearnBlock.ASTNode.createWorkspaceNode(b, a), b.getCursor().setCurNode(a)) : LearnBlock.selected && LearnBlock.selected.unselect()
 };
+//Moves the dragged/clicked block to the front of the workspace
 LearnBlock.Gesture.prototype.bringBlockToFront_ = function () {
     this.targetBlock_ && !this.flyout_ && this.targetBlock_.bringToFront()
 };
+//Records the field that a gesture started on
 LearnBlock.Gesture.prototype.setStartField = function (a) {
     if (this.hasStarted_) throw Error("Tried to call gesture.setStartField, but the gesture had already been started.");
     this.startField_ || (this.startField_ = a)
 };
-LearnBlock.Gesture.prototype.setStartBubble = function (a) {
-    this.startBubble_ || (this.startBubble_ = a)
-};
+//Records the block that a gesture started on
 LearnBlock.Gesture.prototype.setStartBlock = function (a) {
     this.startBlock_ || this.startBubble_ || (this.startBlock_ = a, a.isInFlyout && a != a.getRootBlock() ? this.setTargetBlock_(a.getRootBlock()) : this.setTargetBlock_(a))
 };
+//Records the block that a gesture targets
 LearnBlock.Gesture.prototype.setTargetBlock_ = function (a) {
     a.isShadow() ? this.setTargetBlock_(a.getParent()) : this.targetBlock_ = a
 };
+//Records the workspace that a gesture started on
 LearnBlock.Gesture.prototype.setStartWorkspace_ = function (a) {
     this.startWorkspace_ || (this.startWorkspace_ = a)
 };
+//Records the flyout that a gesture started on
 LearnBlock.Gesture.prototype.setStartFlyout_ = function (a) {
     this.flyout_ || (this.flyout_ = a)
 };
-LearnBlock.Gesture.prototype.isBubbleClick_ = function () {
-    return !!this.startBubble_ && !this.hasExceededDragRadius_
-};
+//Whether the gesture is a click on a block
 LearnBlock.Gesture.prototype.isBlockClick_ = function () {
     return !!this.startBlock_ && !this.hasExceededDragRadius_ && !this.isFieldClick_()
 };
+//Whether the gesture is a click on a field
 LearnBlock.Gesture.prototype.isFieldClick_ = function () {
     return (this.startField_ ? this.startField_.isClickable() : !1) && !this.hasExceededDragRadius_ && (!this.flyout_ || !this.flyout_.autoClose)
 };
+//Whether the gesture is a click on a workspace
 LearnBlock.Gesture.prototype.isWorkspaceClick_ = function () {
     return !this.startBlock_ && !this.startBubble_ && !this.startField_ && !this.hasExceededDragRadius_
 };
+//Whether the gesture is a drag of either a workspace or block
 LearnBlock.Gesture.prototype.isDragging = function () {
     return this.isDraggingWorkspace_ || this.isDraggingBlock_ || this.isDraggingBubble_
 };
+//Whether the gesture has already been started
 LearnBlock.Gesture.prototype.hasStarted = function () {
     return this.hasStarted_
 };
+//Gets a list of the insertion markers that currently exist
 LearnBlock.Gesture.prototype.getInsertionMarkers = function () {
     return this.blockDragger_ ? this.blockDragger_.getInsertionMarkers() : []
 };
+//Is a drag or other gesture currently in progress on any workspace?
 LearnBlock.Gesture.inProgress = function () {
     for (var a = LearnBlock.Workspace.getAll(), b = 0, c; c = a[b]; b++)
         if (c.currentGesture_) return !0;
@@ -3645,7 +3612,7 @@ LearnBlock.FieldLabel.prototype.setClass = function (a) {
 };
 LearnBlock.fieldRegistry.register("field_label", LearnBlock.FieldLabel);
 
-
+//Class for an input with an optional field
 LearnBlock.Input = function (a, b, c, d) {
     if (a != LearnBlock.DUMMY_INPUT && !b) throw Error("Value inputs and statement inputs must have non-empty name.");
     this.type = a;
@@ -3656,13 +3623,16 @@ LearnBlock.Input = function (a, b, c, d) {
 };
 LearnBlock.Input.prototype.align = LearnBlock.ALIGN_LEFT;
 LearnBlock.Input.prototype.visible_ = !0;
+//Gets the source block for the input
 LearnBlock.Input.prototype.getSourceBlock = function () {
     return this.sourceBlock_
 };
+//Adds a field to the end of the input's field row
 LearnBlock.Input.prototype.appendField = function (a, b) {
     this.insertFieldAt(this.fieldRow.length, a, b);
     return this
 };
+//Inserts a field to the end of the input's field row
 LearnBlock.Input.prototype.insertFieldAt = function (a, b, c) {
     if (0 > a || a > this.fieldRow.length) throw Error("index " + a + " out of bounds.");
     if (!(b || "" == b && c)) return a;
@@ -3677,6 +3647,7 @@ LearnBlock.Input.prototype.insertFieldAt = function (a, b, c) {
     this.sourceBlock_.rendered && (this.sourceBlock_.render(), this.sourceBlock_.bumpNeighbours());
     return a
 };
+//Removes a field from this input
 LearnBlock.Input.prototype.removeField = function (a) {
     for (var b = 0, c; c = this.fieldRow[b]; b++)
         if (c.name === a) {
@@ -3686,9 +3657,11 @@ LearnBlock.Input.prototype.removeField = function (a) {
             return
         } throw Error('Field "%s" not found.', a);
 };
+//Gets whether the input is visible or not
 LearnBlock.Input.prototype.isVisible = function () {
     return this.visible_
 };
+//Sets whether the input is visible or not
 LearnBlock.Input.prototype.setVisible = function (a) {
     var b = [];
     if (this.visible_ == a) return b;
@@ -3696,28 +3669,35 @@ LearnBlock.Input.prototype.setVisible = function (a) {
     this.connection && (a ? b = this.connection.unhideAll() : this.connection.hideAll(), d = this.connection.targetBlock()) && (d.getSvgRoot().style.display = c, a || (d.rendered = !1));
     return b
 };
+//Marks all fields on this input as dirty
 LearnBlock.Input.prototype.markDirty = function () {
     for (var a = 0, b; b = this.fieldRow[a]; a++) b.markDirty()
 };
+//Changes a connection's compatibility
 LearnBlock.Input.prototype.setCheck = function (a) {
     if (!this.connection) throw Error("This input does not have a connection.");
     this.connection.setCheck(a);
     return this
 };
+//Changes the alignment of the connection's fields
 LearnBlock.Input.prototype.setAlign = function (a) {
     this.align = a;
     this.sourceBlock_.rendered && this.sourceBlock_.render();
     return this
 };
+//Initializes the fields on the input
 LearnBlock.Input.prototype.init = function () {
     if (this.sourceBlock_.workspace.rendered)
         for (var a = 0; a < this.fieldRow.length; a++) this.fieldRow[a].init()
 };
+//Severs all links to this input
 LearnBlock.Input.prototype.dispose = function () {
     for (var a = 0, b; b = this.fieldRow[a]; a++) b.dispose();
     this.connection && this.connection.dispose();
     this.sourceBlock_ = null
 };
+
+
 LearnBlock.utils.colour = {};
 LearnBlock.utils.colour.parse = function (a) {
     a = String(a).toLowerCase().trim();
@@ -3852,6 +3832,8 @@ LearnBlock.Block = function (a, b, c) {
     }
     "function" == typeof this.onchange && this.setOnChange(this.onchange)
 };
+
+
 LearnBlock.Block.prototype.data = null;
 LearnBlock.Block.prototype.disposed = !1;
 LearnBlock.Block.prototype.hue_ = null;
@@ -5219,52 +5201,8 @@ LearnBlock.utils.Rect.prototype.contains = function (a, b) {
     return a >= this.left && a <= this.right && b >= this.top && b <= this.bottom
 };
 
-
-LearnBlock.Icon = function (a) {
-    this.block_ = a
-};
-LearnBlock.Icon.prototype.collapseHidden = !0;
-LearnBlock.Icon.prototype.SIZE = 17;
-LearnBlock.Icon.prototype.bubble_ = null;
-LearnBlock.Icon.prototype.iconXY_ = null;
-LearnBlock.Icon.prototype.createIcon = function () {
-    this.iconGroup_ || (this.iconGroup_ = LearnBlock.utils.dom.createSvgElement("g", {
-        "class": "blocklyIconGroup"
-    }, null), this.block_.isInFlyout && LearnBlock.utils.dom.addClass(this.iconGroup_, "blocklyIconGroupReadonly"), this.drawIcon_(this.iconGroup_), this.block_.getSvgRoot().appendChild(this.iconGroup_), LearnBlock.bindEventWithChecks_(this.iconGroup_, "mouseup", this, this.iconClick_), this.updateEditable())
-};
-LearnBlock.Icon.prototype.dispose = function () {
-    LearnBlock.utils.dom.removeNode(this.iconGroup_);
-    this.iconGroup_ = null;
-    this.setVisible(!1);
-    this.block_ = null
-};
-LearnBlock.Icon.prototype.updateEditable = function () {};
-LearnBlock.Icon.prototype.isVisible = function () {
-    return !!this.bubble_
-};
-LearnBlock.Icon.prototype.iconClick_ = function (a) {
-    this.block_.workspace.isDragging() || this.block_.isInFlyout || LearnBlock.utils.isRightButton(a) || this.setVisible(!this.isVisible())
-};
-LearnBlock.Icon.prototype.updateColour = function () {
-    this.isVisible() && this.bubble_.setColour(this.block_.getColour())
-};
-LearnBlock.Icon.prototype.setIconLocation = function (a) {
-    this.iconXY_ = a;
-    this.isVisible() && this.bubble_.setAnchorLocation(a)
-};
-LearnBlock.Icon.prototype.computeIconLocation = function () {
-    var a = this.block_.getRelativeToSurfaceXY(),
-        b = LearnBlock.utils.getRelativeXY(this.iconGroup_);
-    a = new LearnBlock.utils.Coordinate(a.x + b.x + this.SIZE / 2, a.y + b.y + this.SIZE / 2);
-    LearnBlock.utils.Coordinate.equals(this.getIconLocation(), a) || this.setIconLocation(a)
-};
-LearnBlock.Icon.prototype.getIconLocation = function () {
-    return this.iconXY_
-};
-LearnBlock.Icon.prototype.getCorrectedSize = function () {
-    return new LearnBlock.utils.Size(LearnBlock.Icon.prototype.SIZE, LearnBlock.Icon.prototype.SIZE - 2)
-};
-
+//????
+LearnBlock.Icon = function (a) {};
 
 //Block_svg
 LearnBlock.BlockSvg = function (a, b, c) {
@@ -5718,7 +5656,6 @@ LearnBlock.BlockSvg.prototype.positionNewBlock = function (a, b, c) {
 LearnBlock.BlockSvg.prototype.highlightForReplacement = function (a) {
     a ? LearnBlock.utils.dom.addClass(this.svgGroup_, "blocklyReplaceable") : LearnBlock.utils.dom.removeClass(this.svgGroup_, "blocklyReplaceable")
 };
-
 
 //CSS Functions
 LearnBlock.Css = {};
@@ -6509,8 +6446,7 @@ LearnBlock.DropDownDiv.repositionForWindowResize = function () {
     } else LearnBlock.DropDownDiv.hide()
 };
 
-
-
+//Class for a workspace's grid
 LearnBlock.Grid = function (a, b) {
     this.gridPattern_ = a;
     this.spacing_ = b.spacing;
@@ -6519,18 +6455,23 @@ LearnBlock.Grid = function (a, b) {
     this.snapToGrid_ = b.snap
 };
 LearnBlock.Grid.prototype.scale_ = 1;
+//Dispose of the grid and unlink from the DOM
 LearnBlock.Grid.prototype.dispose = function () {
     this.gridPattern_ = null
 };
+//Whether blocks should snap to the grid, based on the initial configuration
 LearnBlock.Grid.prototype.shouldSnap = function () {
     return this.snapToGrid_
 };
+//Gets the spacing of the grid points
 LearnBlock.Grid.prototype.getSpacing = function () {
     return this.spacing_
 };
+//Gets the id of the pattern element
 LearnBlock.Grid.prototype.getPatternId = function () {
     return this.gridPattern_.id
 };
+//Updates the grid with a new scale
 LearnBlock.Grid.prototype.update = function (a) {
     this.scale_ = a;
     var b = this.spacing_ * a || 100;
@@ -6545,14 +6486,17 @@ LearnBlock.Grid.prototype.update = function (a) {
     this.setLineAttributes_(this.line1_, a, c, d, b, b);
     this.setLineAttributes_(this.line2_, a, b, b, c, d)
 };
+//Sets the attributes on one of the lines in the grid
 LearnBlock.Grid.prototype.setLineAttributes_ = function (a, b, c, d, e, f) {
     a && (a.setAttribute("stroke-width", b), a.setAttribute("x1", c), a.setAttribute("y1", e), a.setAttribute("x2", d), a.setAttribute("y2", f))
 };
+//Moves the grid to a new x and y position and makes sure that change is visible
 LearnBlock.Grid.prototype.moveTo = function (a, b) {
     this.gridPattern_.setAttribute("x", a);
     this.gridPattern_.setAttribute("y", b);
     (LearnBlock.utils.userAgent.IE || LearnBlock.utils.userAgent.EDGE) && this.update(this.scale_)
 };
+//Creates the DOM for the grid described by options
 LearnBlock.Grid.createDom = function (a, b, c) {
     a = LearnBlock.utils.dom.createSvgElement("pattern", {
         id: "blocklyGridPattern" + a,
@@ -6565,6 +6509,8 @@ LearnBlock.Grid.createDom = function (a, b, c) {
     }, a)) : LearnBlock.utils.dom.createSvgElement("line", {}, a);
     return a
 };
+
+//Parses the user-specified options
 LearnBlock.Options = function (a) {
     var b = !!a.readOnly;
     if (b) var c = null,
@@ -6633,6 +6579,7 @@ LearnBlock.Options = function (a) {
 LearnBlock.Options.prototype.parentWorkspace = null;
 LearnBlock.Options.prototype.setMetrics = null;
 LearnBlock.Options.prototype.getMetrics = null;
+//Parses the user-specified move options
 LearnBlock.Options.parseMoveOptions = function (a, b) {
     var c = a.move || {},
         d = {};
@@ -6641,6 +6588,7 @@ LearnBlock.Options.parseMoveOptions = function (a, b) {
     d.drag = d.scrollbars ? void 0 === c.drag ? !0 : !!c.drag : !1;
     return d
 };
+//Parses the user-specified zoom options
 LearnBlock.Options.parseZoomOptions_ = function (a) {
     a = a.zoom || {};
     var b = {};
@@ -6652,6 +6600,7 @@ LearnBlock.Options.parseZoomOptions_ = function (a) {
     b.scaleSpeed = void 0 === a.scaleSpeed ? 1.2 : Number(a.scaleSpeed);
     return b
 };
+//Parses the user-specified grid options
 LearnBlock.Options.parseGridOptions_ = function (a) {
     a = a.grid || {};
     var b = {};
@@ -6661,6 +6610,7 @@ LearnBlock.Options.parseGridOptions_ = function (a) {
     b.snap = 0 < b.spacing && !!a.snap;
     return b
 };
+//Parses the provided toolbox tree into a consistent DOM format
 LearnBlock.Options.parseToolboxTree = function (a) {
     if (a) {
         if ("string" != typeof a && (LearnBlock.utils.userAgent.IE && a.outerHTML ? a = a.outerHTML : a instanceof Element || (a = null)), "string" == typeof a && (a = LearnBlock.Xml.textToDom(a), "xml" != a.nodeName.toLowerCase())) throw TypeError("Toolbox should be an <xml> document.");
@@ -8556,6 +8506,8 @@ LearnBlock.navigation.ACTION_TOOLBOX = new LearnBlock.Action(LearnBlock.navigati
 LearnBlock.navigation.ACTION_EXIT = new LearnBlock.Action(LearnBlock.navigation.actionNames.EXIT, "Close the current modal, such as a toolbox or field editor.");
 LearnBlock.navigation.ACTION_TOGGLE_KEYBOARD_NAV = new LearnBlock.Action(LearnBlock.navigation.actionNames.TOGGLE_KEYBOARD_NAV, "Turns on and off keyboard navigation.");
 LearnBlock.navigation.READONLY_ACTION_LIST = [LearnBlock.navigation.ACTION_PREVIOUS, LearnBlock.navigation.ACTION_OUT, LearnBlock.navigation.ACTION_IN, LearnBlock.navigation.ACTION_NEXT, LearnBlock.navigation.ACTION_TOGGLE_KEYBOARD_NAV];
+
+//Class for a database of entity names (variables, functions...)
 LearnBlock.Names = function (a, b) {
     this.variablePrefix_ = b || "";
     this.reservedDict_ = Object.create(null);
@@ -8563,18 +8515,23 @@ LearnBlock.Names = function (a, b) {
         for (var c = a.split(","), d = 0; d < c.length; d++) this.reservedDict_[c[d]] = !0;
     this.reset()
 };
+//Constant to separate developer variable names from user-defined variable names
 LearnBlock.Names.DEVELOPER_VARIABLE_TYPE = "DEVELOPER_VARIABLE";
+//Empties the database and starts from scratch
 LearnBlock.Names.prototype.reset = function () {
     this.db_ = Object.create(null);
     this.dbReverse_ = Object.create(null);
     this.variableMap_ = null
 };
+//Sets the variable map that maps from variable name to variable object
 LearnBlock.Names.prototype.setVariableMap = function (a) {
     this.variableMap_ = a
 };
+//Gets the name for a user-defined variable, based on its ID
 LearnBlock.Names.prototype.getNameForUserVariable_ = function (a) {
     return this.variableMap_ ? (a = this.variableMap_.getVariableById(a)) ? a.name : null : (console.log("Deprecated call to LearnBlock.Names.prototype.getName without defining a variable map. To fix, add the folowing code in your generator's init() function:\nLearnBlock.YourGeneratorName.variableDB_.setVariableMap(workspace.getVariableMap());"), null)
 };
+//Converts a LearnBlock entity name to a legal exportable entity name
 LearnBlock.Names.prototype.getName = function (a, b) {
     if (b == LearnBlock.Variables.NAME_TYPE) {
         var c = this.getNameForUserVariable_(a);
@@ -8587,20 +8544,22 @@ LearnBlock.Names.prototype.getName = function (a, b) {
     this.db_[c] = e.substr(d.length);
     return e
 };
+//Converts a LearnBlock entity name to a legal exportable entity name
 LearnBlock.Names.prototype.getDistinctName = function (a, b) {
     for (var c = this.safeName_(a), d = ""; this.dbReverse_[c + d] || c + d in this.reservedDict_;) d = d ? d + 1 : 2;
     c += d;
     this.dbReverse_[c] = !0;
     return (b == LearnBlock.Variables.NAME_TYPE || b == LearnBlock.Names.DEVELOPER_VARIABLE_TYPE ? this.variablePrefix_ : "") + c
 };
+//Given a proposed entity name, generates a name that conforms to the [_A-Za-z][_A-Za-z0-9]* format
 LearnBlock.Names.prototype.safeName_ = function (a) {
     a ? (a = encodeURI(a.replace(/ /g, "_")).replace(/[^\w]/g, "_"), -1 != "0123456789".indexOf(a[0]) && (a = "my_" + a)) : a = LearnBlock.Msg.UNNAMED_KEY || "unnamed";
     return a
 };
+//Do the given two entity names refer to the same entity?
 LearnBlock.Names.equals = function (a, b) {
     return a.toLowerCase() == b.toLowerCase()
 };
-
 
 //Procedures
 LearnBlock.Procedures = {};
@@ -10270,7 +10229,6 @@ LearnBlock.FlyoutCursor.prototype.out = function () {
     return null
 };
 
-
 //Functions flyout
 LearnBlock.Flyout = function (a) {
     a.getMetrics = this.getMetrics_.bind(this);
@@ -10299,6 +10257,7 @@ LearnBlock.Flyout.prototype.SCROLLBAR_PADDING = 2;
 LearnBlock.Flyout.prototype.width_ = 0;
 LearnBlock.Flyout.prototype.height_ = 0;
 LearnBlock.Flyout.prototype.dragAngleRange_ = 70;
+//Creates the flyout's DOM
 LearnBlock.Flyout.prototype.createDom = function (a) {
     this.svgGroup_ = LearnBlock.utils.dom.createSvgElement(a, {
         "class": "blocklyFlyout",
@@ -10312,6 +10271,7 @@ LearnBlock.Flyout.prototype.createDom = function (a) {
     this.workspace_.getThemeManager().subscribe(this.svgBackground_, "flyoutOpacity", "fill-opacity");
     return this.svgGroup_
 };
+//Initializes the flyout
 LearnBlock.Flyout.prototype.init = function (a) {
     this.targetWorkspace_ = a;
     this.workspace_.targetWorkspace = a;
@@ -10325,6 +10285,7 @@ LearnBlock.Flyout.prototype.init = function (a) {
     this.workspace_.variableMap_ = this.targetWorkspace_.getVariableMap();
     this.workspace_.createPotentialVariableMap()
 };
+//Dispose of this flyout
 LearnBlock.Flyout.prototype.dispose = function () {
     this.hide();
     LearnBlock.unbindEvent_(this.eventWrappers_);
@@ -10335,40 +10296,48 @@ LearnBlock.Flyout.prototype.dispose = function () {
         this.svgGroup_ = null);
     this.targetWorkspace_ = this.svgBackground_ = null
 };
+//Gets the width of the flyout
 LearnBlock.Flyout.prototype.getWidth = function () {
     return this.width_
 };
+//Gets the height of the flyout
 LearnBlock.Flyout.prototype.getHeight = function () {
     return this.height_
 };
+//Gets the workspace inside the flyout
 LearnBlock.Flyout.prototype.getWorkspace = function () {
     return this.workspace_
 };
+//Is the flyout visible?
 LearnBlock.Flyout.prototype.isVisible = function () {
     return this.isVisible_
 };
+//Sets whether the flyout is visible
 LearnBlock.Flyout.prototype.setVisible = function (a) {
     var b = a != this.isVisible();
     this.isVisible_ = a;
     this.updateDisplay_()
 };
+//Sets whether this flyout's container is visible
 LearnBlock.Flyout.prototype.setContainerVisible = function (a) {
     var b = a != this.containerVisible_;
     this.containerVisible_ = a;
     this.updateDisplay_()
 };
+//Updates the display property of the flyout based whether it thinks it should be visible and whether its containing workspace is visible
 LearnBlock.Flyout.prototype.updateDisplay_ = function () {
     var a = this.containerVisible_ ? this.isVisible() : !1;
     this.svgGroup_.style.display = a ? "block" : "none";
     this.scrollbar_.setContainerVisible(a)
 };
-//Colocar Flyout
+//Updates the view based on coordinates calculated
 LearnBlock.Flyout.prototype.positionAt_ = function (a, b, c, d) {
     this.svgGroup_.setAttribute("width", a);
     this.svgGroup_.setAttribute("height", b);
     "svg" == this.svgGroup_.tagName ? LearnBlock.utils.dom.setCssTransform(this.svgGroup_, "translate(" + c + "px," + d + "px)") : this.svgGroup_.setAttribute("transform", "translate(" + c + "," + d + ")");
     this.scrollbar_ && (this.scrollbar_.setOrigin(c, d), this.scrollbar_.resize(), this.scrollbar_.setPosition_(this.scrollbar_.position_.x, this.scrollbar_.position_.y))
 };
+//Hides and empties the flyout
 LearnBlock.Flyout.prototype.hide = function () {
     if (this.isVisible()) {
         this.setVisible(!1);
@@ -10377,6 +10346,7 @@ LearnBlock.Flyout.prototype.hide = function () {
         this.reflowWrapper_ && (this.workspace_.removeChangeListener(this.reflowWrapper_), this.reflowWrapper_ = null)
     }
 };
+//Shows and populates the flyout
 LearnBlock.Flyout.prototype.show = function (a) {
     this.workspace_.setResizesEnabled(!1);
     this.hide();
@@ -10408,7 +10378,6 @@ LearnBlock.Flyout.prototype.show = function (a) {
                 f = parseInt(f.getAttribute("gap"), 10);
                 !isNaN(f) && 0 < c.length ? c[c.length - 1] = f : c.push(d);
                 break;
-            case "LABEL":
             case "BUTTON":
                 g = "LABEL" == f.tagName.toUpperCase();
                 if (!LearnBlock.FlyoutButton) throw Error("Missing require for LearnBlock.FlyoutButton");
@@ -10431,6 +10400,7 @@ LearnBlock.Flyout.prototype.show = function (a) {
     this.reflowWrapper_ = this.reflow.bind(this);
     this.workspace_.addChangeListener(this.reflowWrapper_)
 };
+//Deletes blocks, mats and buttons from a previous showing of the flyout
 LearnBlock.Flyout.prototype.clearOldBlocks_ = function () {
     for (var a = this.workspace_.getTopBlocks(!1), b = 0, c; c = a[b]; b++) c.workspace == this.workspace_ && c.dispose(!1, !1);
     for (b = 0; b < this.mats_.length; b++)(a = this.mats_[b]) && LearnBlock.utils.dom.removeNode(a);
@@ -10438,6 +10408,7 @@ LearnBlock.Flyout.prototype.clearOldBlocks_ = function () {
     this.buttons_.length = 0;
     this.workspace_.getPotentialVariableMap().clear()
 };
+//Adds listeners to a block that has been added to the flyout
 LearnBlock.Flyout.prototype.addBlockListeners_ = function (a, b, c) {
     this.listeners_.push(LearnBlock.bindEventWithChecks_(a, "mousedown", null, this.blockMouseDown_(b)));
     this.listeners_.push(LearnBlock.bindEventWithChecks_(c, "mousedown", null, this.blockMouseDown_(b)));
@@ -10447,6 +10418,7 @@ LearnBlock.Flyout.prototype.addBlockListeners_ = function (a, b, c) {
     this.listeners_.push(LearnBlock.bindEvent_(c,
         "mouseout", b, b.removeSelect))
 };
+//Handles a mouse-down on an SVG block in a non-closing flyout
 LearnBlock.Flyout.prototype.blockMouseDown_ = function (a) {
     var b = this;
     return function (c) {
@@ -10454,13 +10426,16 @@ LearnBlock.Flyout.prototype.blockMouseDown_ = function (a) {
         d && (d.setStartBlock(a), d.handleFlyoutStart(c, b))
     }
 };
+//Mouse down on the flyout background
 LearnBlock.Flyout.prototype.onMouseDown_ = function (a) {
     var b = this.targetWorkspace_.getGesture(a);
     b && b.handleFlyoutStart(a, this)
 };
+//Used for deciding if a block can be "dragged out of" the flyout
 LearnBlock.Flyout.prototype.isBlockCreatable_ = function (a) {
     return true
 };
+//Creates a copy of the block on the workspace
 LearnBlock.Flyout.prototype.createBlock = function (a) {
     var b = null;
     LearnBlock.Events.disable();
@@ -10477,6 +10452,7 @@ LearnBlock.Flyout.prototype.createBlock = function (a) {
     this.autoClose ? this.hide() : this.filterForCapacity_();
     return b
 };
+//Initializes the given button
 LearnBlock.Flyout.prototype.initFlyoutButton_ = function (a, b, c) {
     var d = a.createDom();
     a.moveTo(b, c);
@@ -10484,6 +10460,7 @@ LearnBlock.Flyout.prototype.initFlyoutButton_ = function (a, b, c) {
     this.listeners_.push(LearnBlock.bindEventWithChecks_(d, "mousedown", this, this.onMouseDown_));
     this.buttons_.push(a)
 };
+//Creates and places a rectangle corresponding to the given block
 LearnBlock.Flyout.prototype.createRect_ = function (a, b, c, d, e) {
     b = LearnBlock.utils.dom.createSvgElement("rect", {
         "fill-opacity": 0,
@@ -10498,6 +10475,7 @@ LearnBlock.Flyout.prototype.createRect_ = function (a, b, c, d, e) {
     a.flyoutRect_ = b;
     return this.mats_[e] = b
 };
+//Moves a rectangle to sit exactly behind a block
 LearnBlock.Flyout.prototype.moveRectToBlock_ = function (a, b) {
     var c = b.getHeightWidth();
     a.setAttribute("width", c.width);
@@ -10506,19 +10484,23 @@ LearnBlock.Flyout.prototype.moveRectToBlock_ = function (a, b) {
     a.setAttribute("y", d.y);
     a.setAttribute("x", this.RTL ? d.x - c.width : d.x)
 };
+//Filters the blocks on the flyout to disable the ones that are above the capacity limit
 LearnBlock.Flyout.prototype.filterForCapacity_ = function () {
     for (var a = this.workspace_.getTopBlocks(!1), b = 0, c; c = a[b]; b++)
         if (-1 == this.permanentlyDisabled_.indexOf(c))
             for (var d = this.targetWorkspace_.isCapacityAvailable(LearnBlock.utils.getBlockTypeCounts(c)); c;) c.setEnabled(d), c = c.getNextBlock()
 };
+//Reflows blocks and their mats
 LearnBlock.Flyout.prototype.reflow = function () {
     this.reflowWrapper_ && this.workspace_.removeChangeListener(this.reflowWrapper_);
     this.reflowInternal_();
     this.reflowWrapper_ && this.workspace_.addChangeListener(this.reflowWrapper_)
 };
+//True if the flyout may be scrolled with a scrollbar
 LearnBlock.Flyout.prototype.isScrollable = function () {
     return this.scrollbar_ ? this.scrollbar_.isVisible() : !1
 };
+//Copies a block from the flyout to the workspace and positions it correctly
 LearnBlock.Flyout.prototype.placeNewBlock_ = function (a) {
     var b = this.targetWorkspace_;
     if (!a.getSvgRoot()) throw Error("oldBlock is not rendered.");
@@ -10537,7 +10519,7 @@ LearnBlock.Flyout.prototype.placeNewBlock_ = function (a) {
     return c
 };
 
-
+//Class for a button in the flyout
 LearnBlock.FlyoutButton = function (a, b, c, d) {
     this.workspace_ = a;
     this.targetWorkspace_ = b;
@@ -10551,6 +10533,7 @@ LearnBlock.FlyoutButton.MARGIN = 5;
 LearnBlock.FlyoutButton.prototype.width = 0;
 LearnBlock.FlyoutButton.prototype.height = 0;
 LearnBlock.FlyoutButton.prototype.onMouseUpWrapper_ = null;
+//Creates the button elements
 LearnBlock.FlyoutButton.prototype.createDom = function () {
     var a = this.isLabel_ ? "blocklyFlyoutLabel" : "blocklyFlyoutButton";
     this.cssClass_ && (a += " " + this.cssClass_);
@@ -10589,35 +10572,52 @@ LearnBlock.FlyoutButton.prototype.createDom = function () {
     this.onMouseUpWrapper_ = LearnBlock.bindEventWithChecks_(this.svgGroup_, "mouseup", this, this.onMouseUp_);
     return this.svgGroup_
 };
+//Correctly positions the flyout button and make it visible
 LearnBlock.FlyoutButton.prototype.show = function () {
     this.updateTransform_();
     this.svgGroup_.setAttribute("display", "block")
 };
+//Updates SVG attributes to match internal state
 LearnBlock.FlyoutButton.prototype.updateTransform_ = function () {
     this.svgGroup_.setAttribute("transform", "translate(" + this.position_.x + "," + this.position_.y + ")")
 };
+//Moves the button to the given x, y coordinates
 LearnBlock.FlyoutButton.prototype.moveTo = function (a, b) {
     this.position_.x = a;
     this.position_.y = b;
     this.updateTransform_()
 };
+//Location of the button
 LearnBlock.FlyoutButton.prototype.getPosition = function () {
     return this.position_
 };
+//Gets the button's target workspace
 LearnBlock.FlyoutButton.prototype.getTargetWorkspace = function () {
     return this.targetWorkspace_
 };
+//Dispose of the button
 LearnBlock.FlyoutButton.prototype.dispose = function () {
     this.onMouseUpWrapper_ && LearnBlock.unbindEvent_(this.onMouseUpWrapper_);
     this.svgGroup_ && LearnBlock.utils.dom.removeNode(this.svgGroup_);
     this.svgText_ && this.workspace_.getThemeManager().unsubscribe(this.svgText_)
 };
+//Does something when the button is clicked
 LearnBlock.FlyoutButton.prototype.onMouseUp_ = function (a) {
     (a = this.targetWorkspace_.getGesture(a)) && a.cancel();
     this.isLabel_ && this.callbackKey_ ? console.warn("Labels should not have callbacks. Label text: " + this.text_) : this.isLabel_ || this.callbackKey_ && this.targetWorkspace_.getButtonCallback(this.callbackKey_) ? this.isLabel_ || this.targetWorkspace_.getButtonCallback(this.callbackKey_)(this) : console.warn("Buttons should have callbacks. Button text: " + this.text_)
 };
-LearnBlock.Css.register(".blocklyFlyoutButton {,fill: #888;,cursor: default;,},.blocklyFlyoutButtonShadow {,fill: #666;,},.blocklyFlyoutButton:hover {,fill: #aaa;,},.blocklyFlyoutLabel {,cursor: default;,},.blocklyFlyoutLabelBackground {,opacity: 0;,},.blocklyFlyoutLabelText {,fill: #000;,}".split(","));
-
+//CSS for buttons
+LearnBlock.Css.register([
+  '.blocklyFlyoutButton {',
+    'fill: #888;',
+    'cursor: default;',
+  '}',
+  '.blocklyFlyoutButtonShadow {',
+    'fill: #666;',
+  '}',
+  '.blocklyFlyoutButton:hover {',
+    'fill: #aaa;',
+  '}']);
 
 //Class for a flyout
 LearnBlock.VerticalFlyout = function (a) {
@@ -10979,186 +10979,7 @@ LearnBlock.CursorSvg.prototype.createCursorSvg_ = function () {
 LearnBlock.CursorSvg.prototype.dispose = function () {
     this.svgGroup_ && LearnBlock.utils.dom.removeNode(this.svgGroup_)
 };
-LearnBlock.Mutator = function (a) {
-    LearnBlock.Mutator.superClass_.constructor.call(this, null);
-    this.quarkNames_ = a
-};
-LearnBlock.utils.object.inherits(LearnBlock.Mutator, LearnBlock.Icon);
-LearnBlock.Mutator.prototype.workspaceWidth_ = 0;
-LearnBlock.Mutator.prototype.workspaceHeight_ = 0;
-LearnBlock.Mutator.prototype.drawIcon_ = function (a) {
-    LearnBlock.utils.dom.createSvgElement("rect", {
-        "class": "blocklyIconShape",
-        rx: "4",
-        ry: "4",
-        height: "16",
-        width: "16"
-    }, a);
-    LearnBlock.utils.dom.createSvgElement("path", {
-        "class": "blocklyIconSymbol",
-        d: "m4.203,7.296 0,1.368 -0.92,0.677 -0.11,0.41 0.9,1.559 0.41,0.11 1.043,-0.457 1.187,0.683 0.127,1.134 0.3,0.3 1.8,0 0.3,-0.299 0.127,-1.138 1.185,-0.682 1.046,0.458 0.409,-0.11 0.9,-1.559 -0.11,-0.41 -0.92,-0.677 0,-1.366 0.92,-0.677 0.11,-0.41 -0.9,-1.559 -0.409,-0.109 -1.046,0.458 -1.185,-0.682 -0.127,-1.138 -0.3,-0.299 -1.8,0 -0.3,0.3 -0.126,1.135 -1.187,0.682 -1.043,-0.457 -0.41,0.11 -0.899,1.559 0.108,0.409z"
-    }, a);
-    LearnBlock.utils.dom.createSvgElement("circle", {
-        "class": "blocklyIconShape",
-        r: "2.7",
-        cx: "8",
-        cy: "8"
-    }, a)
-};
-LearnBlock.Mutator.prototype.iconClick_ = function (a) {
-    this.block_.isEditable() && LearnBlock.Icon.prototype.iconClick_.call(this, a)
-};
-LearnBlock.Mutator.prototype.createEditor_ = function () {
-    this.svgDialog_ = LearnBlock.utils.dom.createSvgElement("svg", {
-        x: LearnBlock.Bubble.BORDER_WIDTH,
-        y: LearnBlock.Bubble.BORDER_WIDTH
-    }, null);
-    if (this.quarkNames_.length)
-        for (var a = LearnBlock.utils.xml.createElement("xml"), b = 0, c; c = this.quarkNames_[b]; b++) {
-            var d = LearnBlock.utils.xml.createElement("block");
-            d.setAttribute("type", c);
-            a.appendChild(d)
-        } else a = null;
-    a = {
-        disable: !1,
-        disabledPatternId: this.block_.workspace.options.disabledPatternId,
-        languageTree: a,
-        parentWorkspace: this.block_.workspace,
-        pathToMedia: this.block_.workspace.options.pathToMedia,
-        RTL: this.block_.RTL,
-        toolboxPosition: this.block_.RTL ? LearnBlock.TOOLBOX_AT_RIGHT : LearnBlock.TOOLBOX_AT_LEFT,
-        horizontalLayout: !1,
-        getMetrics: this.getFlyoutMetrics_.bind(this),
-        setMetrics: null,
-        renderer: this.block_.workspace.options.renderer
-    };
-    this.workspace_ = new LearnBlock.WorkspaceSvg(a);
-    this.workspace_.isMutator = !0;
-    a = this.workspace_.addFlyout_("g");
-    b = this.workspace_.createDom("blocklyMutatorBackground");
-    b.insertBefore(a, this.workspace_.svgBlockCanvas_);
-    this.svgDialog_.appendChild(b);
-    return this.svgDialog_
-};
-LearnBlock.Mutator.prototype.updateEditable = function () {
-    LearnBlock.Mutator.superClass_.updateEditable.call(this);
-    this.block_.isInFlyout || (this.block_.isEditable() ? this.iconGroup_ && LearnBlock.utils.dom.removeClass(this.iconGroup_, "blocklyIconGroupReadonly") : (this.setVisible(!1), this.iconGroup_ && LearnBlock.utils.dom.addClass(this.iconGroup_, "blocklyIconGroupReadonly")))
-};
-LearnBlock.Mutator.prototype.resizeBubble_ = function () {
-    var a = 2 * LearnBlock.Bubble.BORDER_WIDTH,
-        b = this.workspace_.getCanvas().getBBox();
-    var c = this.block_.RTL ? -b.x : b.width + b.x;
-    b = b.height + 3 * a;
-    if (this.workspace_.flyout_) {
-        var d = this.workspace_.flyout_.getMetrics_();
-        b = Math.max(b, d.contentHeight + 20)
-    }
-    c += 3 * a;
-    if (Math.abs(this.workspaceWidth_ - c) > a || Math.abs(this.workspaceHeight_ - b) > a) this.workspaceWidth_ = c, this.workspaceHeight_ = b, this.bubble_.setBubbleSize(c + a, b + a), this.svgDialog_.setAttribute("width", this.workspaceWidth_),
-        this.svgDialog_.setAttribute("height", this.workspaceHeight_);
-    this.block_.RTL && (a = "translate(" + this.workspaceWidth_ + ",0)", this.workspace_.getCanvas().setAttribute("transform", a));
-    this.workspace_.resize()
-};
-LearnBlock.Mutator.prototype.setVisible = function (a) {
-    if (a != this.isVisible())
-        if (LearnBlock.Events.fire(new LearnBlock.Events.Ui(this.block_, "mutatorOpen", !a, a)), a) {
-            this.bubble_ = new LearnBlock.Bubble(this.block_.workspace, this.createEditor_(), this.block_.svgPath_, this.iconXY_, null, null);
-            this.bubble_.setSvgId(this.block_.id);
-            if (a = this.workspace_.options.languageTree) this.workspace_.flyout_.init(this.workspace_), this.workspace_.flyout_.show(a.childNodes);
-            this.rootBlock_ = this.block_.decompose(this.workspace_);
-            a = this.rootBlock_.getDescendants(!1);
-            for (var b = 0, c; c = a[b]; b++) c.render();
-            this.rootBlock_.setMovable(!1);
-            this.rootBlock_.setDeletable(!1);
-            this.workspace_.flyout_ ? (a = 2 * this.workspace_.flyout_.CORNER_RADIUS, b = this.workspace_.getFlyout().getWidth() + a) : b = a = 16;
-            this.block_.RTL && (b = -b);
-            this.rootBlock_.moveBy(b, a);
-            if (this.block_.saveConnections) {
-                var d = this;
-                this.block_.saveConnections(this.rootBlock_);
-                this.sourceListener_ = function () {
-                    d.block_.saveConnections(d.rootBlock_)
-                };
-                this.block_.workspace.addChangeListener(this.sourceListener_)
-            }
-            this.resizeBubble_();
-            this.workspace_.addChangeListener(this.workspaceChanged_.bind(this));
-            this.updateColour()
-        } else this.svgDialog_ = null, this.workspace_.dispose(), this.rootBlock_ = this.workspace_ = null, this.bubble_.dispose(), this.bubble_ = null, this.workspaceHeight_ = this.workspaceWidth_ = 0, this.sourceListener_ && (this.block_.workspace.removeChangeListener(this.sourceListener_), this.sourceListener_ = null)
-};
-LearnBlock.Mutator.prototype.workspaceChanged_ = function (a) {
-    if (a.type != LearnBlock.Events.UI && (a.type != LearnBlock.Events.CHANGE || "disabled" != a.element)) {
-        if (!this.workspace_.isDragging()) {
-            a = this.workspace_.getTopBlocks(!1);
-            for (var b = 0, c; c = a[b]; b++) {
-                var d = c.getRelativeToSurfaceXY(),
-                    e = c.getHeightWidth();
-                20 > d.y + e.height && c.moveBy(0, 20 - e.height - d.y)
-            }
-        }
-        if (this.rootBlock_.workspace == this.workspace_) {
-            LearnBlock.Events.setGroup(!0);
-            c = this.block_;
-            a = (a = c.mutationToDom()) && LearnBlock.Xml.domToText(a);
-            b = c.rendered;
-            c.rendered = !1;
-            c.compose(this.rootBlock_);
-            c.rendered = b;
-            c.initSvg();
-            b = (b = c.mutationToDom()) && LearnBlock.Xml.domToText(b);
-            if (a != b) {
-                LearnBlock.Events.fire(new LearnBlock.Events.BlockChange(c, "mutation", null, a, b));
-                var f = LearnBlock.Events.getGroup();
-                setTimeout(function () {
-                    LearnBlock.Events.setGroup(f);
-                    c.bumpNeighbours();
-                    LearnBlock.Events.setGroup(!1)
-                }, LearnBlock.BUMP_DELAY)
-            }
-            c.rendered && c.render();
-            a != b && LearnBlock.keyboardAccessibilityMode && LearnBlock.navigation.moveCursorOnBlockMutation(c);
-            this.workspace_.isDragging() || this.resizeBubble_();
-            LearnBlock.Events.setGroup(!1)
-        }
-    }
-};
-LearnBlock.Mutator.prototype.getFlyoutMetrics_ = function () {
-    return {
-        viewHeight: this.workspaceHeight_,
-        viewWidth: this.workspaceWidth_ - this.workspace_.getFlyout().getWidth(),
-        absoluteTop: 0,
-        absoluteLeft: this.workspace_.RTL ? 0 : this.workspace_.getFlyout().getWidth()
-    }
-};
-LearnBlock.Mutator.prototype.dispose = function () {
-    this.block_.mutator = null;
-    LearnBlock.Icon.prototype.dispose.call(this)
-};
-LearnBlock.Mutator.prototype.updateBlockStyle = function () {
-    var a = this.workspace_;
-    if (a && a.getAllBlocks()) {
-        for (var b = a.getAllBlocks(), c = 0; c < b.length; c++) {
-            var d = b[c];
-            d.setStyle(d.getStyleName())
-        }
-        a = a.flyout_.workspace_.getAllBlocks();
-        for (c = 0; c < a.length; c++) d = a[c], d.setStyle(d.getStyleName())
-    }
-};
-LearnBlock.Mutator.reconnect = function (a, b, c) {
-    if (!a || !a.getSourceBlock().workspace) return !1;
-    c = b.getInput(c).connection;
-    var d = a.targetBlock();
-    return d && d != b || c.targetConnection == a ? !1 : (c.isConnected() && c.disconnect(), c.connect(a), !0)
-};
-LearnBlock.Mutator.findParentWs = function (a) {
-    var b = null;
-    if (a && a.options) {
-        var c = a.options.parentWorkspace;
-        a.isFlyout ? c && c.options && (b = c.options.parentWorkspace) : c && (b = c)
-    }
-    return b
-};
+
 LearnBlock.utils.svgPaths = {};
 LearnBlock.utils.svgPaths.point = function (a, b) {
     return " " + a + "," + b + " "

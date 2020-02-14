@@ -5805,530 +5805,8 @@ LearnBlock.Css.inject = function (a, b) {
         }
     }
 };
-//CSS content
-LearnBlock.Css.CONTENT = [
-  /* eslint-disable indent */
-  '.blocklySvg {',
-    'background-color: #fff;',
-    'outline: none;',
-    'overflow: hidden;', /* IE overflows by default. */
-    'position: absolute;',
-    'display: block;',
-  '}',
-  '.blocklyWidgetDiv {',
-    'display: none;',
-    'position: absolute;',
-    'z-index: 99999;', /* big value for bootstrap3 compatibility */
-  '}',
-  '.injectionDiv {',
-    'height: 100%;',
-    'position: relative;',
-    'overflow: hidden;', /* So blocks in drag surface disappear at edges */
-    'touch-action: none;',
-  '}',
-  '.blocklyNonSelectable {',
-    'user-select: none;',
-    '-ms-user-select: none;',
-    '-webkit-user-select: none;',
-  '}',
-  '.blocklyWsDragSurface {',
-    'display: none;',
-    'position: absolute;',
-    'top: 0;',
-    'left: 0;',
-  '}',
-  //Added as a separate rule with multiple classes to make it more specific than a bootstrap rule that selects svg:root. See issue #1275 for context.
-  '.blocklyWsDragSurface.blocklyOverflowVisible {',
-    'overflow: visible;',
-  '}',
-  '.blocklyBlockDragSurface {',
-    'display: none;',
-    'position: absolute;',
-    'top: 0;',
-    'left: 0;',
-    'right: 0;',
-    'bottom: 0;',
-    'overflow: visible !important;',
-    'z-index: 50;', /* Display below toolbox, but above everything else. */
-  '}',
-  '.blocklyBlockCanvas.blocklyCanvasTransitioning,',
-  '.blocklyBubbleCanvas.blocklyCanvasTransitioning {',
-    'transition: transform .5s;',
-  '}',
-  '.blocklyTooltipDiv {',
-    'background-color: #ffffc7;',
-    'border: 1px solid #ddc;',
-    'box-shadow: 4px 4px 20px 1px rgba(0,0,0,.15);',
-    'color: #000;',
-    'display: none;',
-    'font-family: sans-serif;',
-    'font-size: 9pt;',
-    'opacity: .9;',
-    'padding: 2px;',
-    'position: absolute;',
-    'z-index: 100000;', /* big value for bootstrap3 compatibility */
-  '}',
-  '.blocklyDropDownDiv {',
-    'position: fixed;',
-    'left: 0;',
-    'top: 0;',
-    'z-index: 1000;',
-    'display: none;',
-    'border: 1px solid;',
-    'border-radius: 2px;',
-    'padding: 4px;',
-    'box-shadow: 0px 0px 3px 1px rgba(0,0,0,.3);',
-  '}',
-  '.blocklyDropDownDiv.focused {',
-    'box-shadow: 0px 0px 6px 1px rgba(0,0,0,.3);',
-  '}',
-  '.blocklyDropDownContent {',
-    'max-height: 300px;', // @todo: spec for maximum height.
-    'overflow: auto;',
-    'overflow-x: hidden;',
-  '}',
-  '.blocklyDropDownArrow {',
-    'position: absolute;',
-    'left: 0;',
-    'top: 0;',
-    'width: 16px;',
-    'height: 16px;',
-    'z-index: -1;',
-    'background-color: inherit;',
-    'border-color: inherit;',
-  '}',
-  '.blocklyDropDownButton {',
-    'display: inline-block;',
-    'float: left;',
-    'padding: 0;',
-    'margin: 4px;',
-    'border-radius: 4px;',
-    'outline: none;',
-    'border: 1px solid;',
-    'transition: box-shadow .1s;',
-    'cursor: pointer;',
-  '}',
-  '.arrowTop {',
-    'border-top: 1px solid;',
-    'border-left: 1px solid;',
-    'border-top-left-radius: 4px;',
-    'border-color: inherit;',
-  '}',
-  '.arrowBottom {',
-    'border-bottom: 1px solid;',
-    'border-right: 1px solid;',
-    'border-bottom-right-radius: 4px;',
-    'border-color: inherit;',
-  '}',
-  '.blocklyResizeSE {',
-    'cursor: se-resize;',
-    'fill: #aaa;',
-  '}',
-  '.blocklyResizeSW {',
-    'cursor: sw-resize;',
-    'fill: #aaa;',
-  '}',
-  '.blocklyResizeLine {',
-    'stroke: #515A5A;',
-    'stroke-width: 1;',
-  '}',
-  '.blocklyHighlightedConnectionPath {',
-    'fill: none;',
-    'stroke: #fc3;',
-    'stroke-width: 4px;',
-  '}',
-  '.blocklyPathLight {',
-    'fill: none;',
-    'stroke-linecap: round;',
-    'stroke-width: 1;',
-  '}',
-  '.blocklySelected>.blocklyPath {',
-    'stroke: #fc3;',
-    'stroke-width: 3px;',
-  '}',
-  '.blocklySelected>.blocklyPathLight {',
-    'display: none;',
-  '}',
-  '.blocklyDraggable {',
-    /* backup for browsers (e.g. IE11) that don't support grab */
-    'cursor: url("<<<PATH>>>/handopen.cur"), auto;',
-    'cursor: grab;',
-    'cursor: -webkit-grab;',
-  '}',
-  '.blocklyDragging {',
-    /* backup for browsers (e.g. IE11) that don't support grabbing */
-    'cursor: url("<<<PATH>>>/handclosed.cur"), auto;',
-    'cursor: grabbing;',
-    'cursor: -webkit-grabbing;',
-  '}',
-  /* Changes cursor on mouse down. Not effective in Firefox because of
-    https://bugzilla.mozilla.org/show_bug.cgi?id=771241 */
-  '.blocklyDraggable:active {',
-    /* backup for browsers (e.g. IE11) that don't support grabbing */
-    'cursor: url("<<<PATH>>>/handclosed.cur"), auto;',
-    'cursor: grabbing;',
-    'cursor: -webkit-grabbing;',
-  '}',
-  /* Change the cursor on the whole drag surface in case the mouse gets
-     ahead of block during a drag. This way the cursor is still a closed hand.
-   */
-  '.blocklyBlockDragSurface .blocklyDraggable {',
-    /* backup for browsers (e.g. IE11) that don't support grabbing */
-    'cursor: url("<<<PATH>>>/handclosed.cur"), auto;',
-    'cursor: grabbing;',
-    'cursor: -webkit-grabbing;',
-  '}',
-  '.blocklyDragging.blocklyDraggingDelete {',
-    'cursor: url("<<<PATH>>>/handdelete.cur"), auto;',
-  '}',
-  '.blocklyDragging>.blocklyPath,',
-  '.blocklyDragging>.blocklyPathLight {',
-    'fill-opacity: .8;',
-    'stroke-opacity: .8;',
-  '}',
-  '.blocklyDragging>.blocklyPathDark {',
-    'display: none;',
-  '}',
-  '.blocklyDisabled>.blocklyPath {',
-    'fill-opacity: .5;',
-    'stroke-opacity: .5;',
-  '}',
-  '.blocklyDisabled>.blocklyPathLight,',
-  '.blocklyDisabled>.blocklyPathDark {',
-    'display: none;',
-  '}',
-  '.blocklyInsertionMarker>.blocklyPath,',
-  '.blocklyInsertionMarker>.blocklyPathLight,',
-  '.blocklyInsertionMarker>.blocklyPathDark {',
-    'fill-opacity: .2;',
-    'stroke: none',
-  '}',
-  '.blocklyReplaceable .blocklyPath {',
-    'fill-opacity: .5;',
-  '}',
-  '.blocklyReplaceable .blocklyPathLight,',
-  '.blocklyReplaceable .blocklyPathDark {',
-    'display: none;',
-  '}',
-  '.blocklyText {',
-    'cursor: default;',
-    'fill: #fff;',
-    'font-family: sans-serif;',
-    'font-size: 11pt;',
-  '}',
-  '.blocklyMultilineText {',
-    'font-family: monospace;',
-  '}',
-  '.blocklyNonEditableText>text {',
-    'pointer-events: none;',
-  '}',
-  '.blocklyNonEditableText>rect,',
-  '.blocklyEditableText>rect {',
-    'fill: #fff;',
-    'fill-opacity: .6;',
-  '}',
-  '.blocklyNonEditableText>text,',
-  '.blocklyEditableText>text {',
-    'fill: #000;',
-  '}',
-  '.blocklyEditableText:hover>rect {',
-    'stroke: #fff;',
-    'stroke-width: 2;',
-  '}',
-  '.blocklyBubbleText {',
-    'fill: #000;',
-  '}',
-  '.blocklyFlyout {',
-    'position: absolute;',
-    'z-index: 20;',
-  '}',
-  //Don't allow users to select text.  It gets annoying when trying to drag a block and selected text moves instead.
-  '.blocklySvg text, .blocklyBlockDragSurface text {',
-    'user-select: none;',
-    '-ms-user-select: none;',
-    '-webkit-user-select: none;',
-    'cursor: inherit;',
-  '}',
-  '.blocklyHidden {',
-    'display: none;',
-  '}',
-  '.blocklyFieldDropdown:not(.blocklyHidden) {',
-    'display: block;',
-  '}',
-  '.blocklyIconGroup {',
-    'cursor: default;',
-  '}',
-  '.blocklyIconGroup:not(:hover),',
-  '.blocklyIconGroupReadonly {',
-    'opacity: .6;',
-  '}',
-  '.blocklyIconShape {',
-    'fill: #00f;',
-    'stroke: #fff;',
-    'stroke-width: 1px;',
-  '}',
-  '.blocklyIconSymbol {',
-    'fill: #fff;',
-  '}',
-  '.blocklyMinimalBody {',
-    'margin: 0;',
-    'padding: 0;',
-  '}',
-  '.blocklyCommentForeignObject {',
-    'position: relative;',
-    'z-index: 0;',
-  '}',
-  '.blocklyCommentRect {',
-    'fill: #E7DE8E;',
-    'stroke: #bcA903;',
-    'stroke-width: 1px',
-  '}',
-  '.blocklyCommentTarget {',
-    'fill: transparent;',
-    'stroke: #bcA903;',
-  '}',
-  '.blocklyCommentTargetFocused {',
-    'fill: none;',
-  '}',
-  '.blocklyCommentHandleTarget {',
-    'fill: none;',
-  '}',
-  '.blocklyCommentHandleTargetFocused {',
-    'fill: transparent;',
-  '}',
-  '.blocklyFocused>.blocklyCommentRect {',
-    'fill: #B9B272;',
-    'stroke: #B9B272;',
-  '}',
-  '.blocklySelected>.blocklyCommentTarget {',
-    'stroke: #fc3;',
-    'stroke-width: 3px;',
-  '}',
-  '.blocklyCommentTextarea {',
-    'background-color: #fef49c;',
-    'border: 0;',
-    'outline: 0;',
-    'margin: 0;',
-    'padding: 3px;',
-    'resize: none;',
-    'display: block;',
-    'overflow: hidden;',
-  '}',
-  '.blocklyCommentDeleteIcon {',
-    'cursor: pointer;',
-    'fill: #000;',
-    'display: none',
-  '}',
-  '.blocklySelected > .blocklyCommentDeleteIcon {',
-    'display: block',
-  '}',
-  '.blocklyDeleteIconShape {',
-    'fill: #000;',
-    'stroke: #000;',
-    'stroke-width: 1px;',
-  '}',
-  '.blocklyDeleteIconShape.blocklyDeleteIconHighlighted {',
-    'stroke: #fc3;',
-  '}',
-  '.blocklyHtmlInput {',
-    'border: none;',
-    'border-radius: 4px;',
-    'font-family: sans-serif;',
-    'height: 100%;',
-    'margin: 0;',
-    'outline: none;',
-    'padding: 0;',
-    'width: 100%;',
-    'text-align: center;',
-  '}',
-  //Edge and IE introduce a close icon when the input value is longer than acertain length. This affects our sizing calculations of the text input. Hiding the close icon to avoid that.
-  '.blocklyHtmlInput::-ms-clear {',
-    'display: none;',
-  '}',
-  '.blocklyMainBackground {',
-    'stroke-width: 1;',
-    'stroke: #c6c6c6;', /* Equates to #ddd due to border being off-pixel. */
-  '}',
-  '.blocklyMutatorBackground {',
-    'fill: #fff;',
-    'stroke: #ddd;',
-    'stroke-width: 1;',
-  '}',
-  '.blocklyFlyoutBackground {',
-    'fill: #dbd;',
-    'fill-opacity: .8;',
-  '}',
-  '.blocklyMainWorkspaceScrollbar {',
-    'z-index: 20;',
-  '}',
-  '.blocklyFlyoutScrollbar {',
-    'z-index: 30;',
-  '}',
-  '.blocklyScrollbarHorizontal, .blocklyScrollbarVertical {',
-    'position: absolute;',
-    'outline: none;',
-  '}',
-  '.blocklyScrollbarBackground {',
-    'opacity: 0;',
-  '}',
-  '.blocklyScrollbarHandle {',
-    'fill: #ccc;',
-  '}',
-  '.blocklyScrollbarBackground:hover+.blocklyScrollbarHandle,',
-  '.blocklyScrollbarHandle:hover {',
-    'fill: #bbb;',
-  '}',
-  //Darken flyout scrollbars due to being on a grey background. By contrast, workspace scrollbars are on a white background.
-  '.blocklyFlyout .blocklyScrollbarHandle {',
-    'fill: #bbb;',
-  '}',
-  '.blocklyFlyout .blocklyScrollbarBackground:hover+.blocklyScrollbarHandle,',
-  '.blocklyFlyout .blocklyScrollbarHandle:hover {',
-    'fill: #aaa;',
-  '}',
-  '.blocklyInvalidInput {',
-    'background: #faa;',
-  '}',
-  '.blocklyContextMenu {',
-    'border-radius: 4px;',
-    'max-height: 100%;',
-  '}',
-  '.blocklyDropdownMenu {',
-    'border-radius: 2px;',
-    'padding: 0 !important;',
-  '}',
-
-  '.blocklyWidgetDiv .blocklyDropdownMenu .goog-menuitem,',
-  '.blocklyDropDownDiv .blocklyDropdownMenu .goog-menuitem {', /* 28px on the left for icon or checkbox. */
-    'padding-left: 28px;',
-  '}',
-  // BiDi override for the resting state. #noflip
-  '.blocklyWidgetDiv .blocklyDropdownMenu .goog-menuitem.goog-menuitem-rtl,',
-  '.blocklyDropDownDiv .blocklyDropdownMenu .goog-menuitem.goog-menuitem-rtl {', // Flip left/right padding for BiDi.
-    'padding-left: 5px;',
-    'padding-right: 28px;',
-  '}',
-  '.blocklyVerticalCursor {',
-    'stroke-width: 3px;',
-    'fill: rgba(255,255,255,.5);',
-  '}',
-  '.blocklyWidgetDiv .goog-option-selected .goog-menuitem-checkbox,',
-  '.blocklyWidgetDiv .goog-option-selected .goog-menuitem-icon,',
-  '.blocklyDropDownDiv .goog-option-selected .goog-menuitem-checkbox,',
-  '.blocklyDropDownDiv .goog-option-selected .goog-menuitem-icon {',
-    'background: url(<<<PATH>>>/sprites.png) no-repeat -48px -16px;',
-  '}',
-  '.blocklyWidgetDiv .goog-menu {',
-    'background: #fff;',
-    'border-color: transparent;',
-    'border-style: solid;',
-    'border-width: 1px;',
-    'cursor: default;',
-    'font: normal 13px Arial, sans-serif;',
-    'margin: 0;',
-    'outline: none;',
-    'padding: 4px 0;',
-    'position: absolute;',
-    'overflow-y: auto;',
-    'overflow-x: hidden;',
-    'max-height: 100%;',
-    'z-index: 20000;', /* Arbitrary, but some apps depend on it... */
-    'box-shadow: 0px 0px 3px 1px rgba(0,0,0,.3);',
-  '}',
-  '.blocklyWidgetDiv .goog-menu.focused {',
-    'box-shadow: 0px 0px 6px 1px rgba(0,0,0,.3);',
-  '}',
-  '.blocklyDropDownDiv .goog-menu {',
-    'cursor: default;',
-    'font: normal 13px "Helvetica Neue", Helvetica, sans-serif;',
-    'outline: none;',
-    'z-index: 20000;', /* Arbitrary, but some apps depend on it... */
-  '}',
-  '.blocklyWidgetDiv .goog-menuitem,',
-  '.blocklyDropDownDiv .goog-menuitem {',
-    'color: #000;',
-    'font: normal 13px Arial, sans-serif;',
-    'list-style: none;',
-    'margin: 0;', /* 7em on the right for shortcut. */
-    'min-width: 7em;',
-    'border: none;',
-    'padding: 6px 15px;',
-    'white-space: nowrap;',
-    'cursor: pointer;',
-  '}',
-  // If a menu doesn't have checkable items or items with icons,remove padding.
-  '.blocklyWidgetDiv .goog-menu-nocheckbox .goog-menuitem,',
-  '.blocklyWidgetDiv .goog-menu-noicon .goog-menuitem,',
-  '.blocklyDropDownDiv .goog-menu-nocheckbox .goog-menuitem,',
-  '.blocklyDropDownDiv .goog-menu-noicon .goog-menuitem {',
-    'padding-left: 12px;',
-  '}',
-  '.blocklyWidgetDiv .goog-menuitem-content,',
-  '.blocklyDropDownDiv .goog-menuitem-content {',
-    'font: normal 13px Arial, sans-serif;',
-  '}',
-  '.blocklyWidgetDiv .goog-menuitem-content {',
-    'color: #000;',
-  '}',
-  '.blocklyDropDownDiv .goog-menuitem-content {',
-    'color: #000;',
-  '}',
-  /* State: disabled. */
-  '.blocklyWidgetDiv .goog-menuitem-disabled,',
-  '.blocklyDropDownDiv .goog-menuitem-disabled {',
-    'cursor: inherit;',
-  '}',
-  '.blocklyWidgetDiv .goog-menuitem-disabled .goog-menuitem-content,',
-  '.blocklyDropDownDiv .goog-menuitem-disabled .goog-menuitem-content {',
-    'color: #ccc !important;',
-  '}',
-  '.blocklyWidgetDiv .goog-menuitem-disabled .goog-menuitem-icon,',
-  '.blocklyDropDownDiv .goog-menuitem-disabled .goog-menuitem-icon {',
-    'opacity: .3;',
-    'filter: alpha(opacity=30);',
-  '}',
-  /* State: hover. */
-  '.blocklyWidgetDiv .goog-menuitem-highlight ,',
-  '.blocklyDropDownDiv .goog-menuitem-highlight {',
-    'background-color: rgba(0,0,0,.1);',
-  '}',
-  /* State: selected/checked. */
-  '.blocklyWidgetDiv .goog-menuitem-checkbox,',
-  '.blocklyWidgetDiv .goog-menuitem-icon,',
-  '.blocklyDropDownDiv .goog-menuitem-checkbox,',
-  '.blocklyDropDownDiv .goog-menuitem-icon {',
-    'background-repeat: no-repeat;',
-    'height: 16px;',
-    'left: 6px;',
-    'position: absolute;',
-    'right: auto;',
-    'vertical-align: middle;',
-    'width: 16px;',
-  '}',
-  //BiDi override for the selected/checked state. #noflip
-  '.blocklyWidgetDiv .goog-menuitem-rtl .goog-menuitem-checkbox,',
-  '.blocklyWidgetDiv .goog-menuitem-rtl .goog-menuitem-icon,',
-  '.blocklyDropDownDiv .goog-menuitem-rtl .goog-menuitem-checkbox,',
-  '.blocklyDropDownDiv .goog-menuitem-rtl .goog-menuitem-icon {', /* Flip left/right positioning. */
-    'left: auto;',
-    'right: 6px;',
-  '}',
-  '.blocklyWidgetDiv .goog-option-selected .goog-menuitem-checkbox,',
-  '.blocklyWidgetDiv .goog-option-selected .goog-menuitem-icon,',
-  '.blocklyDropDownDiv .goog-option-selected .goog-menuitem-checkbox,',
-  '.blocklyDropDownDiv .goog-option-selected .goog-menuitem-icon {',
-    'position: static;', /* Scroll with the menu. */
-    'float: left;',
-    'margin-left: -24px;',
-  '}',
-  '.blocklyWidgetDiv .goog-menuitem-rtl .goog-menuitem-checkbox,',
-  '.blocklyWidgetDiv .goog-menuitem-rtl .goog-menuitem-icon,',
-  '.blocklyDropDownDiv .goog-menuitem-rtl .goog-menuitem-checkbox,',
-  '.blocklyDropDownDiv .goog-menuitem-rtl .goog-menuitem-icon {',
-    'float: right;',
-    'margin-right: -24px;',
-  '}' /* eslint-enable indent */
-];
+//CSS content (defined in stiles.css)
+LearnBlock.Css.CONTENT = [];
 
 //Dropdown class
 LearnBlock.DropDownDiv = function () {};
@@ -7696,7 +7174,6 @@ LearnBlock.WorkspaceSvg.prototype.refreshTheme = function () {
 
 //Injects an editor into the specified container element
 LearnBlock.inject = function (a, b) {
-    LearnBlock.checkBlockColourConstants();
     "string" == typeof a && (a = document.getElementById(a) || document.querySelector(a));
     if (!LearnBlock.utils.dom.containsNode(document, a)) throw Error("Error: container is not in current document.");
     var c = new LearnBlock.Options(b || {}),
@@ -9096,31 +8573,6 @@ LearnBlock.isNumber = function (a) {
 //Converts a hue (HSV model) into an RGB hex triplet
 LearnBlock.hueToHex = function (a) {
     return LearnBlock.utils.colour.hsvToHex(a, LearnBlock.HSV_SATURATION, 255 * LearnBlock.HSV_VALUE)
-};
-//Checks old colour constants are not overwritten by the host application
-LearnBlock.checkBlockColourConstants = function () {
-    LearnBlock.checkBlockColourConstant_("LOGIC_HUE", ["Blocks", "logic", "HUE"], void 0);
-    LearnBlock.checkBlockColourConstant_("LOGIC_HUE", ["Constants", "Logic", "HUE"], 210);
-    LearnBlock.checkBlockColourConstant_("LOOPS_HUE", ["Blocks", "loops", "HUE"], void 0);
-    LearnBlock.checkBlockColourConstant_("LOOPS_HUE", ["Constants", "Loops", "HUE"], 120);
-    LearnBlock.checkBlockColourConstant_("MATH_HUE", ["Blocks", "math", "HUE"], void 0);
-    LearnBlock.checkBlockColourConstant_("MATH_HUE", ["Constants", "Math",
-"HUE"], 230);
-    LearnBlock.checkBlockColourConstant_("TEXTS_HUE", ["Blocks", "texts", "HUE"], void 0);
-    LearnBlock.checkBlockColourConstant_("TEXTS_HUE", ["Constants", "Text", "HUE"], 160);
-    LearnBlock.checkBlockColourConstant_("LISTS_HUE", ["Blocks", "lists", "HUE"], void 0);
-    LearnBlock.checkBlockColourConstant_("LISTS_HUE", ["Constants", "Lists", "HUE"], 260);
-    LearnBlock.checkBlockColourConstant_("COLOUR_HUE", ["Blocks", "colour", "HUE"], void 0);
-    LearnBlock.checkBlockColourConstant_("COLOUR_HUE", ["Constants", "Colour", "HUE"], 20);
-    LearnBlock.checkBlockColourConstant_("VARIABLES_HUE",
-["Blocks", "variables", "HUE"], void 0);
-    LearnBlock.checkBlockColourConstant_("VARIABLES_HUE", ["Constants", "Variables", "HUE"], 330);
-    LearnBlock.checkBlockColourConstant_("VARIABLES_DYNAMIC_HUE", ["Constants", "VariablesDynamic", "HUE"], 310);
-    LearnBlock.checkBlockColourConstant_("PROCEDURES_HUE", ["Blocks", "procedures", "HUE"], void 0)
-};
-LearnBlock.checkBlockColourConstant_ = function (a, b, c) {
-    for (var d = "Blockly", e = Blockly, f = 0; f < b.length; ++f) d += "." + b[f], e && (e = e[b[f]]);
-    e && e !== c && (a = (void 0 === c ? '%1 has been removed. Use LearnBlock.Msg["%2"].' : '%1 is deprecated and unused. Override LearnBlock.Msg["%2"].').replace("%1", d).replace("%2", a), console.warn(a))
 };
 
 //Tree class
@@ -10694,18 +10146,6 @@ LearnBlock.FlyoutButton.prototype.onMouseUp_ = function (a) {
     (a = this.targetWorkspace_.getGesture(a)) && a.cancel();
     this.isLabel_ && this.callbackKey_ ? console.warn("Labels should not have callbacks. Label text: " + this.text_) : this.isLabel_ || this.callbackKey_ && this.targetWorkspace_.getButtonCallback(this.callbackKey_) ? this.isLabel_ || this.targetWorkspace_.getButtonCallback(this.callbackKey_)(this) : console.warn("Buttons should have callbacks. Button text: " + this.text_)
 };
-//CSS for buttons
-LearnBlock.Css.register([
-  '.blocklyFlyoutButton {',
-    'fill: #888;',
-    'cursor: default;',
-  '}',
-  '.blocklyFlyoutButtonShadow {',
-    'fill: #666;',
-  '}',
-  '.blocklyFlyoutButton:hover {',
-    'fill: #aaa;',
-  '}']);
 
 //Class for a flyout
 LearnBlock.VerticalFlyout = function (a) {
@@ -11162,23 +10602,11 @@ LearnBlock.blockRendering.ConstantProvider = function () {
 };
 //Initializes shape objects based on the constants set in the constructor
 LearnBlock.blockRendering.ConstantProvider.prototype.init = function () {
-    this.JAGGED_TEETH = this.makeJaggedTeeth();
     this.NOTCH = this.makeNotch();
     this.START_HAT = this.makeStartHat();
     this.PUZZLE_TAB = this.makePuzzleTab();
     this.INSIDE_CORNERS = this.makeInsideCorners();
     this.OUTSIDE_CORNERS = this.makeOutsideCorners()
-};
-//An object containing sizing and path information about collapsed block indicators
-LearnBlock.blockRendering.ConstantProvider.prototype.makeJaggedTeeth = function () {
-    var a = this.JAGGED_TEETH_HEIGHT,
-        b = this.JAGGED_TEETH_WIDTH,
-        c = LearnBlock.utils.svgPaths.line([LearnBlock.utils.svgPaths.point(6, 3), LearnBlock.utils.svgPaths.point(-12, 6), LearnBlock.utils.svgPaths.point(6, 3)]);
-    return {
-        height: a,
-        width: b,
-        path: c
-    }
 };
 //An object containing sizing and path information about start hats
 LearnBlock.blockRendering.ConstantProvider.prototype.makeStartHat = function () {
@@ -11547,6 +10975,8 @@ LearnBlock.blockRendering.InRowSpacer = function (a, b) {
     this.height = this.constants_.SPACER_DEFAULT_HEIGHT
 };
 LearnBlock.utils.object.inherits(LearnBlock.blockRendering.InRowSpacer, LearnBlock.blockRendering.Measurable);
+
+//An object representing a single row on a rendered block and all of its subcomponents
 LearnBlock.blockRendering.Row = function (a) {
     this.type = LearnBlock.blockRendering.Types.ROW;
     this.elements = [];
@@ -11555,30 +10985,37 @@ LearnBlock.blockRendering.Row = function (a) {
     this.constants_ = a;
     this.notchOffset = this.constants_.NOTCH_OFFSET_LEFT
 };
+//Inspects all subcomponents and populate all size properties on the row
 LearnBlock.blockRendering.Row.prototype.measure = function () {
     throw Error("Unexpected attempt to measure a base Row.");
 };
+//Get the last input on this row, if it has one
 LearnBlock.blockRendering.Row.prototype.getLastInput = function () {
     for (var a = this.elements.length - 1, b; b = this.elements[a]; a--)
         if (LearnBlock.blockRendering.Types.isInput(b)) return b;
     return null
 };
+//Determines whether this row should start with an element spacer
 LearnBlock.blockRendering.Row.prototype.startsWithElemSpacer = function () {
     return !0
 };
+//Determines whether this row should end with an element spacer
 LearnBlock.blockRendering.Row.prototype.endsWithElemSpacer = function () {
     return !0
 };
+//Convenience method to get the first spacer element on this row
 LearnBlock.blockRendering.Row.prototype.getFirstSpacer = function () {
     for (var a = 0, b; b = this.elements[a]; a++)
         if (LearnBlock.blockRendering.Types.isSpacer(b)) return b;
     return null
 };
+//Convenience method to get the last spacer element on this row
 LearnBlock.blockRendering.Row.prototype.getLastSpacer = function () {
     for (var a = this.elements.length - 1, b; b = this.elements[a]; a--)
         if (LearnBlock.blockRendering.Types.isSpacer(b)) return b;
     return null
 };
+//An object containing information about what elements are in the top row of a block as well as sizing information for the top row
 LearnBlock.blockRendering.TopRow = function (a) {
     LearnBlock.blockRendering.TopRow.superClass_.constructor.call(this, a);
     this.type |= LearnBlock.blockRendering.Types.TOP_ROW;
@@ -11587,11 +11024,13 @@ LearnBlock.blockRendering.TopRow = function (a) {
     this.connection = null
 };
 LearnBlock.utils.object.inherits(LearnBlock.blockRendering.TopRow, LearnBlock.blockRendering.Row);
+//Returns whether or not the top row has a left square corner
 LearnBlock.blockRendering.TopRow.prototype.hasLeftSquareCorner = function (a) {
     var b = (a.hat ? "cap" === a.hat : LearnBlock.BlockSvg.START_HAT) && !a.outputConnection && !a.previousConnection,
         c = a.getPreviousBlock();
     return !!a.outputConnection || b || (c ? c.getNextBlock() == a : !1)
 };
+//Override methods
 LearnBlock.blockRendering.TopRow.prototype.measure = function () {
     for (var a = 0, b = 0, c = 0, d = 0, e; e = this.elements[d]; d++) b += e.width, LearnBlock.blockRendering.Types.isSpacer(e) || (LearnBlock.blockRendering.Types.isHat(e) ? c = Math.max(c, e.ascenderHeight) : a = Math.max(a, e.height));
     this.width = Math.max(this.minWidth, b);
@@ -11602,6 +11041,7 @@ LearnBlock.blockRendering.TopRow.prototype.measure = function () {
 LearnBlock.blockRendering.TopRow.prototype.startsWithElemSpacer = function () {
     return !1
 };
+//An object containing information about what elements are in the bottom row of a block as well as spacing information for the top row
 LearnBlock.blockRendering.BottomRow = function (a) {
     LearnBlock.blockRendering.BottomRow.superClass_.constructor.call(this, a);
     this.type |= LearnBlock.blockRendering.Types.BOTTOM_ROW;
@@ -11610,9 +11050,11 @@ LearnBlock.blockRendering.BottomRow = function (a) {
     this.baseline = this.descenderHeight = 0
 };
 LearnBlock.utils.object.inherits(LearnBlock.blockRendering.BottomRow, LearnBlock.blockRendering.Row);
+//Returns whether or not the bottom row has a left square corner
 LearnBlock.blockRendering.BottomRow.prototype.hasLeftSquareCorner = function (a) {
     return !!a.outputConnection || !!a.getNextBlock()
 };
+//Override methods
 LearnBlock.blockRendering.BottomRow.prototype.measure = function () {
     for (var a = 0, b = 0, c = 0, d = 0, e; e = this.elements[d]; d++) b += e.width, LearnBlock.blockRendering.Types.isSpacer(e) || (LearnBlock.blockRendering.Types.isNextConnection(e) ? c = Math.max(c, e.height) : a = Math.max(a, e.height));
     this.width = Math.max(this.minWidth, b);
@@ -11623,6 +11065,7 @@ LearnBlock.blockRendering.BottomRow.prototype.measure = function () {
 LearnBlock.blockRendering.BottomRow.prototype.startsWithElemSpacer = function () {
     return !1
 };
+//An object containing information about a spacer between two rows
 LearnBlock.blockRendering.SpacerRow = function (a, b, c) {
     LearnBlock.blockRendering.SpacerRow.superClass_.constructor.call(this, a);
     this.type = this.type | LearnBlock.blockRendering.Types.SPACER | LearnBlock.blockRendering.Types.BETWEEN_ROW_SPACER;
@@ -11633,13 +11076,16 @@ LearnBlock.blockRendering.SpacerRow = function (a, b, c) {
     this.elements = [new LearnBlock.blockRendering.InRowSpacer(this.constants_, c)]
 };
 LearnBlock.utils.object.inherits(LearnBlock.blockRendering.SpacerRow, LearnBlock.blockRendering.Row);
+//Override method
 LearnBlock.blockRendering.SpacerRow.prototype.measure = function () {};
+//An object containing information about a row that holds one or more inputs
 LearnBlock.blockRendering.InputRow = function (a) {
     LearnBlock.blockRendering.InputRow.superClass_.constructor.call(this, a);
     this.type |= LearnBlock.blockRendering.Types.INPUT_ROW;
     this.connectedBlockWidths = 0
 };
 LearnBlock.utils.object.inherits(LearnBlock.blockRendering.InputRow, LearnBlock.blockRendering.Row);
+//Inspects all subcomponents and populate all size properties on the row
 LearnBlock.blockRendering.InputRow.prototype.measure = function () {
     this.width = this.minWidth;
     this.height = this.minHeight;
@@ -11648,9 +11094,11 @@ LearnBlock.blockRendering.InputRow.prototype.measure = function () {
         a;
     this.widthWithConnectedBlocks = this.width + a
 };
+//Override method
 LearnBlock.blockRendering.InputRow.prototype.endsWithElemSpacer = function () {
     return !this.hasExternalInput && !this.hasStatement
 };
+//An object containing all sizing information needed to draw this block
 LearnBlock.blockRendering.RenderInfo = function (a, b) {
     this.block_ = b;
     this.renderer_ = a;
@@ -11667,9 +11115,11 @@ LearnBlock.blockRendering.RenderInfo = function (a, b) {
     this.bottomRow = new LearnBlock.blockRendering.BottomRow(this.constants_);
     this.startY = this.startX = 0
 };
+//Gets the block renderer in use
 LearnBlock.blockRendering.RenderInfo.prototype.getRenderer = function () {
     return this.renderer_
 };
+//Populates and returns an object containing all sizing information needed to draw this block
 LearnBlock.blockRendering.RenderInfo.prototype.measure = function () {
     this.createRows_();
     this.addElemSpacing_();
@@ -11678,6 +11128,7 @@ LearnBlock.blockRendering.RenderInfo.prototype.measure = function () {
     this.addRowSpacing_();
     this.finalize_()
 };
+//Creates rows of Measurable objects representing all renderable parts of the block
 LearnBlock.blockRendering.RenderInfo.prototype.createRows_ = function () {
     this.populateTopRow_();
     this.rows.push(this.topRow);
@@ -11694,6 +11145,7 @@ LearnBlock.blockRendering.RenderInfo.prototype.createRows_ = function () {
     this.populateBottomRow_();
     this.rows.push(this.bottomRow)
 };
+//Creates all non-spacer elements that belong on the top row
 LearnBlock.blockRendering.RenderInfo.prototype.populateTopRow_ = function () {
     var a = !!this.block_.previousConnection,
         b = (this.block_.hat ? "cap" === this.block_.hat : LearnBlock.BlockSvg.START_HAT) && !this.outputConnection && !a;
@@ -11702,20 +11154,24 @@ LearnBlock.blockRendering.RenderInfo.prototype.populateTopRow_ = function () {
         this.topRow.capline = a.ascenderHeight) : a && (this.topRow.hasPreviousConnection = !0, this.topRow.connection = new LearnBlock.blockRendering.PreviousConnection(this.constants_, this.block_.previousConnection), this.topRow.elements.push(this.topRow.connection));
     this.block_.inputList.length && this.block_.inputList[0].type == LearnBlock.NEXT_STATEMENT && !this.block_.isCollapsed() ? this.topRow.minHeight = this.constants_.LARGE_PADDING : this.topRow.minHeight = this.constants_.MEDIUM_PADDING
 };
+//Creates all non-spacer elements that belong on the bottom row
 LearnBlock.blockRendering.RenderInfo.prototype.populateBottomRow_ = function () {
     this.bottomRow.hasNextConnection = !!this.block_.nextConnection;
     this.bottomRow.minHeight = this.block_.inputList.length && this.block_.inputList[this.block_.inputList.length - 1].type == LearnBlock.NEXT_STATEMENT ? this.constants_.LARGE_PADDING : this.constants_.MEDIUM_PADDING - 1;
     this.bottomRow.hasLeftSquareCorner(this.block_) ? this.bottomRow.elements.push(new LearnBlock.blockRendering.SquareCorner(this.constants_)) : this.bottomRow.elements.push(new LearnBlock.blockRendering.RoundCorner(this.constants_));
     this.bottomRow.hasNextConnection && (this.bottomRow.connection = new LearnBlock.blockRendering.NextConnection(this.constants_, this.block_.nextConnection), this.bottomRow.elements.push(this.bottomRow.connection))
 };
+//Adds an input element to the active row, if needed, and records the type of the input on the row
 LearnBlock.blockRendering.RenderInfo.prototype.addInput_ = function (a, b) {
     this.isInline && a.type == LearnBlock.INPUT_VALUE ? (b.elements.push(new LearnBlock.blockRendering.InlineInput(this.constants_, a)), b.hasInlineInput = !0) : a.type == LearnBlock.NEXT_STATEMENT ? (b.elements.push(new LearnBlock.blockRendering.StatementInput(this.constants_, a)), b.hasStatement = !0) : a.type == LearnBlock.INPUT_VALUE ? (b.elements.push(new LearnBlock.blockRendering.ExternalValueInput(this.constants_, a)), b.hasExternalInput = !0) : a.type == LearnBlock.DUMMY_INPUT && (b.minHeight =
         Math.max(b.minHeight, this.constants_.DUMMY_INPUT_MIN_HEIGHT), b.hasDummyInput = !0);
     b.align = a.align
 };
+//Decides whether to start a new row between the two inputs
 LearnBlock.blockRendering.RenderInfo.prototype.shouldStartNewRow_ = function (a, b) {
     return b ? a.type == LearnBlock.NEXT_STATEMENT || b.type == LearnBlock.NEXT_STATEMENT ? !0 : a.type == LearnBlock.INPUT_VALUE || a.type == LearnBlock.DUMMY_INPUT ? !this.isInline : !1 : !1
 };
+//Adds horizontal spacing between and around elements within each row
 LearnBlock.blockRendering.RenderInfo.prototype.addElemSpacing_ = function () {
     for (var a = 0, b; b = this.rows[a]; a++) {
         var c = b.elements;
@@ -11731,6 +11187,7 @@ LearnBlock.blockRendering.RenderInfo.prototype.addElemSpacing_ = function () {
             this.getInRowSpacing_(c[c.length - 1], null)))
     }
 };
+//Calculates the width of a spacer element in a row based on the previous and next elements in that row
 LearnBlock.blockRendering.RenderInfo.prototype.getInRowSpacing_ = function (a, b) {
     if (a && LearnBlock.blockRendering.Types.isInput(a) && !b) {
         if (LearnBlock.blockRendering.Types.isExternalInput(a)) return this.constants_.NO_PADDING;
@@ -11740,6 +11197,7 @@ LearnBlock.blockRendering.RenderInfo.prototype.getInRowSpacing_ = function (a, b
     return a && LearnBlock.blockRendering.Types.isLeftSquareCorner(a) && b && (LearnBlock.blockRendering.Types.isPreviousConnection(b) || LearnBlock.blockRendering.Types.isNextConnection(b)) ?
         b.notchOffset : a && LearnBlock.blockRendering.Types.isLeftRoundedCorner(a) && b && (LearnBlock.blockRendering.Types.isPreviousConnection(b) || LearnBlock.blockRendering.Types.isNextConnection(b)) ? b.notchOffset - this.constants_.CORNER_RADIUS : this.constants_.MEDIUM_PADDING
 };
+//Figures out where the right edge of the block and right edge of statement inputs should be placed
 LearnBlock.blockRendering.RenderInfo.prototype.computeBounds_ = function () {
     for (var a = 0, b = 0, c = 0, d = 0, e; e = this.rows[d]; d++) {
         e.measure();
@@ -11757,6 +11215,7 @@ LearnBlock.blockRendering.RenderInfo.prototype.computeBounds_ = function () {
     this.outputConnection && (this.startX = this.outputConnection.width, this.width += this.outputConnection.width,
         this.widthWithChildren += this.outputConnection.width)
 };
+//Extra spacing may be necessary to make sure that the right sides of all rows line up
 LearnBlock.blockRendering.RenderInfo.prototype.alignRowElements_ = function () {
     for (var a = 0, b; b = this.rows[a]; a++)
         if (b.hasStatement) this.alignStatementRow_(b);
@@ -11765,10 +11224,12 @@ LearnBlock.blockRendering.RenderInfo.prototype.alignRowElements_ = function () {
             c && this.addAlignmentPadding_(b, c)
         }
 };
+//Modifies the given row to add the given amount of padding around its fields
 LearnBlock.blockRendering.RenderInfo.prototype.addAlignmentPadding_ = function (a, b) {
     var c = a.getLastSpacer();
     c && (c.width += b, a.width += b)
 };
+//Aligns the elements of a statement row based on computed bounds
 LearnBlock.blockRendering.RenderInfo.prototype.alignStatementRow_ = function (a) {
     var b = a.getLastInput(),
         c = a.width - b.width,
@@ -11780,11 +11241,13 @@ LearnBlock.blockRendering.RenderInfo.prototype.alignStatementRow_ = function (a)
     a.width += d - c;
     a.widthWithConnectedBlocks = Math.max(a.width, this.statementEdge + a.connectedBlockWidths)
 };
+//Adds spacers between rows and set their sizes
 LearnBlock.blockRendering.RenderInfo.prototype.addRowSpacing_ = function () {
     var a = this.rows;
     this.rows = [];
     for (var b = 0; b < a.length; b++) this.rows.push(a[b]), b != a.length - 1 && this.rows.push(this.makeSpacerRow_(a[b], a[b + 1]))
 };
+//Creates a spacer row to go between prev and next, and sets its size
 LearnBlock.blockRendering.RenderInfo.prototype.makeSpacerRow_ = function (a, b) {
     var c = this.getSpacerRowHeight_(a, b),
         d = this.getSpacerRowWidth_(a, b);
@@ -11792,12 +11255,15 @@ LearnBlock.blockRendering.RenderInfo.prototype.makeSpacerRow_ = function (a, b) 
     a.hasStatement && (c.followsStatement = !0);
     return c
 };
+//Calculates the width of a spacer row
 LearnBlock.blockRendering.RenderInfo.prototype.getSpacerRowWidth_ = function (a, b) {
     return this.width - this.startX
 };
+//Calculates the height of a spacer row
 LearnBlock.blockRendering.RenderInfo.prototype.getSpacerRowHeight_ = function (a, b) {
     return this.constants_.MEDIUM_PADDING
 };
+//Calculates the centerline of an element in a rendered row
 LearnBlock.blockRendering.RenderInfo.prototype.getElemCenterline_ = function (a, b) {
     if (LearnBlock.blockRendering.Types.isSpacer(b)) return a.yPos + b.height / 2;
     if (LearnBlock.blockRendering.Types.isBottomRow(a)) {
@@ -11806,9 +11272,11 @@ LearnBlock.blockRendering.RenderInfo.prototype.getElemCenterline_ = function (a,
     }
     return LearnBlock.blockRendering.Types.isTopRow(a) ? LearnBlock.blockRendering.Types.isHat(b) ? a.capline - b.height / 2 : a.capline + b.height / 2 : a.yPos + a.height / 2
 };
+//Records final position information on elements on the given row, for use in drawing
 LearnBlock.blockRendering.RenderInfo.prototype.recordElemPositions_ = function (a) {
     for (var b = a.xPos, c = 0, d; d = a.elements[c]; c++) LearnBlock.blockRendering.Types.isSpacer(d) && (d.height = a.height), d.xPos = b, d.centerline = this.getElemCenterline_(a, d), b += d.width
 };
+//Makes any final changes to the rendering information object
 LearnBlock.blockRendering.RenderInfo.prototype.finalize_ = function () {
     for (var a = 0, b = 0, c = 0, d; d = this.rows[c]; c++) d.yPos = b, d.xPos = this.startX, b += d.height, a = Math.max(a, d.widthWithConnectedBlocks), this.recordElemPositions_(d);
     this.widthWithChildren = a + this.startX;
@@ -11816,6 +11284,7 @@ LearnBlock.blockRendering.RenderInfo.prototype.finalize_ = function () {
     this.startY = this.topRow.capline;
     this.bottomRow.baseline = b - this.bottomRow.descenderHeight
 };
+//An object that draws a block based on the given rendering information
 LearnBlock.blockRendering.Drawer = function (a, b) {
     this.block_ = a;
     this.info_ = b;
@@ -11823,8 +11292,8 @@ LearnBlock.blockRendering.Drawer = function (a, b) {
     this.inlinePath_ = this.outlinePath_ = "";
     this.constants_ = b.getRenderer().getConstants()
 };
+//Draws the block to the workspace
 LearnBlock.blockRendering.Drawer.prototype.draw = function () {
-    this.hideHiddenIcons_();
     this.drawOutline_();
     this.drawInternals_();
     this.block_.pathObject.setPaths(this.outlinePath_ + "\n" + this.inlinePath_);
@@ -11832,13 +11301,12 @@ LearnBlock.blockRendering.Drawer.prototype.draw = function () {
     LearnBlock.blockRendering.useDebugger && this.block_.renderingDebugger.drawDebug(this.block_, this.info_);
     this.recordSizeOnBlock_()
 };
+//Saves sizing information back to the block
 LearnBlock.blockRendering.Drawer.prototype.recordSizeOnBlock_ = function () {
     this.block_.height = this.info_.height;
     this.block_.width = this.info_.widthWithChildren
 };
-LearnBlock.blockRendering.Drawer.prototype.hideHiddenIcons_ = function () {
-    for (var a = 0, b; b = this.info_.hiddenIcons[a]; a++) b.icon.iconGroup_.setAttribute("display", "none")
-};
+//Creates the outline of the block
 LearnBlock.blockRendering.Drawer.prototype.drawOutline_ = function () {
     this.drawTop_();
     for (var a = 1; a < this.info_.rows.length - 1; a++) {
@@ -11848,6 +11316,7 @@ LearnBlock.blockRendering.Drawer.prototype.drawOutline_ = function () {
     this.drawBottom_();
     this.drawLeft_()
 };
+//Adds steps for the top corner of the block
 LearnBlock.blockRendering.Drawer.prototype.drawTop_ = function () {
     var a = this.info_.topRow,
         b = a.elements;
@@ -11857,15 +11326,14 @@ LearnBlock.blockRendering.Drawer.prototype.drawTop_ = function () {
         LearnBlock.blockRendering.Types.isSpacer(d) && (this.outlinePath_ += LearnBlock.utils.svgPaths.lineOnAxis("h", d.width));
     this.outlinePath_ += LearnBlock.utils.svgPaths.lineOnAxis("v", a.height)
 };
-LearnBlock.blockRendering.Drawer.prototype.drawJaggedEdge_ = function (a) {
-    this.outlinePath_ += this.constants_.JAGGED_TEETH.path + LearnBlock.utils.svgPaths.lineOnAxis("v", a.height - this.constants_.JAGGED_TEETH.height)
-};
+//Adds steps for an external value input
 LearnBlock.blockRendering.Drawer.prototype.drawValueInput_ = function (a) {
     var b = a.getLastInput();
     this.positionExternalValueConnection_(a);
     var c = "function" == typeof b.shape.pathDown ? b.shape.pathDown(b.height) : b.shape.pathDown;
     this.outlinePath_ += LearnBlock.utils.svgPaths.lineOnAxis("H", b.xPos + b.width) + c + LearnBlock.utils.svgPaths.lineOnAxis("v", a.height - b.connectionHeight)
 };
+//Adds steps for a statement input
 LearnBlock.blockRendering.Drawer.prototype.drawStatementInput_ = function (a) {
     var b = a.getLastInput(),
         c = b.xPos + b.notchOffset + b.shape.width;
@@ -11875,9 +11343,11 @@ LearnBlock.blockRendering.Drawer.prototype.drawStatementInput_ = function (a) {
         a.xPos + a.width);
     this.positionStatementInputConnection_(a)
 };
+//Adds steps for the right side of a row that does not have value or statement input connections
 LearnBlock.blockRendering.Drawer.prototype.drawRightSideRow_ = function (a) {
     this.outlinePath_ += LearnBlock.utils.svgPaths.lineOnAxis("V", a.yPos + a.height)
 };
+//Adds steps for the bottom edge of a block
 LearnBlock.blockRendering.Drawer.prototype.drawBottom_ = function () {
     var a = this.info_.bottomRow,
         b = a.elements;
@@ -11886,6 +11356,7 @@ LearnBlock.blockRendering.Drawer.prototype.drawBottom_ = function () {
     for (var c = b.length - 1, d; d = b[c]; c--) LearnBlock.blockRendering.Types.isNextConnection(d) ? this.outlinePath_ += d.shape.pathRight : LearnBlock.blockRendering.Types.isLeftSquareCorner(d) ? this.outlinePath_ += LearnBlock.utils.svgPaths.lineOnAxis("H", a.xPos) : LearnBlock.blockRendering.Types.isLeftRoundedCorner(d) ? this.outlinePath_ +=
         this.constants_.OUTSIDE_CORNERS.bottomLeft : LearnBlock.blockRendering.Types.isSpacer(d) && (this.outlinePath_ += LearnBlock.utils.svgPaths.lineOnAxis("h", -1 * d.width))
 };
+//Adds steps for the left side of the block
 LearnBlock.blockRendering.Drawer.prototype.drawLeft_ = function () {
     var a = this.info_.outputConnection;
     this.positionOutputConnection_();
@@ -11896,10 +11367,12 @@ LearnBlock.blockRendering.Drawer.prototype.drawLeft_ = function () {
     }
     this.outlinePath_ += "z"
 };
+//Draws the internals of the block: inline inputs, fields
 LearnBlock.blockRendering.Drawer.prototype.drawInternals_ = function () {
     for (var a = 0, b; b = this.info_.rows[a]; a++)
-        for (var c = 0, d; d = b.elements[c]; c++) LearnBlock.blockRendering.Types.isInlineInput(d) ? this.drawInlineInput_(d) : (LearnBlock.blockRendering.Types.isIcon(d) || LearnBlock.blockRendering.Types.isField(d)) && this.layoutField_(d)
+        for (var c = 0, d; d = b.elements[c]; c++) LearnBlock.blockRendering.Types.isInlineInput(d) ? this.drawInlineInput_(d) : LearnBlock.blockRendering.Types.isField(d) && this.layoutField_(d)
 };
+//Pushes a field's new position to its SVG root
 LearnBlock.blockRendering.Drawer.prototype.layoutField_ = function (a) {
     if (LearnBlock.blockRendering.Types.isField(a)) var b = a.field.getSvgRoot();
     else LearnBlock.blockRendering.Types.isIcon(a) && (b = a.icon.iconGroup_);
@@ -11907,10 +11380,10 @@ LearnBlock.blockRendering.Drawer.prototype.layoutField_ = function (a) {
         d = a.xPos,
         e = "";
     this.info_.RTL && (d = -(d + a.width), a.flipRtl && (d += a.width, e = "scale(-1 1)"));
-    LearnBlock.blockRendering.Types.isIcon(a) ? (b.setAttribute("display", "block"), b.setAttribute("transform", "translate(" + d + "," + c + ")"), a.icon.computeIconLocation()) : b.setAttribute("transform",
-        "translate(" + d + "," + c + ")" + e);
+    b.setAttribute("transform", "translate(" + d + "," + c + ")" + e);
     this.info_.isInsertionMarker && b.setAttribute("display", "none")
 };
+//Adds steps for an inline input
 LearnBlock.blockRendering.Drawer.prototype.drawInlineInput_ = function (a) {
     var b = a.width,
         c = a.height,
@@ -11919,6 +11392,7 @@ LearnBlock.blockRendering.Drawer.prototype.drawInlineInput_ = function (a) {
     this.inlinePath_ += LearnBlock.utils.svgPaths.moveTo(a.xPos + a.connectionWidth, a.centerline - c / 2) + LearnBlock.utils.svgPaths.lineOnAxis("v", d) + a.shape.pathDown + LearnBlock.utils.svgPaths.lineOnAxis("v", c - e) + LearnBlock.utils.svgPaths.lineOnAxis("h", b - a.connectionWidth) + LearnBlock.utils.svgPaths.lineOnAxis("v", -c) + "z";
     this.positionInlineInputConnection_(a)
 };
+//Positions the connection on an inline value input
 LearnBlock.blockRendering.Drawer.prototype.positionInlineInputConnection_ = function (a) {
     var b = a.centerline - a.height / 2;
     if (a.connection) {
@@ -11927,6 +11401,7 @@ LearnBlock.blockRendering.Drawer.prototype.positionInlineInputConnection_ = func
         a.connection.setOffsetInBlock(c, b + a.connectionOffsetY)
     }
 };
+//Positions the connection on a statement input
 LearnBlock.blockRendering.Drawer.prototype.positionStatementInputConnection_ = function (a) {
     var b = a.getLastInput();
     if (b.connection) {
@@ -11935,6 +11410,7 @@ LearnBlock.blockRendering.Drawer.prototype.positionStatementInputConnection_ = f
         b.connection.setOffsetInBlock(c, a.yPos)
     }
 };
+//Positions the connection on an external value input
 LearnBlock.blockRendering.Drawer.prototype.positionExternalValueConnection_ = function (a) {
     var b = a.getLastInput();
     if (b.connection) {
@@ -11943,6 +11419,7 @@ LearnBlock.blockRendering.Drawer.prototype.positionExternalValueConnection_ = fu
         b.connection.setOffsetInBlock(c, a.yPos)
     }
 };
+//Positions the previous connection on a block
 LearnBlock.blockRendering.Drawer.prototype.positionPreviousConnection_ = function () {
     var a = this.info_.topRow;
     if (a.connection) {
@@ -11950,6 +11427,7 @@ LearnBlock.blockRendering.Drawer.prototype.positionPreviousConnection_ = functio
         a.connection.connectionModel.setOffsetInBlock(this.info_.RTL ? -b : b, 0)
     }
 };
+//Positions the next connection on a block
 LearnBlock.blockRendering.Drawer.prototype.positionNextConnection_ = function () {
     var a = this.info_.bottomRow;
     if (a.connection) {
@@ -11958,55 +11436,68 @@ LearnBlock.blockRendering.Drawer.prototype.positionNextConnection_ = function ()
         a.connectionModel.setOffsetInBlock(this.info_.RTL ? -b : b, a.centerline - a.height / 2)
     }
 };
+//Positions the output connection on a block
 LearnBlock.blockRendering.Drawer.prototype.positionOutputConnection_ = function () {
     if (this.info_.outputConnection) {
         var a = this.info_.startX;
         this.block_.outputConnection.setOffsetInBlock(this.info_.RTL ? -a : a, this.info_.outputConnection.connectionOffsetY)
     }
 };
+//The base class for a block renderer
 LearnBlock.blockRendering.Renderer = function () {
     this.constants_ = null
 };
+//Initializes the renderer
 LearnBlock.blockRendering.Renderer.prototype.init = function () {
     this.constants_ = this.makeConstants_();
     this.constants_.init()
 };
+//Creates a new instance of the renderer's constant provider
 LearnBlock.blockRendering.Renderer.prototype.makeConstants_ = function () {
     return new LearnBlock.blockRendering.ConstantProvider
 };
+//Creates a new instance of the renderer's render info object
 LearnBlock.blockRendering.Renderer.prototype.makeRenderInfo_ = function (a) {
     return new LearnBlock.blockRendering.RenderInfo(this, a)
 };
+//Creates a new instance of the renderer's drawer
 LearnBlock.blockRendering.Renderer.prototype.makeDrawer_ = function (a, b) {
     return new LearnBlock.blockRendering.Drawer(a, b)
 };
+//Creates a new instance of the renderer's debugger
 LearnBlock.blockRendering.Renderer.prototype.makeDebugger_ = function () {
     if (!LearnBlock.blockRendering.Debug) throw Error("Missing require for LearnBlock.blockRendering.Debug");
     return new LearnBlock.blockRendering.Debug
 };
+//Creates a new instance of the renderer's cursor drawer
 LearnBlock.blockRendering.Renderer.prototype.makeCursorDrawer = function (a, b) {
     return new LearnBlock.CursorSvg(a, b)
 };
+//Creates a new instance of a renderer path object
 LearnBlock.blockRendering.Renderer.prototype.makePathObject = function (a) {
     return new LearnBlock.blockRendering.PathObject(a)
 };
+//Gets the current renderer's constant provider
 LearnBlock.blockRendering.Renderer.prototype.getConstants = function () {
     return this.constants_
 };
+//Renders the block
 LearnBlock.blockRendering.Renderer.prototype.render = function (a) {
     LearnBlock.blockRendering.useDebugger && !a.renderingDebugger && (a.renderingDebugger = this.makeDebugger_());
     var b = this.makeRenderInfo_(a);
     b.measure();
     this.makeDrawer_(a, b).draw()
 };
+
+//Class geras
 LearnBlock.geras = {};
+//An object that provides constants for rendering blocks in Geras mode
 LearnBlock.geras.ConstantProvider = function () {
     LearnBlock.geras.ConstantProvider.superClass_.constructor.call(this);
     this.DARK_PATH_OFFSET = 1
 };
 LearnBlock.utils.object.inherits(LearnBlock.geras.ConstantProvider, LearnBlock.blockRendering.ConstantProvider);
-//Fin blockrendering
-//Inicio geras
+//An object that adds highlights to a block based on the given rendering information
 LearnBlock.geras.Highlighter = function (a) {
     this.info_ = a;
     this.inlineSteps_ = this.steps_ = "";
@@ -12023,6 +11514,7 @@ LearnBlock.geras.Highlighter = function (a) {
         this.highlightConstants_.START_HAT;
     this.jaggedTeethPaths_ = this.highlightConstants_.JAGGED_TEETH
 };
+//Gets the steps for the highlight path
 LearnBlock.geras.Highlighter.prototype.getPath = function () {
     return this.steps_ + "\n" + this.inlineSteps_
 };
@@ -12077,6 +11569,7 @@ LearnBlock.geras.Highlighter.prototype.drawInlineInput = function (a) {
     this.RTL_ ? (d = a.connectionOffsetY - b, a = a.height - (a.connectionOffsetY + a.connectionHeight) + b, this.inlineSteps_ += LearnBlock.utils.svgPaths.moveTo(c - b, f) + LearnBlock.utils.svgPaths.lineOnAxis("v", d) + this.puzzleTabPaths_.pathDown(this.RTL_) + LearnBlock.utils.svgPaths.lineOnAxis("v", a) + LearnBlock.utils.svgPaths.lineOnAxis("h", e)) : this.inlineSteps_ +=
         LearnBlock.utils.svgPaths.moveTo(a.xPos + a.width + b, f) + LearnBlock.utils.svgPaths.lineOnAxis("v", a.height) + LearnBlock.utils.svgPaths.lineOnAxis("h", -e) + LearnBlock.utils.svgPaths.moveTo(c, d + a.connectionOffsetY) + this.puzzleTabPaths_.pathDown(this.RTL_)
 };
+//An object that handles creating and setting each of the SVG elements used by the renderer
 LearnBlock.geras.PathObject = function (a) {
     this.svgRoot = a;
     this.svgPathDark = LearnBlock.utils.dom.createSvgElement("path", {
@@ -12090,33 +11583,40 @@ LearnBlock.geras.PathObject = function (a) {
         "class": "blocklyPathLight"
     }, this.svgRoot)
 };
+//Sets each of the paths generated by the renderer onto the respective SVG element
 LearnBlock.geras.PathObject.prototype.setPaths = function (a, b) {
     this.svgPath.setAttribute("d", a);
     this.svgPathDark.setAttribute("d", a);
     this.svgPathLight.setAttribute("d", b)
 };
+//Flips the SVG paths in RTL
 LearnBlock.geras.PathObject.prototype.flipRTL = function () {
     this.svgPath.setAttribute("transform", "scale(-1 1)");
     this.svgPathLight.setAttribute("transform", "scale(-1 1)");
     this.svgPathDark.setAttribute("transform", "translate(1,1) scale(-1 1)")
 };
+//An object containing information about the space an inline input takes up during rendering
 LearnBlock.geras.InlineInput = function (a, b) {
     LearnBlock.geras.InlineInput.superClass_.constructor.call(this, a, b);
     this.connectedBlock && (this.width += this.constants_.DARK_PATH_OFFSET, this.height += this.constants_.DARK_PATH_OFFSET)
 };
 LearnBlock.utils.object.inherits(LearnBlock.geras.InlineInput, LearnBlock.blockRendering.InlineInput);
+//An object containing information about the space a statement input takes up during rendering
 LearnBlock.geras.StatementInput = function (a, b) {
     LearnBlock.geras.StatementInput.superClass_.constructor.call(this, a, b);
     this.connectedBlock && (this.height += this.constants_.DARK_PATH_OFFSET)
 };
 LearnBlock.utils.object.inherits(LearnBlock.geras.StatementInput, LearnBlock.blockRendering.StatementInput);
+//An object containing all sizing information needed to draw this block
 LearnBlock.geras.RenderInfo = function (a, b) {
     LearnBlock.geras.RenderInfo.superClass_.constructor.call(this, a, b)
 };
 LearnBlock.utils.object.inherits(LearnBlock.geras.RenderInfo, LearnBlock.blockRendering.RenderInfo);
+//Gets the block renderer in use
 LearnBlock.geras.RenderInfo.prototype.getRenderer = function () {
     return this.renderer_
 };
+//Override methods
 LearnBlock.geras.RenderInfo.prototype.addInput_ = function (a, b) {
     this.isInline && a.type == LearnBlock.INPUT_VALUE ? (b.elements.push(new LearnBlock.geras.InlineInput(this.constants_, a)), b.hasInlineInput = !0) : a.type == LearnBlock.NEXT_STATEMENT ? (b.elements.push(new LearnBlock.geras.StatementInput(this.constants_, a)), b.hasStatement = !0) : a.type == LearnBlock.INPUT_VALUE ? (b.elements.push(new LearnBlock.blockRendering.ExternalValueInput(this.constants_, a)), b.hasExternalInput = !0) : a.type == LearnBlock.DUMMY_INPUT && (b.minHeight = Math.max(b.minHeight,
         this.constants_.DUMMY_INPUT_MIN_HEIGHT), b.hasDummyInput = !0);
@@ -12213,13 +11713,14 @@ LearnBlock.geras.RenderInfo.prototype.finalize_ = function () {
     this.height = b + this.constants_.DARK_PATH_OFFSET;
     this.startY = this.topRow.capline
 };
+//An object that draws a block based on the given rendering information
 LearnBlock.geras.Drawer = function (a, b) {
     LearnBlock.geras.Drawer.superClass_.constructor.call(this, a, b);
     this.highlighter_ = new LearnBlock.geras.Highlighter(b)
 };
 LearnBlock.utils.object.inherits(LearnBlock.geras.Drawer, LearnBlock.blockRendering.Drawer);
+//Override methods
 LearnBlock.geras.Drawer.prototype.draw = function () {
-    this.hideHiddenIcons_();
     this.drawOutline_();
     this.drawInternals_();
     this.block_.pathObject.setPaths(this.outlinePath_ + "\n" + this.inlinePath_, this.highlighter_.getPath());
@@ -12252,10 +11753,12 @@ LearnBlock.geras.Drawer.prototype.drawBottom_ = function () {
     this.highlighter_.drawBottomRow(this.info_.bottomRow);
     LearnBlock.geras.Drawer.superClass_.drawBottom_.call(this)
 };
+//Adds steps for the left side of the block, which may include an output connection
 LearnBlock.geras.Drawer.prototype.drawLeft_ = function () {
     this.highlighter_.drawLeft();
     LearnBlock.geras.Drawer.superClass_.drawLeft_.call(this)
 };
+//Override methods
 LearnBlock.geras.Drawer.prototype.drawInlineInput_ = function (a) {
     this.highlighter_.drawInlineInput(a);
     LearnBlock.geras.Drawer.superClass_.drawInlineInput_.call(this, a)
@@ -12292,6 +11795,7 @@ LearnBlock.geras.Drawer.prototype.positionNextConnection_ = function () {
         a.connectionModel.setOffsetInBlock((this.info_.RTL ? -b : b) + this.constants_.DARK_PATH_OFFSET / 2, a.centerline - a.height / 2 + this.constants_.DARK_PATH_OFFSET)
     }
 };
+//An object that provides constants for rendering highlights on blocks
 LearnBlock.geras.HighlightConstantProvider = function (a) {
     this.constantProvider = a;
     this.OFFSET = .5;
@@ -12300,9 +11804,9 @@ LearnBlock.geras.HighlightConstantProvider = function (a) {
     this.OUTSIDE_CORNER = this.makeOutsideCorner();
     this.PUZZLE_TAB = this.makePuzzleTab();
     this.NOTCH = this.makeNotch();
-    this.JAGGED_TEETH = this.makeJaggedTeeth();
     this.START_HAT = this.makeStartHat()
 };
+//An object containing sizing and path information about inside corner highlights
 LearnBlock.geras.HighlightConstantProvider.prototype.makeInsideCorner = function () {
     var a = this.constantProvider.CORNER_RADIUS,
         b = this.OFFSET,
@@ -12321,6 +11825,7 @@ LearnBlock.geras.HighlightConstantProvider.prototype.makeInsideCorner = function
         }
     }
 };
+//An object containing sizing and path information about outside corner highlights
 LearnBlock.geras.HighlightConstantProvider.prototype.makeOutsideCorner = function () {
     var a = this.constantProvider.CORNER_RADIUS,
         b = this.OFFSET,
@@ -12340,6 +11845,7 @@ LearnBlock.geras.HighlightConstantProvider.prototype.makeOutsideCorner = functio
         }
     }
 };
+//An object containing sizing and path information about puzzle tab highlights
 LearnBlock.geras.HighlightConstantProvider.prototype.makePuzzleTab = function () {
     var a = this.constantProvider.TAB_WIDTH,
         b = this.constantProvider.TAB_HEIGHT,
@@ -12359,16 +11865,13 @@ LearnBlock.geras.HighlightConstantProvider.prototype.makePuzzleTab = function ()
         }
     }
 };
+//An object containing sizing and path information about notch highlights
 LearnBlock.geras.HighlightConstantProvider.prototype.makeNotch = function () {
     return {
         pathLeft: LearnBlock.utils.svgPaths.lineOnAxis("h", this.OFFSET) + this.constantProvider.NOTCH.pathLeft
     }
 };
-LearnBlock.geras.HighlightConstantProvider.prototype.makeJaggedTeeth = function () {
-    return {
-        pathLeft: LearnBlock.utils.svgPaths.lineTo(5.1, 2.6) + LearnBlock.utils.svgPaths.moveBy(-10.2, 6.8) + LearnBlock.utils.svgPaths.lineTo(5.1, 2.6)
-    }
-};
+//An object containing sizing and path information about start highlights
 LearnBlock.geras.HighlightConstantProvider.prototype.makeStartHat = function () {
     var a = this.constantProvider.START_HAT.height,
         b = LearnBlock.utils.svgPaths.moveBy(25, -8.7) + LearnBlock.utils.svgPaths.curve("c", [LearnBlock.utils.svgPaths.point(29.7, -6.2), LearnBlock.utils.svgPaths.point(57.2, -.5), LearnBlock.utils.svgPaths.point(75, 8.7)]),
@@ -12380,36 +11883,42 @@ LearnBlock.geras.HighlightConstantProvider.prototype.makeStartHat = function () 
         }
     }
 };
+//The geras renderer
 LearnBlock.geras.Renderer = function () {
     LearnBlock.geras.Renderer.superClass_.constructor.call(this);
     this.highlightConstants_ = null
 };
 LearnBlock.utils.object.inherits(LearnBlock.geras.Renderer, LearnBlock.blockRendering.Renderer);
+//Initializes the renderer
 LearnBlock.geras.Renderer.prototype.init = function () {
     LearnBlock.geras.Renderer.superClass_.init.call(this);
     this.highlightConstants_ = this.makeHighlightConstants_()
 };
+//Override method
 LearnBlock.geras.Renderer.prototype.makeConstants_ = function () {
     return new LearnBlock.geras.ConstantProvider
 };
+//Creates a new instance of the renderer's render info object
 LearnBlock.geras.Renderer.prototype.makeRenderInfo_ = function (a) {
     return new LearnBlock.geras.RenderInfo(this, a)
 };
+//Creates a new instance of the renderer's drawer
 LearnBlock.geras.Renderer.prototype.makeDrawer_ = function (a, b) {
     return new LearnBlock.geras.Drawer(a, b)
 };
+//Creates a new instance of a renderer path object
 LearnBlock.geras.Renderer.prototype.makePathObject = function (a) {
     return new LearnBlock.geras.PathObject(a)
 };
+//Creates a new instance of the renderer's highlight constant provider
 LearnBlock.blockRendering.Renderer.prototype.makeHighlightConstants_ = function () {
     return new LearnBlock.geras.HighlightConstantProvider(this.getConstants())
 };
+//Gets the renderer's highlight constant provider
 LearnBlock.geras.Renderer.prototype.getHighlightConstants = function () {
     return this.highlightConstants_
 };
 LearnBlock.blockRendering.register("geras", LearnBlock.geras.Renderer);
-//Fin geras
-
 
 //Class for the toolbox
 LearnBlock.Toolbox = function (a) {
@@ -12624,109 +12133,6 @@ LearnBlock.Toolbox.TreeSeparator = function (a) {
     LearnBlock.tree.TreeNode.call(this, null, "", a)
 };
 LearnBlock.utils.object.inherits(LearnBlock.Toolbox.TreeSeparator, LearnBlock.tree.TreeNode);
-//CSS for toolbox
-LearnBlock.Css.register([
-  '.blocklyToolboxDelete {',
-    'cursor: url("<<<PATH>>>/handdelete.cur"), auto;',
-  '}',
-
-  '.blocklyToolboxGrab {',
-    'cursor: url("<<<PATH>>>/handclosed.cur"), auto;',
-    'cursor: grabbing;',
-    'cursor: -webkit-grabbing;',
-  '}',
-  '.blocklyToolboxDiv {',
-    'background-color: #dbd;',
-    'overflow-x: auto;',
-    'overflow-y: auto;',
-    'position: absolute;',
-    'z-index: 70;',
-    '-webkit-tap-highlight-color: transparent;',
-  '}',
-
-  '.blocklyTreeRoot {',
-    'padding: 4px 0;',
-    'width: 35px;',
-  '}',
-
-  '.blocklyTreeRoot:focus {',
-    'outline: none;',
-  '}',
-  //Casilla de categoria
-  '.blocklyTreeRow {',
-    'height: 120px;',
-    'width: 140px;',
-    'line-height: 22px;',
-    'margin-bottom: 20px;',
-    'white-space: nowrap;',
-    'border-style: solid;',
-    'border-color: #000;',
-    'transform: matrix(0, -1, 1, 0, -10, 0);',
-  '}',
-  '.blocklyHorizontalTree {',
-    'float: left;',
-    'margin: 1px 5px 8px 0;',
-  '}',
-
-  '.blocklyHorizontalTreeRtl {',
-    'float: right;',
-    'margin: 1px 0 8px 5px;',
-  '}',
-
-  '.blocklyToolboxDiv[dir="RTL"] .blocklyTreeRow {',
-    'margin-left: 8px;',
-  '}',
-
-  '.blocklyTreeRow:not(.blocklyTreeSelected):hover {',
-    'background-color: #e4e4e4;',
-  '}',
-
-  '.blocklyTreeSeparator {',
-    'border-bottom: solid #e5e5e5 1px;',
-    'height: 0;',
-    'margin: 5px 0;',
-  '}',
-
-  '.blocklyTreeSeparatorHorizontal {',
-    'border-right: solid #e5e5e5 1px;',
-    'width: 0;',
-    'padding: 5px 0;',
-    'margin: 0 5px;',
-  '}',
-
-  '.blocklyTreeSelected>.blocklyTreeIconClosedLtr {',
-    'background-position: -32px -17px;',
-  '}',
-
-  '.blocklyTreeSelected>.blocklyTreeIconClosedRtl {',
-    'background-position: 0 -17px;',
-  '}',
-
-  '.blocklyTreeSelected>.blocklyTreeIconOpen {',
-    'background-position: -16px -17px;',
-  '}',
-
-  '.blocklyTreeIconNone,',
-  '.blocklyTreeSelected>.blocklyTreeIconNone {',
-    'background-position: -48px -1px;',
-  '}',
-  //Texto categoria
-  '.blocklyTreeLabel {',
-    'cursor: default;',
-    'font-family: sans-serif;',
-    'font-size: 16px;',
-    'padding: 0 3px;',
-    'vertical-align: middle;',
-  '}',
-
-  '.blocklyToolboxDelete .blocklyTreeLabel {',
-    'cursor: url("<<<PATH>>>/handdelete.cur"), auto;',
-  '}',
-
-  '.blocklyTreeSelected .blocklyTreeLabel {',
-    'color: #fff;',
-  '}'
-]);
 
 //Dynamic Variables
 LearnBlock.VariablesDynamic = {};

@@ -11124,7 +11124,7 @@ LearnBlock.utils.svgPaths.arc = function (a, b, c, d) {
     return a + " " + c + " " + c + " " + b + d
 };
 
-//Inicio blockrendering
+//An object that provides constants for rendering blocks
 LearnBlock.blockRendering.ConstantProvider = function () {
     this.NO_PADDING = 0;
     this.SMALL_PADDING = 3;
@@ -11160,6 +11160,7 @@ LearnBlock.blockRendering.ConstantProvider = function () {
     this.JAGGED_TEETH_HEIGHT = 12;
     this.JAGGED_TEETH_WIDTH = 6
 };
+//Initializes shape objects based on the constants set in the constructor
 LearnBlock.blockRendering.ConstantProvider.prototype.init = function () {
     this.JAGGED_TEETH = this.makeJaggedTeeth();
     this.NOTCH = this.makeNotch();
@@ -11168,6 +11169,7 @@ LearnBlock.blockRendering.ConstantProvider.prototype.init = function () {
     this.INSIDE_CORNERS = this.makeInsideCorners();
     this.OUTSIDE_CORNERS = this.makeOutsideCorners()
 };
+//An object containing sizing and path information about collapsed block indicators
 LearnBlock.blockRendering.ConstantProvider.prototype.makeJaggedTeeth = function () {
     var a = this.JAGGED_TEETH_HEIGHT,
         b = this.JAGGED_TEETH_WIDTH,
@@ -11178,6 +11180,7 @@ LearnBlock.blockRendering.ConstantProvider.prototype.makeJaggedTeeth = function 
         path: c
     }
 };
+//An object containing sizing and path information about start hats
 LearnBlock.blockRendering.ConstantProvider.prototype.makeStartHat = function () {
     var a = this.START_HAT_HEIGHT,
         b = this.START_HAT_WIDTH,
@@ -11188,6 +11191,7 @@ LearnBlock.blockRendering.ConstantProvider.prototype.makeStartHat = function () 
         path: c
     }
 };
+//An object containing sizing and path information about puzzle tabs
 LearnBlock.blockRendering.ConstantProvider.prototype.makePuzzleTab = function () {
     function a(a) {
         a = a ? -1 : 1;
@@ -11210,6 +11214,7 @@ LearnBlock.blockRendering.ConstantProvider.prototype.makePuzzleTab = function ()
         pathUp: d
     }
 };
+//An object containing sizing and path information about notches
 LearnBlock.blockRendering.ConstantProvider.prototype.makeNotch = function () {
     function a(a) {
         return LearnBlock.utils.svgPaths.line([LearnBlock.utils.svgPaths.point(a * d, c), LearnBlock.utils.svgPaths.point(3 * a, 0), LearnBlock.utils.svgPaths.point(a * d, -c)])
@@ -11226,6 +11231,7 @@ LearnBlock.blockRendering.ConstantProvider.prototype.makeNotch = function () {
         pathRight: f
     }
 };
+//An object containing sizing and path information about inside corners
 LearnBlock.blockRendering.ConstantProvider.prototype.makeInsideCorners = function () {
     var a = this.CORNER_RADIUS,
         b = LearnBlock.utils.svgPaths.arc("a", "0 0,0", a, LearnBlock.utils.svgPaths.point(-a, a)),
@@ -11237,6 +11243,7 @@ LearnBlock.blockRendering.ConstantProvider.prototype.makeInsideCorners = functio
         pathBottom: c
     }
 };
+//An object containing sizing and path information about outside corners
 LearnBlock.blockRendering.ConstantProvider.prototype.makeOutsideCorners = function () {
     var a = this.CORNER_RADIUS,
         b = LearnBlock.utils.svgPaths.moveBy(0, a) + LearnBlock.utils.svgPaths.arc("a", "0 0,1", a, LearnBlock.utils.svgPaths.point(a, -a));
@@ -11246,6 +11253,7 @@ LearnBlock.blockRendering.ConstantProvider.prototype.makeOutsideCorners = functi
         bottomLeft: a
     }
 };
+//Gets an object with connection shape and sizing information based on the type of the connection
 LearnBlock.blockRendering.ConstantProvider.prototype.shapeFor = function (a) {
     switch (a.type) {
         case LearnBlock.INPUT_VALUE:
@@ -11258,6 +11266,7 @@ LearnBlock.blockRendering.ConstantProvider.prototype.shapeFor = function (a) {
             throw Error("Unknown connection type");
     }
 };
+//Types of rendering elements
 LearnBlock.blockRendering.Types = {
     NONE: 0,
     FIELD: 1,
@@ -11285,85 +11294,114 @@ LearnBlock.blockRendering.Types = {
     BOTTOM_ROW: 4194304,
     INPUT_ROW: 8388608
 };
+//A Left Corner Union Type
 LearnBlock.blockRendering.Types.LEFT_CORNER = LearnBlock.blockRendering.Types.LEFT_SQUARE_CORNER | LearnBlock.blockRendering.Types.LEFT_ROUND_CORNER;
+//A Right Corner Union Type
 LearnBlock.blockRendering.Types.RIGHT_CORNER = LearnBlock.blockRendering.Types.RIGHT_SQUARE_CORNER | LearnBlock.blockRendering.Types.RIGHT_ROUND_CORNER;
+//Next flag value to use for custom rendering element types
 LearnBlock.blockRendering.Types.nextTypeValue_ = 16777216;
+//Gets the enum flag value of an existing type or register a new type
 LearnBlock.blockRendering.Types.getType = function (a) {
     LearnBlock.blockRendering.Types.hasOwnProperty(a) || (LearnBlock.blockRendering.Types[a] = LearnBlock.blockRendering.Types.nextTypeValue_, LearnBlock.blockRendering.Types.nextTypeValue_ <<= 1);
     return LearnBlock.blockRendering.Types[a]
 };
+//Whether a measurable stores information about a field
 LearnBlock.blockRendering.Types.isField = function (a) {
     return a.type & LearnBlock.blockRendering.Types.FIELD
 };
+//Whether a measurable stores information about a hat
 LearnBlock.blockRendering.Types.isHat = function (a) {
     return a.type & LearnBlock.blockRendering.Types.HAT
 };
+//Whether a measurable stores information about an icon
 LearnBlock.blockRendering.Types.isIcon = function (a) {
     return a.type & LearnBlock.blockRendering.Types.ICON
 };
+//Whether a measurable stores information about a spacer
 LearnBlock.blockRendering.Types.isSpacer = function (a) {
     return a.type & LearnBlock.blockRendering.Types.SPACER
 };
+//Whether a measurable stores information about an in-row spacer
 LearnBlock.blockRendering.Types.isInRowSpacer = function (a) {
     return a.type & LearnBlock.blockRendering.Types.IN_ROW_SPACER
 };
+//Whether a measurable stores information about an input
 LearnBlock.blockRendering.Types.isInput = function (a) {
     return a.type & LearnBlock.blockRendering.Types.INPUT
 };
+//Whether a measurable stores information about an external input
 LearnBlock.blockRendering.Types.isExternalInput = function (a) {
     return a.type & LearnBlock.blockRendering.Types.EXTERNAL_VALUE_INPUT
 };
+//Whether a measurable stores information about an inline input
 LearnBlock.blockRendering.Types.isInlineInput = function (a) {
     return a.type & LearnBlock.blockRendering.Types.INLINE_INPUT
 };
+//Whether a measurable stores information about a statement input
 LearnBlock.blockRendering.Types.isStatementInput = function (a) {
     return a.type & LearnBlock.blockRendering.Types.STATEMENT_INPUT
 };
+//Whether a measurable stores information about a previous connection
 LearnBlock.blockRendering.Types.isPreviousConnection = function (a) {
     return a.type & LearnBlock.blockRendering.Types.PREVIOUS_CONNECTION
 };
+//Whether a measurable stores information about a next connection
 LearnBlock.blockRendering.Types.isNextConnection = function (a) {
     return a.type & LearnBlock.blockRendering.Types.NEXT_CONNECTION
 };
+//Whether a measurable stores information about a previous or next connection
 LearnBlock.blockRendering.Types.isPreviousOrNextConnection = function (a) {
     return a.type & (LearnBlock.blockRendering.Types.PREVIOUS_CONNECTION | LearnBlock.blockRendering.Types.NEXT_CONNECTION)
 };
+//Whether a measurable stores information about a left round corner
 LearnBlock.blockRendering.Types.isLeftRoundedCorner = function (a) {
     return a.type & LearnBlock.blockRendering.Types.LEFT_ROUND_CORNER
 };
+//Whether a measurable stores information about a right round corner
 LearnBlock.blockRendering.Types.isRightRoundedCorner = function (a) {
     return a.type & LearnBlock.blockRendering.Types.RIGHT_ROUND_CORNER
 };
+//Whether a measurable stores information about a left square corner
 LearnBlock.blockRendering.Types.isLeftSquareCorner = function (a) {
     return a.type & LearnBlock.blockRendering.Types.LEFT_SQUARE_CORNER
 };
+//Whether a measurable stores information about a right square corner
 LearnBlock.blockRendering.Types.isRightSquareCorner = function (a) {
     return a.type & LearnBlock.blockRendering.Types.RIGHT_SQUARE_CORNER
 };
+//Whether a measurable stores information about a corner
 LearnBlock.blockRendering.Types.isCorner = function (a) {
     return a.type & LearnBlock.blockRendering.Types.CORNER
 };
+//Whether a measurable stores information about a jagged edge
 LearnBlock.blockRendering.Types.isJaggedEdge = function (a) {
     return a.type & LearnBlock.blockRendering.Types.JAGGED_EDGE
 };
+//Whether a measurable stores information about a row
 LearnBlock.blockRendering.Types.isRow = function (a) {
     return a.type & LearnBlock.blockRendering.Types.ROW
 };
+//Whether a measurable stores information about a between-row spacer
 LearnBlock.blockRendering.Types.isBetweenRowSpacer = function (a) {
     return a.type & LearnBlock.blockRendering.Types.BETWEEN_ROW_SPACER
 };
+//Whether a measurable stores information about a top row
 LearnBlock.blockRendering.Types.isTopRow = function (a) {
     return a.type & LearnBlock.blockRendering.Types.TOP_ROW
 };
+//Whether a measurable stores information about a bottom row
 LearnBlock.blockRendering.Types.isBottomRow = function (a) {
     return a.type & LearnBlock.blockRendering.Types.BOTTOM_ROW
 };
+//Whether a measurable stores information about a top or bottom row
 LearnBlock.blockRendering.Types.isTopOrBottomRow = function (a) {
     return a.type & (LearnBlock.blockRendering.Types.TOP_ROW | LearnBlock.blockRendering.Types.BOTTOM_ROW)
 };
+//Whether a measurable stores information about an input row
 LearnBlock.blockRendering.Types.isInputRow = function (a) {
     return a.type & LearnBlock.blockRendering.Types.INPUT_ROW
 };
+//The base class to represent a part of a block that takes up space during rendering
 LearnBlock.blockRendering.Measurable = function (a) {
     this.height = this.width = 0;
     this.type = LearnBlock.blockRendering.Types.NONE;
@@ -11371,6 +11409,7 @@ LearnBlock.blockRendering.Measurable = function (a) {
     this.constants_ = a;
     this.notchOffset = this.constants_.NOTCH_OFFSET_LEFT
 };
+//The base class to represent a connection and the space that it takes up on the block
 LearnBlock.blockRendering.Connection = function (a, b) {
     LearnBlock.blockRendering.Connection.superClass_.constructor.call(this, a);
     this.connectionModel = b;
@@ -11378,6 +11417,7 @@ LearnBlock.blockRendering.Connection = function (a, b) {
     this.type |= LearnBlock.blockRendering.Types.CONNECTION
 };
 LearnBlock.utils.object.inherits(LearnBlock.blockRendering.Connection, LearnBlock.blockRendering.Measurable);
+//An object containing information about the space an output connection takes up during rendering
 LearnBlock.blockRendering.OutputConnection = function (a, b) {
     LearnBlock.blockRendering.OutputConnection.superClass_.constructor.call(this, a, b);
     this.type |= LearnBlock.blockRendering.Types.OUTPUT_CONNECTION;
@@ -11387,9 +11427,11 @@ LearnBlock.blockRendering.OutputConnection = function (a, b) {
     this.startX = this.width
 };
 LearnBlock.utils.object.inherits(LearnBlock.blockRendering.OutputConnection, LearnBlock.blockRendering.Connection);
+//Whether or not the connection shape is dynamic
 LearnBlock.blockRendering.OutputConnection.prototype.isDynamic = function () {
     return this.shape.isDynamic
 };
+//An object containing information about the space a previous connection takes up during rendering
 LearnBlock.blockRendering.PreviousConnection = function (a, b) {
     LearnBlock.blockRendering.PreviousConnection.superClass_.constructor.call(this, a, b);
     this.type |= LearnBlock.blockRendering.Types.PREVIOUS_CONNECTION;
@@ -11397,6 +11439,7 @@ LearnBlock.blockRendering.PreviousConnection = function (a, b) {
     this.width = this.shape.width
 };
 LearnBlock.utils.object.inherits(LearnBlock.blockRendering.PreviousConnection, LearnBlock.blockRendering.Connection);
+//An object containing information about the space a next connection takes up during rendering
 LearnBlock.blockRendering.NextConnection = function (a, b) {
     LearnBlock.blockRendering.NextConnection.superClass_.constructor.call(this, a, b);
     this.type |= LearnBlock.blockRendering.Types.NEXT_CONNECTION;
@@ -11404,6 +11447,7 @@ LearnBlock.blockRendering.NextConnection = function (a, b) {
     this.width = this.shape.width
 };
 LearnBlock.utils.object.inherits(LearnBlock.blockRendering.NextConnection, LearnBlock.blockRendering.Connection);
+//The base class to represent an input that takes up space on a block during rendering
 LearnBlock.blockRendering.InputConnection = function (a, b) {
     LearnBlock.blockRendering.InputConnection.superClass_.constructor.call(this, a, b.connection);
     this.type |= LearnBlock.blockRendering.Types.INPUT;
@@ -11419,6 +11463,7 @@ LearnBlock.blockRendering.InputConnection = function (a, b) {
     this.connectionOffsetY = this.connectionOffsetX = 0
 };
 LearnBlock.utils.object.inherits(LearnBlock.blockRendering.InputConnection, LearnBlock.blockRendering.Connection);
+//An object containing information about the space an inline input takes up during rendering
 LearnBlock.blockRendering.InlineInput = function (a, b) {
     LearnBlock.blockRendering.InlineInput.superClass_.constructor.call(this, a, b);
     this.type |= LearnBlock.blockRendering.Types.INLINE_INPUT;
@@ -11429,6 +11474,7 @@ LearnBlock.blockRendering.InlineInput = function (a, b) {
         this.shape.width
 };
 LearnBlock.utils.object.inherits(LearnBlock.blockRendering.InlineInput, LearnBlock.blockRendering.InputConnection);
+//An object containing information about the space a statement input takes up during rendering
 LearnBlock.blockRendering.StatementInput = function (a, b) {
     LearnBlock.blockRendering.StatementInput.superClass_.constructor.call(this, a, b);
     this.type |= LearnBlock.blockRendering.Types.STATEMENT_INPUT;
@@ -11436,6 +11482,7 @@ LearnBlock.blockRendering.StatementInput = function (a, b) {
     this.width = this.constants_.NOTCH_OFFSET_LEFT + this.shape.width
 };
 LearnBlock.utils.object.inherits(LearnBlock.blockRendering.StatementInput, LearnBlock.blockRendering.InputConnection);
+//An object containing information about the space an external value input takes up during rendering
 LearnBlock.blockRendering.ExternalValueInput = function (a, b) {
     LearnBlock.blockRendering.ExternalValueInput.superClass_.constructor.call(this, a, b);
     this.type |= LearnBlock.blockRendering.Types.EXTERNAL_VALUE_INPUT;
@@ -11447,16 +11494,7 @@ LearnBlock.blockRendering.ExternalValueInput = function (a, b) {
         this.shape.width
 };
 LearnBlock.utils.object.inherits(LearnBlock.blockRendering.ExternalValueInput, LearnBlock.blockRendering.InputConnection);
-LearnBlock.blockRendering.Icon = function (a, b) {
-    LearnBlock.blockRendering.Icon.superClass_.constructor.call(this, a);
-    this.icon = b;
-    this.isVisible = b.isVisible();
-    this.type |= LearnBlock.blockRendering.Types.ICON;
-    var c = b.getCorrectedSize();
-    this.height = c.height;
-    this.width = c.width
-};
-LearnBlock.utils.object.inherits(LearnBlock.blockRendering.Icon, LearnBlock.blockRendering.Measurable);
+//An object containing information about the jagged edge of a collapsed block takes up during rendering
 LearnBlock.blockRendering.JaggedEdge = function (a) {
     LearnBlock.blockRendering.JaggedEdge.superClass_.constructor.call(this, a);
     this.type |= LearnBlock.blockRendering.Types.JAGGED_EDGE;
@@ -11464,6 +11502,7 @@ LearnBlock.blockRendering.JaggedEdge = function (a) {
     this.width = this.constants_.JAGGED_TEETH.width
 };
 LearnBlock.utils.object.inherits(LearnBlock.blockRendering.JaggedEdge, LearnBlock.blockRendering.Measurable);
+//An object containing information about the space a field takes up during rendering
 LearnBlock.blockRendering.Field = function (a, b, c) {
     LearnBlock.blockRendering.Field.superClass_.constructor.call(this, a);
     this.field = b;
@@ -11476,6 +11515,7 @@ LearnBlock.blockRendering.Field = function (a, b, c) {
     this.parentInput = c
 };
 LearnBlock.utils.object.inherits(LearnBlock.blockRendering.Field, LearnBlock.blockRendering.Measurable);
+//An object containing information about the space a hat takes up during rendering
 LearnBlock.blockRendering.Hat = function (a) {
     LearnBlock.blockRendering.Hat.superClass_.constructor.call(this, a);
     this.type |= LearnBlock.blockRendering.Types.HAT;
@@ -11484,12 +11524,14 @@ LearnBlock.blockRendering.Hat = function (a) {
     this.ascenderHeight = this.height
 };
 LearnBlock.utils.object.inherits(LearnBlock.blockRendering.Hat, LearnBlock.blockRendering.Measurable);
+//An object containing information about the space a square corner takes up during rendering
 LearnBlock.blockRendering.SquareCorner = function (a, b) {
     LearnBlock.blockRendering.SquareCorner.superClass_.constructor.call(this, a);
     this.type = (b && "left" != b ? LearnBlock.blockRendering.Types.RIGHT_SQUARE_CORNER : LearnBlock.blockRendering.Types.LEFT_SQUARE_CORNER) | LearnBlock.blockRendering.Types.CORNER;
     this.width = this.height = this.constants_.NO_PADDING
 };
 LearnBlock.utils.object.inherits(LearnBlock.blockRendering.SquareCorner, LearnBlock.blockRendering.Measurable);
+//An object containing information about the space a rounded corner takes up during rendering
 LearnBlock.blockRendering.RoundCorner = function (a, b) {
     LearnBlock.blockRendering.RoundCorner.superClass_.constructor.call(this, a);
     this.type = (b && "left" != b ? LearnBlock.blockRendering.Types.RIGHT_ROUND_CORNER : LearnBlock.blockRendering.Types.LEFT_ROUND_CORNER) | LearnBlock.blockRendering.Types.CORNER;
@@ -11497,6 +11539,7 @@ LearnBlock.blockRendering.RoundCorner = function (a, b) {
     this.height = this.constants_.CORNER_RADIUS / 2
 };
 LearnBlock.utils.object.inherits(LearnBlock.blockRendering.RoundCorner, LearnBlock.blockRendering.Measurable);
+//An object containing information about a spacer between two elements on a row
 LearnBlock.blockRendering.InRowSpacer = function (a, b) {
     LearnBlock.blockRendering.InRowSpacer.superClass_.constructor.call(this, a);
     this.type = this.type | LearnBlock.blockRendering.Types.SPACER | LearnBlock.blockRendering.Types.IN_ROW_SPACER;

@@ -1837,8 +1837,8 @@ LearnBlock.InsertionMarkerManager.prototype.shouldReplace_ = function () {
 //Shows an insertion marker or replacement highlighting during a drag
 LearnBlock.InsertionMarkerManager.prototype.maybeShowPreview_ = function (a) {
     var b = a.closest;
-        a = a.local;
-        b && (b == this.closestConnection_ || b.sourceBlock_.isInsertionMarker() ? console.log("Trying to connect to an insertion marker") : (this.closestConnection_ = b, this.localConnection_ = a, this.showPreview_()))
+    a = a.local;
+    b && (b == this.closestConnection_ || b.sourceBlock_.isInsertionMarker() ? console.log("Trying to connect to an insertion marker") : (this.closestConnection_ = b, this.localConnection_ = a, this.showPreview_()))
 
 };
 //A preview should be shown
@@ -3790,28 +3790,41 @@ LearnBlock.utils.colour.hexToRgb = function (a) {
 };
 //Converts an HSV triplet to hex representation
 LearnBlock.utils.colour.hsvToHex = function (a, b, c) {
-    var d = 0, e = 0, f = 0;
+    var d = 0,
+        e = 0,
+        f = 0;
     if (0 == b) f = e = d = c;
     else {
-        var g = Math.floor(a / 60), h = a / 60 - g;
+        var g = Math.floor(a / 60),
+            h = a / 60 - g;
         a = c * (1 - b);
         var k = c * (1 - b * h);
         b = c * (1 - b * (1 - h));
         switch (g) {
             case 1:
-                d = k; e = c; f = a;
+                d = k;
+                e = c;
+                f = a;
                 break;
             case 2:
-                d = a; e = c; f = b;
+                d = a;
+                e = c;
+                f = b;
                 break;
             case 3:
-                d = a; e = k; f = c;
+                d = a;
+                e = k;
+                f = c;
                 break;
             case 4:
-                d = b; e = a; f = c;
+                d = b;
+                e = a;
+                f = c;
                 break;
             case 5:
-                d = c; e = a; f = k;
+                d = c;
+                e = a;
+                f = k;
                 break;
             case 6:
             case 0:
@@ -3951,7 +3964,7 @@ LearnBlock.Block.prototype.unplugFromStack_ = function (a) {
     var b = null;
     this.previousConnection.isConnected() && (b = this.previousConnection.targetConnection, this.previousConnection.disconnect());
     var c = this.getNextBlock();
-    a && c && !c.isShadow() && (a = this.nextConnection.targetConnection, a.disconnect(), b && b.checkType_(a) && b.connect(a))
+    a && c && (a = this.nextConnection.targetConnection, a.disconnect(), b && b.checkType_(a) && b.connect(a))
 };
 //Returns all connections originating from the block
 LearnBlock.Block.prototype.getConnections_ = function (a) {
@@ -4740,15 +4753,15 @@ LearnBlock.utils.aria.setState = function (a, b, c) {
 //Adds the 'aria-' prefix to ariaName
 LearnBlock.utils.aria.getAriaAttributeName_ = function (a) {
     return LearnBlock.utils.aria.ARIA_PREFIX_ + a
-}
+};
 
-
-;
+//A basic menu class
 LearnBlock.Menu = function () {
     LearnBlock.Component.call(this);
     this.highlightedIndex_ = -1
 };
 LearnBlock.utils.object.inherits(LearnBlock.Menu, LearnBlock.Component);
+//Creates the menu DOM
 LearnBlock.Menu.prototype.createDom = function () {
     var a = document.createElement("div");
     a.id = this.getId();
@@ -4757,17 +4770,21 @@ LearnBlock.Menu.prototype.createDom = function () {
     a.tabIndex = 0;
     LearnBlock.utils.aria.setRole(a, this.roleName_ || LearnBlock.utils.aria.Role.MENU)
 };
+//Focuses the menu element
 LearnBlock.Menu.prototype.focus = function () {
     var a = this.getElement();
     a && (a.focus(), LearnBlock.utils.dom.addClass(a, "focused"))
 };
+//Blurs the menu element
 LearnBlock.Menu.prototype.blur = function () {
     var a = this.getElement();
     a && (a.blur(), LearnBlock.utils.dom.removeClass(a, "focused"))
 };
+//Sets the menu accessibility role
 LearnBlock.Menu.prototype.setRole = function (a) {
     this.roleName_ = a
 };
+//Override method
 LearnBlock.Menu.prototype.enterDocument = function () {
     LearnBlock.Menu.superClass_.enterDocument.call(this);
     this.forEachChild(function (a) {
@@ -4775,14 +4792,17 @@ LearnBlock.Menu.prototype.enterDocument = function () {
     }, this);
     this.attachEvents_()
 };
+//Cleans up the container before its DOM is removed from the document
 LearnBlock.Menu.prototype.exitDocument = function () {
     this.setHighlightedIndex(-1);
     LearnBlock.Menu.superClass_.exitDocument.call(this)
 };
+//Override method
 LearnBlock.Menu.prototype.disposeInternal = function () {
     LearnBlock.Menu.superClass_.disposeInternal.call(this);
     this.detachEvents_()
 };
+//Adds the event listeners to the menu
 LearnBlock.Menu.prototype.attachEvents_ = function () {
     var a = this.getElement();
     this.mouseOverHandler_ = LearnBlock.bindEventWithChecks_(a, "mouseover", this, this.handleMouseOver_, !0);
@@ -4792,6 +4812,7 @@ LearnBlock.Menu.prototype.attachEvents_ = function () {
     this.onKeyDownWrapper_ = LearnBlock.bindEventWithChecks_(a,
         "keydown", this, this.handleKeyEvent)
 };
+//Removes the event listeners from the menu
 LearnBlock.Menu.prototype.detachEvents_ = function () {
     LearnBlock.unbindEvent_(this.mouseOverHandler_);
     LearnBlock.unbindEvent_(this.clickHandler_);
@@ -4799,13 +4820,16 @@ LearnBlock.Menu.prototype.detachEvents_ = function () {
     LearnBlock.unbindEvent_(this.mouseLeaveHandler_);
     LearnBlock.unbindEvent_(this.onKeyDownWrapper_)
 };
+//Map of DOM IDs to child menuitems
 LearnBlock.Menu.prototype.childElementIdMap_ = null;
+//Creates a DOM ID for the child menuitem and registers it
 LearnBlock.Menu.prototype.registerChildId_ = function (a) {
     var b = a.getElement();
     b = b.id || (b.id = a.getId());
     this.childElementIdMap_ || (this.childElementIdMap_ = {});
     this.childElementIdMap_[b] = a
 };
+//Returns the child menuitem that owns the given DOM node
 LearnBlock.Menu.prototype.getMenuItem = function (a) {
     if (this.childElementIdMap_)
         for (var b = this.getElement(); a && a !== b;) {
@@ -4815,31 +4839,38 @@ LearnBlock.Menu.prototype.getMenuItem = function (a) {
         }
     return null
 };
+//Unhighlights the current highlighted item
 LearnBlock.Menu.prototype.unhighlightCurrent = function () {
     var a = this.getHighlighted();
     a && a.setHighlighted(!1)
 };
+//Clears the currently highlighted item
 LearnBlock.Menu.prototype.clearHighlighted = function () {
     this.unhighlightCurrent();
     this.setHighlightedIndex(-1)
 };
+//Returns the currently highlighted item
 LearnBlock.Menu.prototype.getHighlighted = function () {
     return this.getChildAt(this.highlightedIndex_)
 };
+//Highlights the item at the given 0-based index
 LearnBlock.Menu.prototype.setHighlightedIndex = function (a) {
     var b = this.getChildAt(a);
     b ? (b.setHighlighted(!0), this.highlightedIndex_ = a) : -1 < this.highlightedIndex_ && (this.getHighlighted().setHighlighted(!1), this.highlightedIndex_ = -1);
     b && LearnBlock.utils.style.scrollIntoContainerView(b.getElement(), this.getElement())
 };
+//Highlights the given item if it exists and is a child of the container
 LearnBlock.Menu.prototype.setHighlighted = function (a) {
     this.setHighlightedIndex(this.indexOfChild(a))
 };
+//Highlights the next highlightable item
 LearnBlock.Menu.prototype.highlightNext = function () {
     this.unhighlightCurrent();
     this.highlightHelper(function (a, b) {
         return (a + 1) % b
     }, this.highlightedIndex_)
 };
+//Highlights the previous highlightable item
 LearnBlock.Menu.prototype.highlightPrevious = function () {
     this.unhighlightCurrent();
     this.highlightHelper(function (a, b) {
@@ -4847,6 +4878,7 @@ LearnBlock.Menu.prototype.highlightPrevious = function () {
         return 0 > a ? b - 1 : a
     }, this.highlightedIndex_)
 };
+//Helper function that manages the details of moving the highlight among child menuitems in response to keyboard events
 LearnBlock.Menu.prototype.highlightHelper = function (a, b) {
     var c = 0 > b ? -1 : b,
         d = this.getChildCount();
@@ -4859,25 +4891,32 @@ LearnBlock.Menu.prototype.highlightHelper = function (a, b) {
     }
     return !1
 };
+//Returns whether the given item can be highlighted
 LearnBlock.Menu.prototype.canHighlightItem = function (a) {
     return true
 };
+//Handles mouseover events
 LearnBlock.Menu.prototype.handleMouseOver_ = function (a) {
     (a = this.getMenuItem(a.target)) && this.getHighlighted() !== a && (this.unhighlightCurrent(), this.setHighlighted(a))
 };
+//Handles click events
 LearnBlock.Menu.prototype.handleClick_ = function (a) {
     var b = this.getMenuItem(a.target);
     b && b.handleClick(a) && a.preventDefault()
 };
+//Handles mouse enter events
 LearnBlock.Menu.prototype.handleMouseEnter_ = function (a) {
     this.focus()
 };
+//Handles mouse leave events
 LearnBlock.Menu.prototype.handleMouseLeave_ = function (a) {
     this.getElement() && (this.blur(), this.clearHighlighted())
 };
+//Attempts to handle a keyboard event
 LearnBlock.Menu.prototype.handleKeyEvent = function (a) {
     return 0 != this.getChildCount() && this.handleKeyEventInternal(a) ? (a.preventDefault(), a.stopPropagation(), !0) : !1
 };
+//Attempts to handle a keyboard event
 LearnBlock.Menu.prototype.handleKeyEventInternal = function (a) {
     var b = this.getHighlighted();
     if (b && "function" == typeof b.handleKeyEvent && b.handleKeyEvent(a)) return !0;
@@ -4897,6 +4936,8 @@ LearnBlock.Menu.prototype.handleKeyEventInternal = function (a) {
     }
     return !0
 };
+
+//Class representing an item in a menu
 LearnBlock.MenuItem = function (a, b) {
     LearnBlock.Component.call(this);
     this.setContentInternal(a);
@@ -4904,6 +4945,7 @@ LearnBlock.MenuItem = function (a, b) {
     this.enabled_ = !0
 };
 LearnBlock.utils.object.inherits(LearnBlock.MenuItem, LearnBlock.Component);
+//Creates the menuitem's DOM
 LearnBlock.MenuItem.prototype.createDom = function () {
     var a = document.createElement("div");
     a.id = this.getId();
@@ -4918,37 +4960,46 @@ LearnBlock.MenuItem.prototype.createDom = function () {
         LearnBlock.utils.aria.Role.MENUITEMCHECKBOX : LearnBlock.utils.aria.Role.MENUITEM));
     LearnBlock.utils.aria.setState(a, LearnBlock.utils.aria.State.SELECTED, this.checkable_ && this.checked_ || !1)
 };
+//The HTML element for the checkbox
 LearnBlock.MenuItem.prototype.getCheckboxDom = function () {
     if (!this.checkable_) return null;
     var a = document.createElement("div");
     a.className = "goog-menuitem-checkbox";
     return a
 };
+//The HTML for the content
 LearnBlock.MenuItem.prototype.getContentDom = function () {
     var a = this.content_;
     "string" === typeof a && (a = document.createTextNode(a));
     return a
 };
+//The HTML for the content wrapper
 LearnBlock.MenuItem.prototype.getContentWrapperDom = function () {
     var a = document.createElement("div");
     a.className = "goog-menuitem-content";
     return a
 };
+//Sets the content associated with the menu item
 LearnBlock.MenuItem.prototype.setContentInternal = function (a) {
     this.content_ = a
 };
+//Sets the value associated with the menu item
 LearnBlock.MenuItem.prototype.setValue = function (a) {
     this.value_ = a
 };
+//Gets the value associated with the menu item
 LearnBlock.MenuItem.prototype.getValue = function () {
     return this.value_
 };
+//Sets the menu accessibility role
 LearnBlock.MenuItem.prototype.setRole = function (a) {
     this.roleName_ = a
 };
+//Sets the menu item to be checkable or not
 LearnBlock.MenuItem.prototype.setCheckable = function (a) {
     this.checkable_ = a
 };
+//Checks or unchecks the component
 LearnBlock.MenuItem.prototype.setChecked = function (a) {
     if (this.checkable_) {
         this.checked_ = a;
@@ -4956,26 +5007,32 @@ LearnBlock.MenuItem.prototype.setChecked = function (a) {
         b && (a ? (LearnBlock.utils.dom.addClass(b, "goog-option-selected"), LearnBlock.utils.aria.setState(b, LearnBlock.utils.aria.State.SELECTED, !0)) : (LearnBlock.utils.dom.removeClass(b, "goog-option-selected"), LearnBlock.utils.aria.setState(b, LearnBlock.utils.aria.State.SELECTED, !1)))
     }
 };
+//Highlights or unhighlights the component
 LearnBlock.MenuItem.prototype.setHighlighted = function (a) {
     this.highlight_ = a;
     var b = this.getElement();
     b && (a ? LearnBlock.utils.dom.addClass(b, "goog-menuitem-highlight") : LearnBlock.utils.dom.removeClass(b, "goog-menuitem-highlight"))
 };
+//Returns true if the menu item is enabled, false otherwise
 LearnBlock.MenuItem.prototype.isEnabled = function () {
     return this.enabled_
 };
+//Enables or disables the menu item
 LearnBlock.MenuItem.prototype.setEnabled = function (a) {
     this.enabled_ = a;
     (a = this.getElement()) && (this.enabled_ ? LearnBlock.utils.dom.removeClass(a, "goog-menuitem-disabled") : LearnBlock.utils.dom.addClass(a, "goog-menuitem-disabled"))
 };
+//Handles click events
 LearnBlock.MenuItem.prototype.handleClick = function (a) {
     this.setHighlighted(!0);
     this.performActionInternal()
 };
+//Performs the appropriate action when the menu item is activated hy the user
 LearnBlock.MenuItem.prototype.performActionInternal = function () {
     this.checkable_ && this.setChecked(!this.checked_);
     this.actionHandler_ && this.actionHandler_.call(this.actionHandlerObj_, this)
 };
+//Sets the handler that's triggered when the menu item is activated by the user
 LearnBlock.MenuItem.prototype.onAction = function (a, b) {
     this.actionHandler_ = a;
     this.actionHandlerObj_ = b
@@ -7362,6 +7419,7 @@ LearnBlock.WorkspaceSvg.prototype.showContextMenu_ = function (a) {
             for (var c = 0; c < a.length; c++) b(a[c])
         }
     }
+
     function c() {
         LearnBlock.Events.setGroup(f);
         var a = p.shift();
@@ -9065,8 +9123,9 @@ LearnBlock.checkBlockColourConstant_ = function (a, b, c) {
     e && e !== c && (a = (void 0 === c ? '%1 has been removed. Use LearnBlock.Msg["%2"].' : '%1 is deprecated and unused. Override LearnBlock.Msg["%2"].').replace("%1", d).replace("%2", a), console.warn(a))
 };
 
-
+//Tree class
 LearnBlock.tree = {};
+//An abstract base class for a node in the tree
 LearnBlock.tree.BaseNode = function (a, b) {
     LearnBlock.Component.call(this);
     this.config_ = b;
@@ -9077,12 +9136,15 @@ LearnBlock.tree.BaseNode = function (a, b) {
     this.depth_ = -1
 };
 LearnBlock.utils.object.inherits(LearnBlock.tree.BaseNode, LearnBlock.Component);
+//Map of nodes in existence
 LearnBlock.tree.BaseNode.allNodes = {};
+//Override method
 LearnBlock.tree.BaseNode.prototype.disposeInternal = function () {
     LearnBlock.tree.BaseNode.superClass_.disposeInternal.call(this);
     this.tree && (this.tree = null);
     this.setElementInternal(null)
 };
+//Adds roles and states
 LearnBlock.tree.BaseNode.prototype.initAccessibility = function () {
     var a = this.getElement();
     if (a) {
@@ -9092,7 +9154,6 @@ LearnBlock.tree.BaseNode.prototype.initAccessibility = function () {
         LearnBlock.utils.aria.setState(a, LearnBlock.utils.aria.State.SELECTED, !1);
         LearnBlock.utils.aria.setState(a, LearnBlock.utils.aria.State.LEVEL, this.getDepth());
         b && LearnBlock.utils.aria.setState(a, LearnBlock.utils.aria.State.LABELLEDBY, b.id);
-        (b = this.getIconElement()) && LearnBlock.utils.aria.setRole(b, LearnBlock.utils.aria.Role.PRESENTATION);
         if (b = this.getChildrenElement())
             if (LearnBlock.utils.aria.setRole(b, LearnBlock.utils.aria.Role.GROUP), b.hasChildNodes())
                 for (LearnBlock.utils.aria.setState(a, LearnBlock.utils.aria.State.EXPANDED, !1), a = this.getChildCount(), b = 1; b <= a; b++) {
@@ -9102,6 +9163,7 @@ LearnBlock.tree.BaseNode.prototype.initAccessibility = function () {
                 }
     }
 };
+//Override methods
 LearnBlock.tree.BaseNode.prototype.createDom = function () {
     var a = document.createElement("div");
     a.appendChild(this.toDom());
@@ -9116,6 +9178,7 @@ LearnBlock.tree.BaseNode.prototype.exitDocument = function () {
     LearnBlock.tree.BaseNode.superClass_.exitDocument.call(this);
     delete LearnBlock.tree.BaseNode.allNodes[this.getId()]
 };
+//The method assumes that the child doesn't have parent node yet
 LearnBlock.tree.BaseNode.prototype.addChildAt = function (a, b) {
     var c = this.getChildAt(b - 1),
         d = this.getChildAt(b);
@@ -9128,7 +9191,7 @@ LearnBlock.tree.BaseNode.prototype.addChildAt = function (a, b) {
     e && a.setTreeInternal(e);
     a.setDepth_(this.getDepth() + 1);
     if (e = this.getElement())
-        if (this.updateExpandIcon(), LearnBlock.utils.aria.setState(e, LearnBlock.utils.aria.State.EXPANDED, this.getExpanded()), this.getExpanded()) {
+        if (LearnBlock.utils.aria.setState(e, LearnBlock.utils.aria.State.EXPANDED, this.getExpanded()), this.getExpanded()) {
             e =
                 this.getChildrenElement();
             a.getElement() || a.createDom();
@@ -9139,22 +9202,27 @@ LearnBlock.tree.BaseNode.prototype.addChildAt = function (a, b) {
             d || (c ? c.updateExpandIcon() : (LearnBlock.utils.style.setElementShown(e, !0), this.setExpanded(this.getExpanded())))
         }
 };
+//Appends a node as a child to the current node
 LearnBlock.tree.BaseNode.prototype.add = function (a) {
     if (a.getParent()) throw Error(LearnBlock.Component.Error.PARENT_UNABLE_TO_BE_SET);
     this.addChildAt(a, this.getChildCount())
 };
+//Returns the tree
 LearnBlock.tree.BaseNode.prototype.getTree = function () {
     return null
 };
+//Returns the depth of the node in the tree
 LearnBlock.tree.BaseNode.prototype.getDepth = function () {
     var a = this.depth_;
     0 > a && (a = this.computeDepth_(), this.setDepth_(a));
     return a
 };
+//Computes the depth of the node in the tree
 LearnBlock.tree.BaseNode.prototype.computeDepth_ = function () {
     var a = this.getParent();
     return a ? a.getDepth() + 1 : 0
 };
+//Changes the depth of a node
 LearnBlock.tree.BaseNode.prototype.setDepth_ = function (a) {
     if (a != this.depth_) {
         this.depth_ = a;
@@ -9168,6 +9236,7 @@ LearnBlock.tree.BaseNode.prototype.setDepth_ = function (a) {
         })
     }
 };
+//Returns true if the node is a descendant of this node
 LearnBlock.tree.BaseNode.prototype.contains = function (a) {
     for (; a;) {
         if (a == this) return !0;
@@ -9175,6 +9244,7 @@ LearnBlock.tree.BaseNode.prototype.contains = function (a) {
     }
     return !1
 };
+//Returns the children of this node
 LearnBlock.tree.BaseNode.prototype.getChildren = function () {
     var a = [];
     this.forEachChild(function (b) {
@@ -9182,32 +9252,41 @@ LearnBlock.tree.BaseNode.prototype.getChildren = function () {
     });
     return a
 };
+//The first child of this node
 LearnBlock.tree.BaseNode.prototype.getFirstChild = function () {
     return this.getChildAt(0)
 };
+//The last child of this node
 LearnBlock.tree.BaseNode.prototype.getLastChild = function () {
     return this.getChildAt(this.getChildCount() - 1)
 };
+//The previous sibling of this node
 LearnBlock.tree.BaseNode.prototype.getPreviousSibling = function () {
     return this.previousSibling_
 };
+//The next sibling of this node
 LearnBlock.tree.BaseNode.prototype.getNextSibling = function () {
     return this.nextSibling_
 };
+//Whether the node is the last sibling
 LearnBlock.tree.BaseNode.prototype.isLastSibling = function () {
     return !this.nextSibling_
 };
+//Whether the node is selected
 LearnBlock.tree.BaseNode.prototype.isSelected = function () {
     return this.selected_
 };
+//Selects the node
 LearnBlock.tree.BaseNode.prototype.select = function () {
     var a = this.getTree();
     a && a.setSelectedItem(this)
 };
+//Selects the first node
 LearnBlock.tree.BaseNode.prototype.selectFirst = function () {
     var a = this.getTree();
     a && this.firstChild_ && a.setSelectedItem(this.firstChild_)
 };
+//Called from the tree to instruct the node change its selection state
 LearnBlock.tree.BaseNode.prototype.setSelectedInternal = function (a) {
     if (this.selected_ != a) {
         this.selected_ = a;
@@ -9216,12 +9295,15 @@ LearnBlock.tree.BaseNode.prototype.setSelectedInternal = function (a) {
         b && (LearnBlock.utils.aria.setState(b, LearnBlock.utils.aria.State.SELECTED, a), a && (a = this.getTree().getElement(), LearnBlock.utils.aria.setState(a, LearnBlock.utils.aria.State.ACTIVEDESCENDANT, this.getId())))
     }
 };
+//Whether the node is expanded
 LearnBlock.tree.BaseNode.prototype.getExpanded = function () {
     return this.expanded_
 };
+//Sets the node to be expanded internally
 LearnBlock.tree.BaseNode.prototype.setExpandedInternal = function (a) {
     this.expanded_ = a
 };
+//Sets the node to be expanded
 LearnBlock.tree.BaseNode.prototype.setExpanded = function (a) {
     var b = a != this.expanded_,
         c;
@@ -9241,14 +9323,19 @@ LearnBlock.tree.BaseNode.prototype.setExpanded = function (a) {
     e && this.updateIcon_();
     b && (a ? this.doNodeExpanded() : this.doNodeCollapsed())
 };
+//Used to notify a node of that it has been expanded
 LearnBlock.tree.BaseNode.prototype.doNodeExpanded = function () {};
+//Used to notify a node that it has been collapsed
 LearnBlock.tree.BaseNode.prototype.doNodeCollapsed = function () {};
+//Toggles the expanded state of the node
 LearnBlock.tree.BaseNode.prototype.toggle = function () {
     this.setExpanded(!this.getExpanded())
 };
+//Whether the node is collapsible by user actions
 LearnBlock.tree.BaseNode.prototype.isUserCollapsible = function () {
     return this.isUserCollapsible_
 };
+//Creates HTML Element for the node
 LearnBlock.tree.BaseNode.prototype.toDom = function () {
     var a = this.getExpanded() && this.hasChildren(),
         b = document.createElement("div");
@@ -9263,90 +9350,78 @@ LearnBlock.tree.BaseNode.prototype.toDom = function () {
     a.appendChild(b);
     return a
 };
+//The pixel indent of the row
 LearnBlock.tree.BaseNode.prototype.getPixelIndent_ = function () {
     return Math.max(0, (this.getDepth() - 1) * this.config_.indentWidth)
 };
+//The HTML element for the row
 LearnBlock.tree.BaseNode.prototype.getRowDom = function () {
     var a = document.createElement("div");
     a.className = this.getRowClassName();
     a.style["padding-" + (this.isRightToLeft() ? "right" : "left")] = this.getPixelIndent_() + "px";
-    a.appendChild(this.getIconDom());
     a.appendChild(this.getLabelDom());
     return a
 };
+//The class name for the row
 LearnBlock.tree.BaseNode.prototype.getRowClassName = function () {
     var a = "";
     this.isSelected() && (a = " " + (this.config_.cssSelectedRow || ""));
     return this.config_.cssTreeRow + a
 };
+//The HTML element for the label
 LearnBlock.tree.BaseNode.prototype.getLabelDom = function () {
     var a = document.createElement("span");
     a.className = this.config_.cssItemLabel || "";
     a.textContent = this.getText();
     return a
 };
-LearnBlock.tree.BaseNode.prototype.getIconDom = function () {
-    var a = document.createElement("span");
-    a.style.display = "inline-block";
-    a.className = this.getCalculatedIconClass();
-    return a
-};
-LearnBlock.tree.BaseNode.prototype.getCalculatedIconClass = function () {
-    throw Error("unimplemented abstract method");
-};
+//The background position style value
 LearnBlock.tree.BaseNode.prototype.getBackgroundPosition = function () {
     return (this.isLastSibling() ? "-100" : (this.getDepth() - 1) * this.config_.indentWidth) + "px 0"
 };
+//The element for the tree node
 LearnBlock.tree.BaseNode.prototype.getElement = function () {
     var a = LearnBlock.tree.BaseNode.superClass_.getElement.call(this);
     a || (a = document.getElementById(this.getId()), this.setElementInternal(a));
     return a
 };
+//The row is the div that is used to draw the node without the children
 LearnBlock.tree.BaseNode.prototype.getRowElement = function () {
     var a = this.getElement();
     return a ? a.firstChild : null
 };
-LearnBlock.tree.BaseNode.prototype.getIconElement = function () {
-    var a = this.getRowElement();
-    return a ? a.firstChild : null
-};
+//The label element
 LearnBlock.tree.BaseNode.prototype.getLabelElement = function () {
     var a = this.getRowElement();
     return a && a.lastChild ? a.lastChild.previousSibling : null
 };
+//The div containing the children
 LearnBlock.tree.BaseNode.prototype.getChildrenElement = function () {
     var a = this.getElement();
     return a ? a.lastChild : null
 };
-LearnBlock.tree.BaseNode.prototype.getIconClass = function () {
-    return this.iconClass_
-};
-LearnBlock.tree.BaseNode.prototype.getExpandedIconClass = function () {
-    return this.expandedIconClass_
-};
+//Sets the text of the label
 LearnBlock.tree.BaseNode.prototype.setText = function (a) {
     this.content_ = a
 };
+//Returns the text of the label
 LearnBlock.tree.BaseNode.prototype.getText = function () {
     return this.content_
 };
+//Updates the row styles
 LearnBlock.tree.BaseNode.prototype.updateRow = function () {
     var a = this.getRowElement();
     a && (a.className = this.getRowClassName())
 };
-LearnBlock.tree.BaseNode.prototype.updateExpandIcon = function () {
-    var a = this.getChildrenElement();
-    a && (a.style.backgroundPosition = this.getBackgroundPosition())
-};
-LearnBlock.tree.BaseNode.prototype.updateIcon_ = function () {
-    this.getIconElement().className = this.getCalculatedIconClass()
-};
+//Handles mouse down event
 LearnBlock.tree.BaseNode.prototype.onMouseDown = function (a) {
     "expand" == a.target.getAttribute("type") && this.hasChildren() ? this.isUserCollapsible_ && this.toggle() : (this.select(), this.updateRow())
 };
+//Handles a click event
 LearnBlock.tree.BaseNode.prototype.onClick_ = function (a) {
     a.preventDefault()
 };
+//Handles a key down event
 LearnBlock.tree.BaseNode.prototype.onKeyDown = function (a) {
     var b = !0;
     switch (a.keyCode) {
@@ -9370,31 +9445,38 @@ LearnBlock.tree.BaseNode.prototype.onKeyDown = function (a) {
     b && a.preventDefault();
     return b
 };
+//Selects the next node
 LearnBlock.tree.BaseNode.prototype.selectNext = function () {
     var a = this.getNextShownNode();
     a && a.select();
     return !0
 };
+//Selects the previous node
 LearnBlock.tree.BaseNode.prototype.selectPrevious = function () {
     var a = this.getPreviousShownNode();
     a && a.select();
     return !0
 };
+//Selects the parent node
 LearnBlock.tree.BaseNode.prototype.selectParent = function () {
-    if (this.hasChildren() && this.getExpanded() && this.isUserCollapsible_) this.setExpanded(!1);
-    else {
-        var a = this.getParent(),
-            b = this.getTree();
-        a && a != b && a.select()
-    }
+    var a = this.getParent(),
+        b = this.getTree();
+    a && a != b && a.select()
     return !0
 };
+//Selects the child node
 LearnBlock.tree.BaseNode.prototype.selectChild = function () {
-    return this.hasChildren() ? (this.getExpanded() ? this.getFirstChild().select() : this.setExpanded(!0), !0) : !1
+    if (this.hasChildren()) {
+        this.getFirstChild().select();
+        return true;
+    }
+    return false;
 };
+//The last shown descendant
 LearnBlock.tree.BaseNode.prototype.getLastShownDescendant = function () {
     return this.getExpanded() && this.hasChildren() ? this.getLastChild().getLastShownDescendant() : this
 };
+//The next node to show
 LearnBlock.tree.BaseNode.prototype.getNextShownNode = function () {
     if (this.hasChildren() && this.getExpanded()) return this.getFirstChild();
     for (var a = this, b; a != this.getTree();) {
@@ -9404,6 +9486,7 @@ LearnBlock.tree.BaseNode.prototype.getNextShownNode = function () {
     }
     return null
 };
+//The previous node to show
 LearnBlock.tree.BaseNode.prototype.getPreviousShownNode = function () {
     var a = this.getPreviousSibling();
     if (null != a) return a.getLastShownDescendant();
@@ -9411,42 +9494,37 @@ LearnBlock.tree.BaseNode.prototype.getPreviousShownNode = function () {
     var b = this.getTree();
     return a == b || this == b ? null : a
 };
+//The configuration for the tree
 LearnBlock.tree.BaseNode.prototype.getConfig = function () {
     return this.config_
 };
+//Internal method that is used to set the tree control on the node
 LearnBlock.tree.BaseNode.prototype.setTreeInternal = function (a) {
     this.tree != a && (this.tree = a, this.forEachChild(function (b) {
         b.setTreeInternal(a)
     }))
 };
+
+//Class for a single node in the tree
 LearnBlock.tree.TreeNode = function (a, b, c) {
     this.toolbox_ = a;
     LearnBlock.tree.BaseNode.call(this, b, c)
 };
 LearnBlock.utils.object.inherits(LearnBlock.tree.TreeNode, LearnBlock.tree.BaseNode);
+//Returns the tree
 LearnBlock.tree.TreeNode.prototype.getTree = function () {
     if (this.tree) return this.tree;
     var a = this.getParent();
     return a && (a = a.getTree()) ? (this.setTreeInternal(a), a) : null
 };
-LearnBlock.tree.TreeNode.prototype.getCalculatedIconClass = function () {
-    var a = this.getExpanded(),
-        b = this.getExpandedIconClass();
-    if (a && b) return b;
-    b = this.getIconClass();
-    if (!a && b) return b;
-    b = this.getConfig();
-    if (this.hasChildren()) {
-        if (a && b.cssExpandedFolderIcon) return b.cssTreeIcon + " " + b.cssExpandedFolderIcon;
-        if (!a && b.cssCollapsedFolderIcon) return b.cssTreeIcon + " " + b.cssCollapsedFolderIcon
-    } else if (b.cssFileIcon) return b.cssTreeIcon + " " + b.cssFileIcon;
-    return ""
-};
+//Expands or collapses the node on mouse click
 LearnBlock.tree.TreeNode.prototype.onClick_ = function (a) {
     this.hasChildren() && this.isUserCollapsible() ? (this.toggle(), this.select()) : this.isSelected() ? this.getTree().setSelectedItem(null) : this.select();
     this.updateRow()
 };
+//Suppresses the inherited mouse down behaviour
 LearnBlock.tree.TreeNode.prototype.onMouseDown = function (a) {};
+//Arrow keys work properly
 LearnBlock.tree.TreeNode.prototype.onKeyDown = function (a) {
     if (this.tree.toolbox_.horizontalLayout_) {
         var b = {},
@@ -9465,14 +9543,20 @@ LearnBlock.tree.TreeNode.prototype.onKeyDown = function (a) {
     return LearnBlock.tree.TreeNode.superClass_.onKeyDown.call(this,
         a)
 };
+//Sets the handler that's triggered when the size of node has changed
 LearnBlock.tree.TreeNode.prototype.onSizeChanged = function (a) {
     this.onSizeChanged_ = a
 };
+//Triggers a size changed event if a handler exists
 LearnBlock.tree.TreeNode.prototype.resizeToolbox_ = function () {
     this.onSizeChanged_ && this.onSizeChanged_.call(this.toolbox_)
 };
+//Resizes the toolbox when a node is expanded
 LearnBlock.tree.TreeNode.prototype.doNodeExpanded = LearnBlock.tree.TreeNode.prototype.resizeToolbox_;
+//Resizes the toolbox when a node is collased
 LearnBlock.tree.TreeNode.prototype.doNodeCollapsed = LearnBlock.tree.TreeNode.prototype.resizeToolbox_;
+
+//Class for an extension of the TreeControl object that provides a way to view a hierarchical set of data
 LearnBlock.tree.TreeControl = function (a, b) {
     this.toolbox_ = a;
     LearnBlock.tree.BaseNode.call(this, "", b);
@@ -9481,29 +9565,36 @@ LearnBlock.tree.TreeControl = function (a, b) {
     this.selectedItem_ = this
 };
 LearnBlock.utils.object.inherits(LearnBlock.tree.TreeControl, LearnBlock.tree.BaseNode);
+//Returns the tree
 LearnBlock.tree.TreeControl.prototype.getTree = function () {
     return this
 };
+//Returns the associated toolbox
 LearnBlock.tree.TreeControl.prototype.getToolbox = function () {
     return this.toolbox_
 };
+//Returns node depth
 LearnBlock.tree.TreeControl.prototype.getDepth = function () {
     return 0
 };
+//Handles focus on the tree
 LearnBlock.tree.TreeControl.prototype.handleFocus_ = function (a) {
     this.focused_ = !0;
     a = this.getElement();
     LearnBlock.utils.dom.addClass(a, "focused");
     this.selectedItem_ && this.selectedItem_.select()
 };
+//Handles blur on the tree
 LearnBlock.tree.TreeControl.prototype.handleBlur_ = function (a) {
     this.focused_ = !1;
     a = this.getElement();
     LearnBlock.utils.dom.removeClass(a, "focused")
 };
+//Gets whether this tree has focus or not
 LearnBlock.tree.TreeControl.prototype.hasFocus = function () {
     return this.focused_
 };
+//Override methods
 LearnBlock.tree.TreeControl.prototype.getExpanded = function () {
     return !0
 };
@@ -9518,15 +9609,7 @@ LearnBlock.tree.TreeControl.prototype.updateExpandIcon = function () {};
 LearnBlock.tree.TreeControl.prototype.getRowClassName = function () {
     return LearnBlock.tree.TreeControl.superClass_.getRowClassName.call(this) + " " + this.getConfig().cssHideRoot
 };
-LearnBlock.tree.TreeControl.prototype.getCalculatedIconClass = function () {
-    var a = this.getExpanded(),
-        b = this.getExpandedIconClass();
-    if (a && b) return b;
-    b = this.getIconClass();
-    if (!a && b) return b;
-    b = this.getConfig();
-    return a && b.cssExpandedRootIcon ? b.cssTreeIcon + " " + b.cssExpandedRootIcon : ""
-};
+//Sets the selected item
 LearnBlock.tree.TreeControl.prototype.setSelectedItem = function (a) {
     if (a != this.selectedItem_ && (!this.onBeforeSelected_ || this.onBeforeSelected_.call(this.toolbox_, a))) {
         var b = this.getSelectedItem();
@@ -9535,21 +9618,26 @@ LearnBlock.tree.TreeControl.prototype.setSelectedItem = function (a) {
         this.onAfterSelected_ && this.onAfterSelected_.call(this.toolbox_, b, a)
     }
 };
+//Sets the handler that's triggered before a node is selected
 LearnBlock.tree.TreeControl.prototype.onBeforeSelected = function (a) {
     this.onBeforeSelected_ = a
 };
+//Sets the handler that's triggered after a node is selected
 LearnBlock.tree.TreeControl.prototype.onAfterSelected = function (a) {
     this.onAfterSelected_ = a
 };
+//Returns the selected item
 LearnBlock.tree.TreeControl.prototype.getSelectedItem = function () {
     return this.selectedItem_
 };
+//Adds roles and states
 LearnBlock.tree.TreeControl.prototype.initAccessibility = function () {
     LearnBlock.tree.TreeControl.superClass_.initAccessibility.call(this);
     var a = this.getElement();
     LearnBlock.utils.aria.setRole(a, LearnBlock.utils.aria.Role.TREE);
     LearnBlock.utils.aria.setState(a, LearnBlock.utils.aria.State.LABELLEDBY, this.getLabelElement().id)
 };
+//Override methods
 LearnBlock.tree.TreeControl.prototype.enterDocument = function () {
     LearnBlock.tree.TreeControl.superClass_.enterDocument.call(this);
     var a = this.getElement();
@@ -9562,6 +9650,7 @@ LearnBlock.tree.TreeControl.prototype.exitDocument = function () {
     LearnBlock.tree.TreeControl.superClass_.exitDocument.call(this);
     this.detachEvents_()
 };
+//Adds the event listeners to the tree
 LearnBlock.tree.TreeControl.prototype.attachEvents_ = function () {
     var a = this.getElement();
     a.tabIndex = 0;
@@ -9570,12 +9659,14 @@ LearnBlock.tree.TreeControl.prototype.attachEvents_ = function () {
     this.onClickWrapper_ = LearnBlock.bindEventWithChecks_(a, "click", this, this.handleMouseEvent_);
     this.onKeydownWrapper_ = LearnBlock.bindEvent_(a, "keydown", this, this.handleKeyEvent_)
 };
+//Removes the event listeners from the tree
 LearnBlock.tree.TreeControl.prototype.detachEvents_ = function () {
     LearnBlock.unbindEvent_(this.onFocusWrapper_);
     LearnBlock.unbindEvent_(this.onBlurWrapper_);
     LearnBlock.unbindEvent_(this.onClickWrapper_);
     LearnBlock.unbindEvent_(this.onKeydownWrapper_)
 };
+//Handles mouse events
 LearnBlock.tree.TreeControl.prototype.handleMouseEvent_ = function (a) {
     var b = this.getNodeFromEvent_(a);
     if (b) switch (a.type) {
@@ -9586,11 +9677,13 @@ LearnBlock.tree.TreeControl.prototype.handleMouseEvent_ = function (a) {
             b.onClick_(a)
     }
 };
+//Handles key down on the tree
 LearnBlock.tree.TreeControl.prototype.handleKeyEvent_ = function (a) {
     var b = !1;
     if (b = this.selectedItem_ && this.selectedItem_.onKeyDown(a) || b) LearnBlock.utils.style.scrollIntoContainerView(this.selectedItem_.getElement(), this.getElement().parentNode), a.preventDefault();
     return b
 };
+//Finds the containing node given an event
 LearnBlock.tree.TreeControl.prototype.getNodeFromEvent_ = function (a) {
     for (var b = a.target; null != b;) {
         if (a = LearnBlock.tree.BaseNode.allNodes[b.id]) return a;
@@ -9599,6 +9692,7 @@ LearnBlock.tree.TreeControl.prototype.getNodeFromEvent_ = function (a) {
     }
     return null
 };
+//Creates a new tree node using the same config as the root
 LearnBlock.tree.TreeControl.prototype.createNode = function (a) {
     return new LearnBlock.tree.TreeNode(this.toolbox_, a || "", this.getConfig())
 };

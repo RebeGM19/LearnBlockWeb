@@ -265,15 +265,6 @@ LearnBlock.utils.userAgent = {};
     LearnBlock.utils.userAgent.JAVA_FX = b("JavaFX");
     LearnBlock.utils.userAgent.WEBKIT = b("WebKit") && !LearnBlock.utils.userAgent.EDGE;
     LearnBlock.utils.userAgent.GECKO = b("Gecko") && !LearnBlock.utils.userAgent.WEBKIT && !LearnBlock.utils.userAgent.IE && !LearnBlock.utils.userAgent.EDGE;
-    LearnBlock.utils.userAgent.ANDROID =
-        b("Android");
-    LearnBlock.utils.userAgent.IPAD = b("iPad");
-    LearnBlock.utils.userAgent.IPOD = b("iPod");
-    LearnBlock.utils.userAgent.IPHONE = b("iPhone") && !LearnBlock.utils.userAgent.IPAD && !LearnBlock.utils.userAgent.IPOD;
-    LearnBlock.utils.userAgent.MAC = b("Macintosh");
-    LearnBlock.utils.userAgent.TABLET = LearnBlock.utils.userAgent.IPAD || LearnBlock.utils.userAgent.ANDROID && !b("Mobile") || b("Silk");
-    LearnBlock.utils.userAgent.MOBILE = !LearnBlock.utils.userAgent.TABLET && (LearnBlock.utils.userAgent.IPOD || LearnBlock.utils.userAgent.IPHONE || LearnBlock.utils.userAgent.ANDROID ||
-        b("IEMobile"))
 })(LearnBlock.utils.global.navigator && LearnBlock.utils.global.navigator.userAgent || "");
 //Don't do anything for this event, just halt propagation
 LearnBlock.utils.noEvent = function (a) {
@@ -615,36 +606,46 @@ LearnBlock.Events.Abstract.prototype.getEventWorkspace_ = function () {
     return a
 };
 
-
-
+//Utils object
 LearnBlock.utils.object = {};
+//Inherits the prototype methods from one constructor into another
 LearnBlock.utils.object.inherits = function (a, b) {
     a.superClass_ = b.prototype;
     a.prototype = Object.create(b.prototype);
     a.prototype.constructor = a
 };
+//Copies all the members of a source object to a target object
 LearnBlock.utils.object.mixin = function (a, b) {
     for (var c in b) a[c] = b[c]
 };
+//Returns an array of a given object's own enumerable property values
 LearnBlock.utils.object.values = function (a) {
     return Object.values ? Object.values(a) : Object.keys(a).map(function (b) {
         return a[b]
     })
 };
+
+//Utils xml
 LearnBlock.utils.xml = {};
+//Namespace for xml
 LearnBlock.utils.xml.NAME_SPACE = "https://developers.google.com/blockly/xml";
+//Gets the document object
 LearnBlock.utils.xml.document = function () {
     return document
 };
+//Creates DOM element for xml
 LearnBlock.utils.xml.createElement = function (a) {
     return LearnBlock.utils.xml.document().createElementNS(LearnBlock.utils.xml.NAME_SPACE, a)
 };
+//Creates text element for xml
 LearnBlock.utils.xml.createTextNode = function (a) {
     return LearnBlock.utils.xml.document().createTextNode(a)
 };
+//Converts an xml string into a DOM tree
 LearnBlock.utils.xml.textToDomDocument = function (a) {
     return (new DOMParser).parseFromString(a, "text/xml")
 };
+//Converts a DOM structure into plain text
 LearnBlock.utils.xml.domToText = function (a) {
     return (new XMLSerializer).serializeToString(a)
 };
@@ -960,19 +961,26 @@ LearnBlock.Events.VarRename.prototype.run = function (a) {
     a ? b.renameVariableById(this.varId, this.newName) : b.renameVariableById(this.varId, this.oldName)
 };
 
-
+//Utils DOM
 LearnBlock.utils.dom = {};
+//Required name space for SVG elements
 LearnBlock.utils.dom.SVG_NS = "http://www.w3.org/2000/svg";
+//Required name space for HTML elements
 LearnBlock.utils.dom.HTML_NS = "http://www.w3.org/1999/xhtml";
+//Required name space for XLINK elements
 LearnBlock.utils.dom.XLINK_NS = "http://www.w3.org/1999/xlink";
+//Node type constants
 LearnBlock.utils.dom.Node = {
     ELEMENT_NODE: 1,
     TEXT_NODE: 3,
     COMMENT_NODE: 8,
     DOCUMENT_POSITION_CONTAINED_BY: 16
 };
+//Temporary cache of text widths
 LearnBlock.utils.dom.cacheWidths_ = null;
+//Number of current references to cache
 LearnBlock.utils.dom.cacheReference_ = 0;
+//Helper method for creating SVG elements
 LearnBlock.utils.dom.createSvgElement = function (a, b, c) {
     a = document.createElementNS(LearnBlock.utils.dom.SVG_NS, a);
     for (var d in b) a.setAttribute(d, b[d]);
@@ -980,6 +988,7 @@ LearnBlock.utils.dom.createSvgElement = function (a, b, c) {
     c && c.appendChild(a);
     return a
 };
+//Adds a CSS class to a element
 LearnBlock.utils.dom.addClass = function (a, b) {
     var c = a.getAttribute("class") || "";
     if (-1 != (" " + c + " ").indexOf(" " + b + " ")) return !1;
@@ -987,6 +996,7 @@ LearnBlock.utils.dom.addClass = function (a, b) {
     a.setAttribute("class", c + b);
     return !0
 };
+//Removes a CSS class from a element
 LearnBlock.utils.dom.removeClass = function (a, b) {
     var c = a.getAttribute("class");
     if (-1 == (" " + c + " ").indexOf(" " + b + " ")) return !1;
@@ -995,33 +1005,41 @@ LearnBlock.utils.dom.removeClass = function (a, b) {
     c.length ? a.setAttribute("class", c.join(" ")) : a.removeAttribute("class");
     return !0
 };
+//Checks if an element has the specified CSS class
 LearnBlock.utils.dom.hasClass = function (a, b) {
     return -1 != (" " + a.getAttribute("class") + " ").indexOf(" " + b + " ")
 };
+//Removes a node from its parent
 LearnBlock.utils.dom.removeNode = function (a) {
     return a && a.parentNode ? a.parentNode.removeChild(a) : null
 };
+//Inserts a node after a reference node
 LearnBlock.utils.dom.insertAfter = function (a, b) {
     var c = b.nextSibling,
         d = b.parentNode;
     if (!d) throw Error("Reference node has no parent.");
     c ? d.insertBefore(a, c) : d.appendChild(a)
 };
+//Whether a node contains another node
 LearnBlock.utils.dom.containsNode = function (a, b) {
     return !!(a.compareDocumentPosition(b) & LearnBlock.utils.dom.Node.DOCUMENT_POSITION_CONTAINED_BY)
 };
+//Sets the CSS transform property on an element
 LearnBlock.utils.dom.setCssTransform = function (a, b) {
     a.style.transform = b;
     a.style["-webkit-transform"] = b
 };
+//Starts caching text widths
 LearnBlock.utils.dom.startTextWidthCache = function () {
     LearnBlock.utils.dom.cacheReference_++;
     LearnBlock.utils.dom.cacheWidths_ || (LearnBlock.utils.dom.cacheWidths_ = {})
 };
+//Stops caching field widths
 LearnBlock.utils.dom.stopTextWidthCache = function () {
     LearnBlock.utils.dom.cacheReference_--;
     LearnBlock.utils.dom.cacheReference_ || (LearnBlock.utils.dom.cacheWidths_ = null)
 };
+//Gets the width of a text element
 LearnBlock.utils.dom.getTextWidth = function (a) {
     var b = a.textContent + "\n" + a.className.baseVal,
         c;
@@ -1034,18 +1052,19 @@ LearnBlock.utils.dom.getTextWidth = function (a) {
     LearnBlock.utils.dom.cacheWidths_ && (LearnBlock.utils.dom.cacheWidths_[b] = c);
     return c
 };
+
+//Class for XML reader and writer
 LearnBlock.Xml = {};
+//Encodes a block tree as XML
 LearnBlock.Xml.workspaceToDom = function (a, b) {
     var c = LearnBlock.utils.xml.createElement("xml"),
         d = LearnBlock.Xml.variablesToDom(LearnBlock.Variables.allUsedVarModels(a));
     d.hasChildNodes() && c.appendChild(d);
-    var e = a.getTopComments(!0);
-    d = 0;
-    for (var f; f = e[d]; d++) c.appendChild(f.toXmlWithXY(b));
     e = a.getTopBlocks(!0);
     for (d = 0; f = e[d]; d++) c.appendChild(LearnBlock.Xml.blockToDomWithXY(f, b));
     return c
 };
+//Encodes a list of variables as XML
 LearnBlock.Xml.variablesToDom = function (a) {
     for (var b = LearnBlock.utils.xml.createElement("variables"), c = 0, d; d = a[c]; c++) {
         var e = LearnBlock.utils.xml.createElement("variable");
@@ -1056,6 +1075,7 @@ LearnBlock.Xml.variablesToDom = function (a) {
     }
     return b
 };
+//Encodes a block subtree as XML with XY coordinates
 LearnBlock.Xml.blockToDomWithXY = function (a, b) {
     var c;
     a.workspace.RTL && (c = a.workspace.getWidth());
@@ -1065,6 +1085,7 @@ LearnBlock.Xml.blockToDomWithXY = function (a, b) {
     d.setAttribute("y", Math.round(e.y));
     return d
 };
+//Encodes a field as XML
 LearnBlock.Xml.fieldToDom_ = function (a) {
     if (a.isSerializable()) {
         var b = LearnBlock.utils.xml.createElement("field");
@@ -1073,10 +1094,12 @@ LearnBlock.Xml.fieldToDom_ = function (a) {
     }
     return null
 };
+//Encodes all of a block's fields as XML and attaches them to the given tree of XML elements
 LearnBlock.Xml.allFieldsToDom_ = function (a, b) {
     for (var c = 0, d; d = a.inputList[c]; c++)
         for (var e = 0, f; f = d.fieldRow[e]; e++)(f = LearnBlock.Xml.fieldToDom_(f)) && b.appendChild(f)
 };
+//Encodes a block subtree as XML
 LearnBlock.Xml.blockToDom = function (a, b) {
     var c = LearnBlock.utils.xml.createElement("block");
     c.setAttribute("type", a.type);
@@ -1109,14 +1132,7 @@ LearnBlock.Xml.blockToDom = function (a, b) {
     !d || e;
     return c
 };
-LearnBlock.Xml.cloneShadow_ = function (a, b) {
-    for (var c = a = a.cloneNode(!0), d; c;)
-        if (b && "shadow" == c.nodeName && c.removeAttribute("id"), c.firstChild) c = c.firstChild;
-        else {
-            for (; c && !c.nextSibling;) d = c, c = c.parentNode, d.nodeType == LearnBlock.utils.dom.Node.TEXT_NODE && "" == d.data.trim() && c.firstChild != d && LearnBlock.utils.dom.removeNode(d);
-            c && (d = c, c = c.nextSibling, d.nodeType == LearnBlock.utils.dom.Node.TEXT_NODE && "" == d.data.trim() && LearnBlock.utils.dom.removeNode(d))
-        } return a
-};
+//Converts a DOM structure into plain text
 LearnBlock.Xml.domToText = function (a) {
     a = LearnBlock.utils.xml.domToText(a);
     var b = /(<[^/](?:[^>]*[^/])?>[^<]*)\n([^<]*<\/)/;
@@ -1126,6 +1142,7 @@ LearnBlock.Xml.domToText = function (a) {
     } while (a != c);
     return a
 };
+//Converts a DOM structure into properly indented text
 LearnBlock.Xml.domToPrettyText = function (a) {
     a = LearnBlock.Xml.domToText(a).split("<");
     for (var b = "", c = 1; c < a.length; c++) {
@@ -1138,11 +1155,13 @@ LearnBlock.Xml.domToPrettyText = function (a) {
     a = a.replace(/(<(\w+)\b[^>]*>[^\n]*)\n *<\/\2>/g, "$1</$2>");
     return a.replace(/^\n/, "")
 };
+//Converts an XML string into a DOM structure
 LearnBlock.Xml.textToDom = function (a) {
     var b = LearnBlock.utils.xml.textToDomDocument(a);
     if (!b || !b.documentElement || b.getElementsByTagName("parsererror").length) throw Error("textToDom was unable to parse: " + a);
     return b.documentElement
 };
+//Clears the given workspace then decodes an XML DOM and creates blocks on the workspace
 LearnBlock.Xml.clearWorkspaceAndLoadFromXml = function (a, b) {
     b.setResizesEnabled(!1);
     b.clear();
@@ -1150,6 +1169,7 @@ LearnBlock.Xml.clearWorkspaceAndLoadFromXml = function (a, b) {
     b.setResizesEnabled(!0);
     return c
 };
+//Decodes an XML DOM and creates blocks on the workspace
 LearnBlock.Xml.domToWorkspace = function (a, b) {
     if (a instanceof LearnBlock.Workspace) {
         var c = a;
@@ -1170,7 +1190,7 @@ LearnBlock.Xml.domToWorkspace = function (a, b) {
         for (var h = 0; h < e; h++) {
             var k = a.childNodes[h],
                 l = k.nodeName.toLowerCase();
-            if ("block" == l || "shadow" == l && !LearnBlock.Events.recordUndo) {
+            if ("block" == l || !LearnBlock.Events.recordUndo) {
                 var m =
                     LearnBlock.Xml.domToBlock(k, b);
                 c.push(m.id);
@@ -1193,6 +1213,7 @@ LearnBlock.Xml.domToWorkspace = function (a, b) {
     LearnBlock.Events.fire(new LearnBlock.Events.FinishedLoading(b));
     return c
 };
+//Decodes an XML DOM and creates blocks on the workspace
 LearnBlock.Xml.appendDomToWorkspace = function (a, b) {
     if (b.hasOwnProperty("scale")) {
         var c = LearnBlock.BlockSvg.TAB_WIDTH;
@@ -1223,6 +1244,7 @@ LearnBlock.Xml.appendDomToWorkspace = function (a, b) {
     }
     return c
 };
+//Decodes an XML block tag and creates a block on the workspace
 LearnBlock.Xml.domToBlock = function (a, b) {
     if (a instanceof LearnBlock.Workspace) {
         var c = a;
@@ -1256,6 +1278,7 @@ LearnBlock.Xml.domToBlock = function (a, b) {
     }
     return d
 };
+//Decodes an XML list of variables and adds the variables to the workspace
 LearnBlock.Xml.domToVariables = function (a, b) {
     for (var c = 0, d; d = a.childNodes[c]; c++)
         if (d.nodeType == LearnBlock.utils.dom.Node.ELEMENT_NODE) {
@@ -1264,6 +1287,7 @@ LearnBlock.Xml.domToVariables = function (a, b) {
             b.createVariable(d.textContent, e, f)
         }
 };
+//Decodes an XML block tag and creates a block on the workspace
 LearnBlock.Xml.domToBlockHeadless_ = function (a, b) {
     var c = null,
         d = a.getAttribute("type");
@@ -1318,18 +1342,14 @@ LearnBlock.Xml.domToBlockHeadless_ = function (a, b) {
     (e = a.getAttribute("deletable")) && c.setDeletable("true" == e);
     (e = a.getAttribute("movable")) && c.setMovable("true" == e);
     (e = a.getAttribute("editable")) && c.setEditable("true" == e);
-    if ("shadow" == a.nodeName.toLowerCase()) {
-        d = c.getChildren(!1);
-        for (e = 0; g = d[e]; e++)
-            if (!g.isShadow()) throw TypeError("Shadow block not allowed non-shadow child.");
-        if (c.getVarModels().length) throw TypeError("Shadow blocks cannot have variable references.");
-    }
     return c
 };
+//Decodes an XML field tag and sets the value of that field on the given block
 LearnBlock.Xml.domToField_ = function (a, b, c) {
     var d = a.getField(b);
     d ? d.fromXml(c) : console.warn("Ignoring non-existent field " + b + " in block " + a.type)
 };
+//Removes any 'next' block
 LearnBlock.Xml.deleteNext = function (a) {
     for (var b = 0, c; c = a.childNodes[b]; b++)
         if ("next" == c.nodeName.toLowerCase()) {
@@ -2325,14 +2345,17 @@ LearnBlock.Scrollbar.prototype.setOrigin = function (a, b) {
     this.origin_ = new LearnBlock.utils.Coordinate(a, b)
 };
 
-
+//Utils math
 LearnBlock.utils.math = {};
+//Converts degrees to radians
 LearnBlock.utils.math.toRadians = function (a) {
     return a * Math.PI / 180
 };
+//Converts radians to degrees
 LearnBlock.utils.math.toDegrees = function (a) {
     return 180 * a / Math.PI
 };
+//Clamps the provided number between the lower bound and the upper bound
 LearnBlock.utils.math.clamp = function (a, b, c) {
     if (c < a) {
         var d = c;
@@ -2341,25 +2364,33 @@ LearnBlock.utils.math.clamp = function (a, b, c) {
     }
     return Math.max(a, Math.min(b, c))
 };
+
+//Class for a cursor
 LearnBlock.Cursor = function () {
     this.drawer_ = this.curNode_ = null
 };
+//Sets the object in charge of drawing the cursor
 LearnBlock.Cursor.prototype.setDrawer = function (a) {
     this.drawer_ = a
 };
+//Gets the current drawer for the cursor
 LearnBlock.Cursor.prototype.getDrawer = function () {
     return this.drawer_
 };
+//Gets the current location of the cursor
 LearnBlock.Cursor.prototype.getCurNode = function () {
     return this.curNode_
 };
+//Sets the location of the cursor and calls the update method
 LearnBlock.Cursor.prototype.setCurNode = function (a) {
     this.curNode_ = a;
     this.drawer_ && this.drawer_.draw(this.getCurNode())
 };
+//Hides the cursor SVG
 LearnBlock.Cursor.prototype.hide = function () {
     this.drawer_ && this.drawer_.hide()
 };
+//Finds the next connection, field, or block
 LearnBlock.Cursor.prototype.next = function () {
     var a = this.getCurNode();
     if (!a) return null;
@@ -2367,6 +2398,7 @@ LearnBlock.Cursor.prototype.next = function () {
     a && this.setCurNode(a);
     return a
 };
+//Finds the in connection or field
 LearnBlock.Cursor.prototype["in"] = function () {
     var a = this.getCurNode();
     if (!a) return null;
@@ -2374,6 +2406,7 @@ LearnBlock.Cursor.prototype["in"] = function () {
     (a = a["in"]()) && this.setCurNode(a);
     return a
 };
+//Finds the previous connection, field, or block
 LearnBlock.Cursor.prototype.prev = function () {
     var a = this.getCurNode();
     if (!a) return null;
@@ -2381,6 +2414,7 @@ LearnBlock.Cursor.prototype.prev = function () {
     a && this.setCurNode(a);
     return a
 };
+//Finds the out connection, field, or block
 LearnBlock.Cursor.prototype.out = function () {
     var a = this.getCurNode();
     if (!a) return null;
@@ -2388,10 +2422,13 @@ LearnBlock.Cursor.prototype.out = function () {
     a && this.setCurNode(a);
     return a
 };
+
+//Class for a marker
 LearnBlock.MarkerCursor = function () {
     LearnBlock.MarkerCursor.superClass_.constructor.call(this)
 };
 LearnBlock.utils.object.inherits(LearnBlock.MarkerCursor, LearnBlock.Cursor);
+//No-ops: Markers don't move
 LearnBlock.MarkerCursor.prototype.next = function () {
     return null
 };
@@ -3728,8 +3765,9 @@ LearnBlock.Input.prototype.dispose = function () {
     this.sourceBlock_ = null
 };
 
-
+//Utils colour
 LearnBlock.utils.colour = {};
+//Parses a colour from a string
 LearnBlock.utils.colour.parse = function (a) {
     a = String(a).toLowerCase().trim();
     var b = LearnBlock.utils.colour.names[a];
@@ -3740,50 +3778,40 @@ LearnBlock.utils.colour.parse = function (a) {
     var c = a.match(/^(?:rgb)?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/);
     return c && (a = Number(c[1]), b = Number(c[2]), c = Number(c[3]), 0 <= a && 256 > a && 0 <= b && 256 > b && 0 <= c && 256 > c) ? LearnBlock.utils.colour.rgbToHex(a, b, c) : null
 };
+//Converts a colour from RGB to hex representation
 LearnBlock.utils.colour.rgbToHex = function (a, b, c) {
     b = a << 16 | b << 8 | c;
     return 16 > a ? "#" + (16777216 | b).toString(16).substr(1) : "#" + b.toString(16)
 };
+//Converts a hex representation of a colour to RGB
 LearnBlock.utils.colour.hexToRgb = function (a) {
     a = parseInt(a.substr(1), 16);
     return [a >> 16, a >> 8 & 255, a & 255]
 };
+//Converts an HSV triplet to hex representation
 LearnBlock.utils.colour.hsvToHex = function (a, b, c) {
-    var d = 0,
-        e = 0,
-        f = 0;
+    var d = 0, e = 0, f = 0;
     if (0 == b) f = e = d = c;
     else {
-        var g = Math.floor(a / 60),
-            h = a / 60 - g;
+        var g = Math.floor(a / 60), h = a / 60 - g;
         a = c * (1 - b);
         var k = c * (1 - b * h);
         b = c * (1 - b * (1 - h));
         switch (g) {
             case 1:
-                d = k;
-                e = c;
-                f = a;
+                d = k; e = c; f = a;
                 break;
             case 2:
-                d = a;
-                e = c;
-                f = b;
+                d = a; e = c; f = b;
                 break;
             case 3:
-                d = a;
-                e = k;
-                f = c;
+                d = a; e = k; f = c;
                 break;
             case 4:
-                d = b;
-                e = a;
-                f = c;
+                d = b; e = a; f = c;
                 break;
             case 5:
-                d = c;
-                e = a;
-                f = k;
+                d = c; e = a; f = k;
                 break;
             case 6:
             case 0:
@@ -3792,11 +3820,13 @@ LearnBlock.utils.colour.hsvToHex = function (a, b, c) {
     }
     return LearnBlock.utils.colour.rgbToHex(Math.floor(d), Math.floor(e), Math.floor(f))
 };
+//Blends two colours together, using the specified factor to indicate the weight given to the first colour
 LearnBlock.utils.colour.blend = function (a, b, c) {
     a = LearnBlock.utils.colour.hexToRgb(LearnBlock.utils.colour.parse(a));
     b = LearnBlock.utils.colour.hexToRgb(LearnBlock.utils.colour.parse(b));
     return LearnBlock.utils.colour.rgbToHex(Math.round(b[0] + c * (a[0] - b[0])), Math.round(b[1] + c * (a[1] - b[1])), Math.round(b[2] + c * (a[2] - b[2])))
 };
+//A map that contains the 16 basic colour keywords as defined by W3C
 LearnBlock.utils.colour.names = {
     aqua: "#00ffff",
     black: "#000000",
@@ -4525,11 +4555,17 @@ LearnBlock.blockRendering.PathObject.prototype.setPaths = function (a) {
 LearnBlock.blockRendering.PathObject.prototype.flipRTL = function () {
     this.svgPath.setAttribute("transform", "scale(-1 1)")
 };
+
+//Utils idGenerator
 LearnBlock.utils.IdGenerator = {};
+//Next unique ID to use
 LearnBlock.utils.IdGenerator.nextId_ = 0;
+//Gets the next unique ID
 LearnBlock.utils.IdGenerator.getNextUniqueId = function () {
     return "blockly:" + (LearnBlock.utils.IdGenerator.nextId_++).toString(36)
 };
+
+//Default implementation of a UI component
 LearnBlock.Component = function () {
     this.rightToLeft_ = LearnBlock.Component.defaultRightToLeft;
     this.id_ = null;
@@ -4538,62 +4574,78 @@ LearnBlock.Component = function () {
     this.children_ = [];
     this.childIndex_ = {}
 };
+//The default right to left value
 LearnBlock.Component.defaultRightToLeft = !1;
+//Errors thrown by the component
 LearnBlock.Component.Error = {
     ALREADY_RENDERED: "Component already rendered",
     PARENT_UNABLE_TO_BE_SET: "Unable to set parent component",
     CHILD_INDEX_OUT_OF_BOUNDS: "Child component index out of bounds"
 };
+//Gets the unique ID for the instance of this component
 LearnBlock.Component.prototype.getId = function () {
     return this.id_ || (this.id_ = LearnBlock.utils.IdGenerator.getNextUniqueId())
 };
+//Gets the component's element
 LearnBlock.Component.prototype.getElement = function () {
     return this.element_
 };
+//Sets the component's root element to the given element
 LearnBlock.Component.prototype.setElementInternal = function (a) {
     this.element_ = a
 };
+//Sets the parent of this component to use for event bubbling
 LearnBlock.Component.prototype.setParent = function (a) {
     if (this == a) throw Error(LearnBlock.Component.Error.PARENT_UNABLE_TO_BE_SET);
     if (a && this.parent_ && this.id_ && this.parent_.getChild(this.id_) && this.parent_ != a) throw Error(LearnBlock.Component.Error.PARENT_UNABLE_TO_BE_SET);
     this.parent_ = a
 };
+//Returns the component's parent, if any
 LearnBlock.Component.prototype.getParent = function () {
     return this.parent_
 };
+//Determines whether the component has been added to the document
 LearnBlock.Component.prototype.isInDocument = function () {
     return this.inDocument_
 };
+//Creates the initial DOM representation for the component
 LearnBlock.Component.prototype.createDom = function () {
     this.element_ = document.createElement("div")
 };
+//Renders the component
 LearnBlock.Component.prototype.render = function (a) {
     this.render_(a)
 };
+//Renders the component before another element
 LearnBlock.Component.prototype.renderBefore = function (a) {
     this.render_(a.parentNode, a)
 };
+//Renders the component
 LearnBlock.Component.prototype.render_ = function (a, b) {
     if (this.inDocument_) throw Error(LearnBlock.Component.Error.ALREADY_RENDERED);
     this.element_ || this.createDom();
     a ? a.insertBefore(this.element_, b || null) : document.body.appendChild(this.element_);
     this.parent_ && !this.parent_.isInDocument() || this.enterDocument()
 };
+//Called when the component's element is known to be in the document
 LearnBlock.Component.prototype.enterDocument = function () {
     this.inDocument_ = !0;
     this.forEachChild(function (a) {
         !a.isInDocument() && a.getElement() && a.enterDocument()
     })
 };
+//Called by dispose to clean up the elements and listeners created by a component
 LearnBlock.Component.prototype.exitDocument = function () {
     this.forEachChild(function (a) {
         a.isInDocument() && a.exitDocument()
     });
     this.inDocument_ = !1
 };
+//Disposes of the object
 LearnBlock.Component.prototype.dispose = function () {
     this.disposed_ || (this.disposed_ = !0, this.disposeInternal())
 };
+//Disposes of the component
 LearnBlock.Component.prototype.disposeInternal = function () {
     this.inDocument_ && this.exitDocument();
     this.forEachChild(function (a) {
@@ -4602,9 +4654,11 @@ LearnBlock.Component.prototype.disposeInternal = function () {
     this.element_ && LearnBlock.utils.dom.removeNode(this.element_);
     this.parent_ = this.element_ = this.childIndex_ = this.children_ = null
 };
+//Adds the specified component as the last child of this component
 LearnBlock.Component.prototype.addChild = function (a, b) {
     this.addChildAt(a, this.getChildCount(), b)
 };
+//Adds the specified component as a child of this component at the given 0-based index
 LearnBlock.Component.prototype.addChildAt = function (a, b, c) {
     if (a.inDocument_ && (c || !this.inDocument_)) throw Error(LearnBlock.Component.Error.ALREADY_RENDERED);
     if (0 > b || b > this.getChildCount()) throw Error(LearnBlock.Component.Error.CHILD_INDEX_OUT_OF_BOUNDS);
@@ -4617,158 +4671,79 @@ LearnBlock.Component.prototype.addChildAt = function (a, b, c) {
     a.inDocument_ && this.inDocument_ && a.getParent() == this ? (c = this.getContentElement(), b = c.childNodes[b] ||
         null, b != a.getElement() && c.insertBefore(a.getElement(), b)) : c ? (this.element_ || this.createDom(), b = this.getChildAt(b + 1), a.render_(this.getContentElement(), b ? b.element_ : null)) : this.inDocument_ && !a.inDocument_ && a.element_ && a.element_.parentNode && a.element_.parentNode.nodeType == LearnBlock.utils.dom.Node.ELEMENT_NODE && a.enterDocument()
 };
+//Returns the DOM element into which child components are to be rendered
 LearnBlock.Component.prototype.getContentElement = function () {
     return this.element_
 };
+//Returns true if the component is rendered right-to-left, false otherwise
 LearnBlock.Component.prototype.isRightToLeft = function () {
     return this.rightToLeft_
 };
+//Set is right-to-left
 LearnBlock.Component.prototype.setRightToLeft = function (a) {
     if (this.inDocument_) throw Error(LearnBlock.Component.Error.ALREADY_RENDERED);
     this.rightToLeft_ = a
 };
+//Returns true if the component has children
 LearnBlock.Component.prototype.hasChildren = function () {
     return 0 != this.children_.length
 };
+//Returns the number of children of this component
 LearnBlock.Component.prototype.getChildCount = function () {
     return this.children_.length
 };
+//Returns the child with the given ID, or null if no such child exists
 LearnBlock.Component.prototype.getChild = function (a) {
     return a ? this.childIndex_[a] || null : null
 };
+//Returns the child at the given index, or null if the index is out of bounds
 LearnBlock.Component.prototype.getChildAt = function (a) {
     return this.children_[a] || null
 };
+//Calls the given function on each of this component's children in order
 LearnBlock.Component.prototype.forEachChild = function (a, b) {
     for (var c = 0; c < this.children_.length; c++) a.call(b, this.children_[c], c)
 };
+//Returns the 0-based index of the given child component
 LearnBlock.Component.prototype.indexOfChild = function (a) {
     return this.children_.indexOf(a)
 };
+
+//Utils aria
 LearnBlock.utils.aria = {};
+//ARIA states/properties prefix
 LearnBlock.utils.aria.ARIA_PREFIX_ = "aria-";
+//ARIA role attribute
 LearnBlock.utils.aria.ROLE_ATTRIBUTE_ = "role";
-LearnBlock.utils.aria.Role = {
-    ALERT: "alert",
-    ALERTDIALOG: "alertdialog",
-    APPLICATION: "application",
-    ARTICLE: "article",
-    BANNER: "banner",
-    BUTTON: "button",
-    CHECKBOX: "checkbox",
-    COLUMNHEADER: "columnheader",
-    COMBOBOX: "combobox",
-    COMPLEMENTARY: "complementary",
-    CONTENTINFO: "contentinfo",
-    DEFINITION: "definition",
-    DIALOG: "dialog",
-    DIRECTORY: "directory",
-    DOCUMENT: "document",
-    FORM: "form",
-    GRID: "grid",
-    GRIDCELL: "gridcell",
-    GROUP: "group",
-    HEADING: "heading",
-    IMG: "img",
-    LINK: "link",
-    LIST: "list",
-    LISTBOX: "listbox",
-    LISTITEM: "listitem",
-    LOG: "log",
-    MAIN: "main",
-    MARQUEE: "marquee",
-    MATH: "math",
-    MENU: "menu",
-    MENUBAR: "menubar",
-    MENUITEM: "menuitem",
-    MENUITEMCHECKBOX: "menuitemcheckbox",
-    MENUITEMRADIO: "menuitemradio",
-    NAVIGATION: "navigation",
-    NOTE: "note",
-    OPTION: "option",
-    PRESENTATION: "presentation",
-    PROGRESSBAR: "progressbar",
-    RADIO: "radio",
-    RADIOGROUP: "radiogroup",
-    REGION: "region",
-    ROW: "row",
-    ROWGROUP: "rowgroup",
-    ROWHEADER: "rowheader",
-    SCROLLBAR: "scrollbar",
-    SEARCH: "search",
-    SEPARATOR: "separator",
-    SLIDER: "slider",
-    SPINBUTTON: "spinbutton",
-    STATUS: "status",
-    TAB: "tab",
-    TABLE: "table",
-    TABLIST: "tablist",
-    TABPANEL: "tabpanel",
-    TEXTBOX: "textbox",
-    TEXTINFO: "textinfo",
-    TIMER: "timer",
-    TOOLBAR: "toolbar",
-    TOOLTIP: "tooltip",
-    TREE: "tree",
-    TREEGRID: "treegrid",
-    TREEITEM: "treeitem"
-};
-LearnBlock.utils.aria.State = {
-    ACTIVEDESCENDANT: "activedescendant",
-    ATOMIC: "atomic",
-    AUTOCOMPLETE: "autocomplete",
-    BUSY: "busy",
-    CHECKED: "checked",
-    COLINDEX: "colindex",
-    CONTROLS: "controls",
-    DESCRIBEDBY: "describedby",
-    DISABLED: "disabled",
-    DROPEFFECT: "dropeffect",
-    EXPANDED: "expanded",
-    FLOWTO: "flowto",
-    GRABBED: "grabbed",
-    HASPOPUP: "haspopup",
-    HIDDEN: "hidden",
-    INVALID: "invalid",
-    LABEL: "label",
-    LABELLEDBY: "labelledby",
-    LEVEL: "level",
-    LIVE: "live",
-    MULTILINE: "multiline",
-    MULTISELECTABLE: "multiselectable",
-    ORIENTATION: "orientation",
-    OWNS: "owns",
-    POSINSET: "posinset",
-    PRESSED: "pressed",
-    READONLY: "readonly",
-    RELEVANT: "relevant",
-    REQUIRED: "required",
-    ROWINDEX: "rowindex",
-    SELECTED: "selected",
-    SETSIZE: "setsize",
-    SORT: "sort",
-    VALUEMAX: "valuemax",
-    VALUEMIN: "valuemin",
-    VALUENOW: "valuenow",
-    VALUETEXT: "valuetext"
-};
+//ARIA role values
+LearnBlock.utils.aria.Role = {};
+//ARIA states and properties
+LearnBlock.utils.aria.State = {};
+//Sets the role of an element
 LearnBlock.utils.aria.setRole = function (a, b) {
     b ? a.setAttribute(LearnBlock.utils.aria.ROLE_ATTRIBUTE_, b) : LearnBlock.utils.aria.removeRole(a)
 };
+//Gets role of an element
 LearnBlock.utils.aria.getRole = function (a) {
     return a.getAttribute(LearnBlock.utils.aria.ROLE_ATTRIBUTE_) || null
 };
+//Removes role of an element
 LearnBlock.utils.aria.removeRole = function (a) {
     a.removeAttribute(LearnBlock.utils.aria.ROLE_ATTRIBUTE_)
 };
+//Sets the state or property of an element
 LearnBlock.utils.aria.setState = function (a, b, c) {
     Array.isArray(c) && (c = c.join(" "));
     b = LearnBlock.utils.aria.getAriaAttributeName_(b);
     a.setAttribute(b, c)
 };
+//Adds the 'aria-' prefix to ariaName
 LearnBlock.utils.aria.getAriaAttributeName_ = function (a) {
     return LearnBlock.utils.aria.ARIA_PREFIX_ + a
-};
+}
+
+
+;
 LearnBlock.Menu = function () {
     LearnBlock.Component.call(this);
     this.highlightedIndex_ = -1
@@ -7845,11 +7820,13 @@ LearnBlock.inject.bindDocumentEvents_ = function () {
     LearnBlock.documentEventsBound_ = !0
 };
 
-
+//Class for a single action
 LearnBlock.Action = function (a, b) {
     this.name = a;
     this.desc = b
 };
+
+//Class for an AST node
 LearnBlock.ASTNode = function (a, b, c) {
     if (!b) throw Error("Cannot create a node without a location.");
     this.type_ = a;
@@ -7857,6 +7834,7 @@ LearnBlock.ASTNode = function (a, b, c) {
     this.location_ = b;
     this.processParams_(c || null)
 };
+//Object holding different types for an AST node
 LearnBlock.ASTNode.types = {
     FIELD: "field",
     BLOCK: "block",
@@ -7867,7 +7845,9 @@ LearnBlock.ASTNode.types = {
     STACK: "stack",
     WORKSPACE: "workspace"
 };
+//The default y offset to use when moving the cursor
 LearnBlock.ASTNode.DEFAULT_OFFSET_Y = -20;
+//Whether an AST node of the given type points to a connection
 LearnBlock.ASTNode.isConnectionType_ = function (a) {
     switch (a) {
         case LearnBlock.ASTNode.types.PREVIOUS:
@@ -7878,41 +7858,53 @@ LearnBlock.ASTNode.isConnectionType_ = function (a) {
     }
     return !1
 };
+//Creates an AST node pointing to a field
 LearnBlock.ASTNode.createFieldNode = function (a) {
     return new LearnBlock.ASTNode(LearnBlock.ASTNode.types.FIELD, a)
 };
+//Creates an AST node pointing to a connection
 LearnBlock.ASTNode.createConnectionNode = function (a) {
     return a ? a.type == LearnBlock.INPUT_VALUE || a.type == LearnBlock.NEXT_STATEMENT && a.getParentInput() ? LearnBlock.ASTNode.createInputNode(a.getParentInput()) : a.type == LearnBlock.NEXT_STATEMENT ? new LearnBlock.ASTNode(LearnBlock.ASTNode.types.NEXT, a) : a.type == LearnBlock.OUTPUT_VALUE ? new LearnBlock.ASTNode(LearnBlock.ASTNode.types.OUTPUT, a) : a.type == LearnBlock.PREVIOUS_STATEMENT ? new LearnBlock.ASTNode(LearnBlock.ASTNode.types.PREVIOUS, a) : null : null
 };
+//Creates an AST node pointing to an input
 LearnBlock.ASTNode.createInputNode = function (a) {
     return a ? new LearnBlock.ASTNode(LearnBlock.ASTNode.types.INPUT, a.connection) : null
 };
+//Creates an AST node pointing to a block
 LearnBlock.ASTNode.createBlockNode = function (a) {
     return new LearnBlock.ASTNode(LearnBlock.ASTNode.types.BLOCK, a)
 };
+//Creates an AST node of type stack
 LearnBlock.ASTNode.createStackNode = function (a) {
     return new LearnBlock.ASTNode(LearnBlock.ASTNode.types.STACK, a)
 };
+//Creates an AST node pointing to a workspace
 LearnBlock.ASTNode.createWorkspaceNode = function (a, b) {
     return new LearnBlock.ASTNode(LearnBlock.ASTNode.types.WORKSPACE, a, {
         wsCoordinate: b
     })
 };
+//Parses the optional parameters
 LearnBlock.ASTNode.prototype.processParams_ = function (a) {
     a && a.wsCoordinate && (this.wsCoordinate_ = a.wsCoordinate)
 };
+//Gets the value pointed to by this node
 LearnBlock.ASTNode.prototype.getLocation = function () {
     return this.location_
 };
+//The type of the current location
 LearnBlock.ASTNode.prototype.getType = function () {
     return this.type_
 };
+//The coordinate on the workspace
 LearnBlock.ASTNode.prototype.getWsCoordinate = function () {
     return this.wsCoordinate_
 };
+//Whether the node points to a connection
 LearnBlock.ASTNode.prototype.isConnection = function () {
     return this.isConnection_
 };
+//Gets either the previous editable field, or get the first editable field for the given input
 LearnBlock.ASTNode.prototype.findPreviousEditableField_ = function (a, b, c) {
     b = b.fieldRow;
     a = b.indexOf(a);
@@ -7920,6 +7912,7 @@ LearnBlock.ASTNode.prototype.findPreviousEditableField_ = function (a, b, c) {
         if (a.EDITABLE) return b = a, LearnBlock.ASTNode.createFieldNode(b);
     return null
 };
+//Given an input, finds the next editable field or an input with a non null connection in the same block
 LearnBlock.ASTNode.prototype.findNextForInput_ = function () {
     var a = this.location_.getParentInput(),
         b = a.getSourceBlock();
@@ -7931,6 +7924,7 @@ LearnBlock.ASTNode.prototype.findNextForInput_ = function () {
     }
     return null
 };
+//Given a field, finds the next editable field or an input with a non null connection in the same block
 LearnBlock.ASTNode.prototype.findNextForField_ = function () {
     var a = this.location_,
         b = a.getParentInput(),
@@ -7946,6 +7940,7 @@ LearnBlock.ASTNode.prototype.findNextForField_ = function () {
     }
     return null
 };
+//Given an input, finds the previous editable field or an input with a non null connection in the same block
 LearnBlock.ASTNode.prototype.findPrevForInput_ = function () {
     for (var a = this.location_.getParentInput(), b = a.getSourceBlock(), c = b.inputList.indexOf(a), d; d = b.inputList[c]; c--) {
         if (d.connection && d !== a) return LearnBlock.ASTNode.createInputNode(d);
@@ -7955,6 +7950,7 @@ LearnBlock.ASTNode.prototype.findPrevForInput_ = function () {
     }
     return null
 };
+//Given a field, finds the previous editable field or an input with a non null connection in the same block
 LearnBlock.ASTNode.prototype.findPrevForField_ = function () {
     var a = this.location_,
         b = a.getParentInput(),
@@ -7971,6 +7967,7 @@ LearnBlock.ASTNode.prototype.findPrevForField_ = function () {
     }
     return null
 };
+//Navigates between stacks of blocks on the workspace
 LearnBlock.ASTNode.prototype.navigateBetweenStacks_ = function (a) {
     var b = this.getLocation();
     b instanceof LearnBlock.Block || (b = b.getSourceBlock());
@@ -7981,16 +7978,19 @@ LearnBlock.ASTNode.prototype.navigateBetweenStacks_ = function (a) {
         if (c.id == e.id) return a = d + (a ? 1 : -1), -1 == a || a == b.length ? null : LearnBlock.ASTNode.createStackNode(b[a]);
     throw Error("Couldn't find " + (a ? "next" : "previous") + " stack?!");
 };
+//Finds the top most AST node for a given block
 LearnBlock.ASTNode.prototype.findTopASTNodeForBlock_ = function (a) {
     var b = a.previousConnection || a.outputConnection;
     return b ? LearnBlock.ASTNode.createConnectionNode(b) : LearnBlock.ASTNode.createBlockNode(a)
 };
+//Gets the AST node pointing to the input that the block is nested under or if the block is not nested then get the stack AST node
 LearnBlock.ASTNode.prototype.getOutAstNodeForBlock_ = function (a) {
     if (!a) return null;
     a = a.getTopStackBlock();
     var b = a.previousConnection || a.outputConnection;
     return b && b.targetConnection && b.targetConnection.getParentInput() ? LearnBlock.ASTNode.createInputNode(b.targetConnection.getParentInput()) : LearnBlock.ASTNode.createStackNode(a)
 };
+//Finds the first editable field or input with a connection on a given block
 LearnBlock.ASTNode.prototype.findFirstFieldOrInput_ = function (a) {
     a = a.inputList;
     for (var b = 0, c; c = a[b]; b++) {
@@ -8000,6 +8000,7 @@ LearnBlock.ASTNode.prototype.findFirstFieldOrInput_ = function (a) {
     }
     return null
 };
+//Finds the element to the right of the current element in the AST
 LearnBlock.ASTNode.prototype.next = function () {
     switch (this.type_) {
         case LearnBlock.ASTNode.types.STACK:
@@ -8021,6 +8022,7 @@ LearnBlock.ASTNode.prototype.next = function () {
     }
     return null
 };
+//Finds the element one level below and all the way to the left of the current location
 LearnBlock.ASTNode.prototype["in"] = function () {
     switch (this.type_) {
         case LearnBlock.ASTNode.types.WORKSPACE:
@@ -8036,6 +8038,7 @@ LearnBlock.ASTNode.prototype["in"] = function () {
     }
     return null
 };
+//Finds the element to the left of the current element in the AST
 LearnBlock.ASTNode.prototype.prev = function () {
     switch (this.type_) {
         case LearnBlock.ASTNode.types.STACK:
@@ -8057,6 +8060,7 @@ LearnBlock.ASTNode.prototype.prev = function () {
     }
     return null
 };
+//Finds the next element that is one position above and all the way to the left of the current location
 LearnBlock.ASTNode.prototype.out = function () {
     switch (this.type_) {
         case LearnBlock.ASTNode.types.STACK:
@@ -8078,168 +8082,60 @@ LearnBlock.ASTNode.prototype.out = function () {
     }
     return null
 };
-LearnBlock.utils.KeyCodes = {
-    WIN_KEY_FF_LINUX: 0,
-    MAC_ENTER: 3,
-    BACKSPACE: 8,
-    TAB: 9,
-    NUM_CENTER: 12,
-    ENTER: 13,
-    SHIFT: 16,
-    CTRL: 17,
-    ALT: 18,
-    PAUSE: 19,
-    CAPS_LOCK: 20,
-    ESC: 27,
-    SPACE: 32,
-    PAGE_UP: 33,
-    PAGE_DOWN: 34,
-    END: 35,
-    HOME: 36,
-    LEFT: 37,
-    UP: 38,
-    RIGHT: 39,
-    DOWN: 40,
-    PLUS_SIGN: 43,
-    PRINT_SCREEN: 44,
-    INSERT: 45,
-    DELETE: 46,
-    ZERO: 48,
-    ONE: 49,
-    TWO: 50,
-    THREE: 51,
-    FOUR: 52,
-    FIVE: 53,
-    SIX: 54,
-    SEVEN: 55,
-    EIGHT: 56,
-    NINE: 57,
-    FF_SEMICOLON: 59,
-    FF_EQUALS: 61,
-    FF_DASH: 173,
-    FF_HASH: 163,
-    QUESTION_MARK: 63,
-    AT_SIGN: 64,
-    A: 65,
-    B: 66,
-    C: 67,
-    D: 68,
-    E: 69,
-    F: 70,
-    G: 71,
-    H: 72,
-    I: 73,
-    J: 74,
-    K: 75,
-    L: 76,
-    M: 77,
-    N: 78,
-    O: 79,
-    P: 80,
-    Q: 81,
-    R: 82,
-    S: 83,
-    T: 84,
-    U: 85,
-    V: 86,
-    W: 87,
-    X: 88,
-    Y: 89,
-    Z: 90,
-    META: 91,
-    WIN_KEY_RIGHT: 92,
-    CONTEXT_MENU: 93,
-    NUM_ZERO: 96,
-    NUM_ONE: 97,
-    NUM_TWO: 98,
-    NUM_THREE: 99,
-    NUM_FOUR: 100,
-    NUM_FIVE: 101,
-    NUM_SIX: 102,
-    NUM_SEVEN: 103,
-    NUM_EIGHT: 104,
-    NUM_NINE: 105,
-    NUM_MULTIPLY: 106,
-    NUM_PLUS: 107,
-    NUM_MINUS: 109,
-    NUM_PERIOD: 110,
-    NUM_DIVISION: 111,
-    F1: 112,
-    F2: 113,
-    F3: 114,
-    F4: 115,
-    F5: 116,
-    F6: 117,
-    F7: 118,
-    F8: 119,
-    F9: 120,
-    F10: 121,
-    F11: 122,
-    F12: 123,
-    NUMLOCK: 144,
-    SCROLL_LOCK: 145,
-    FIRST_MEDIA_KEY: 166,
-    LAST_MEDIA_KEY: 183,
-    SEMICOLON: 186,
-    DASH: 189,
-    EQUALS: 187,
-    COMMA: 188,
-    PERIOD: 190,
-    SLASH: 191,
-    APOSTROPHE: 192,
-    TILDE: 192,
-    SINGLE_QUOTE: 222,
-    OPEN_SQUARE_BRACKET: 219,
-    BACKSLASH: 220,
-    CLOSE_SQUARE_BRACKET: 221,
-    WIN_KEY: 224,
-    MAC_FF_META: 224,
-    MAC_WK_CMD_LEFT: 91,
-    MAC_WK_CMD_RIGHT: 93,
-    WIN_IME: 229,
-    VK_NONAME: 252,
-    PHANTOM: 255
-};
+
+//Key codes for common characters
+LearnBlock.utils.KeyCodes = {};
+
+//Holds the serialized key to key action mapping
 LearnBlock.user = {};
 LearnBlock.user.keyMap = {};
 LearnBlock.user.keyMap.map_ = {};
+//Object holding valid modifiers
 LearnBlock.user.keyMap.modifierKeys = {
     SHIFT: "Shift",
     CONTROL: "Control",
     ALT: "Alt",
     META: "Meta"
 };
+//Updates the key map to contain the new action
 LearnBlock.user.keyMap.setActionForKey = function (a, b) {
     var c = LearnBlock.user.keyMap.getKeyByAction(b);
     c && delete LearnBlock.user.keyMap.map_[c];
     LearnBlock.user.keyMap.map_[a] = b
 };
+//Creates a new key map
 LearnBlock.user.keyMap.setKeyMap = function (a) {
     LearnBlock.user.keyMap.map_ = a
 };
+//Gets the current key map
 LearnBlock.user.keyMap.getKeyMap = function () {
     var a = {};
     LearnBlock.utils.object.mixin(a, LearnBlock.user.keyMap.map_);
     return a
 };
+//Gets the action by the serialized key code
 LearnBlock.user.keyMap.getActionByKeyCode = function (a) {
     return LearnBlock.user.keyMap.map_[a]
 };
+//Gets the serialized key that corresponds to the action
 LearnBlock.user.keyMap.getKeyByAction = function (a) {
     for (var b = Object.keys(LearnBlock.user.keyMap.map_), c = 0, d; d = b[c]; c++)
         if (LearnBlock.user.keyMap.map_[d].name === a.name) return d;
     return null
 };
+//Serializes the key event
 LearnBlock.user.keyMap.serializeKeyEvent = function (a) {
     for (var b = LearnBlock.utils.object.values(LearnBlock.user.keyMap.modifierKeys), c = "", d = 0, e; e = b[d]; d++) a.getModifierState(e) && (c += e);
     return c += a.keyCode
 };
+//Creates the serialized key code that will be used in the key map
 LearnBlock.user.keyMap.createSerializedKey = function (a, b) {
     for (var c = "", d = LearnBlock.utils.object.values(LearnBlock.user.keyMap.modifierKeys), e = 0, f; f = b[e]; e++)
         if (-1 < d.indexOf(f)) c += f;
         else throw Error(f + " is not a valid modifier key.");
     return c + a
 };
+//Creates the default key map
 LearnBlock.user.keyMap.createDefaultKeyMap = function () {
     var a = {},
         b = LearnBlock.user.keyMap.createSerializedKey(LearnBlock.utils.KeyCodes.K, [LearnBlock.user.keyMap.modifierKeys.CONTROL]);
@@ -8257,12 +8153,15 @@ LearnBlock.user.keyMap.createDefaultKeyMap = function () {
     a[b] = LearnBlock.navigation.ACTION_TOGGLE_KEYBOARD_NAV;
     return a
 };
+
+//Class for navigation
 LearnBlock.navigation = {};
 LearnBlock.navigation.loggingCallback = null;
 LearnBlock.navigation.STATE_FLYOUT = 1;
 LearnBlock.navigation.STATE_WS = 2;
 LearnBlock.navigation.STATE_TOOLBOX = 3;
 LearnBlock.navigation.currentState_ = LearnBlock.navigation.STATE_WS;
+//Object holding default action names
 LearnBlock.navigation.actionNames = {
     PREVIOUS: "previous",
     NEXT: "next",
@@ -8275,11 +8174,13 @@ LearnBlock.navigation.actionNames = {
     EXIT: "exit",
     TOGGLE_KEYBOARD_NAV: "toggle_keyboard_nav"
 };
+//If a toolbox exists, sets the navigation state to toolbox and select the first category in the toolbox
 LearnBlock.navigation.focusToolbox_ = function () {
     var a = LearnBlock.getMainWorkspace(),
         b = a.getToolbox();
     b && (LearnBlock.navigation.currentState_ = LearnBlock.navigation.STATE_TOOLBOX, LearnBlock.navigation.resetFlyout_(!1), a.getMarker().getCurNode() || LearnBlock.navigation.markAtCursor_(), b.selectFirstCategory())
 };
+//Changes focus to the flyout
 LearnBlock.navigation.focusFlyout_ = function () {
     LearnBlock.navigation.currentState_ = LearnBlock.navigation.STATE_FLYOUT;
     var a = LearnBlock.getMainWorkspace();
@@ -8288,6 +8189,7 @@ LearnBlock.navigation.focusFlyout_ = function () {
     a.getMarker().getCurNode() || LearnBlock.navigation.markAtCursor_();
     b && b.getWorkspace() && (a = b.getWorkspace().getTopBlocks(!0), 0 < a.length && (a = a[0], a = LearnBlock.ASTNode.createStackNode(a), LearnBlock.navigation.getFlyoutCursor_().setCurNode(a)))
 };
+//Finds where the cursor should go on the workspace
 LearnBlock.navigation.focusWorkspace_ = function () {
     LearnBlock.hideChaff();
     var a = LearnBlock.getMainWorkspace(),
@@ -8298,12 +8200,14 @@ LearnBlock.navigation.focusWorkspace_ = function () {
     LearnBlock.navigation.currentState_ = LearnBlock.navigation.STATE_WS;
     0 < d.length ? b.setCurNode(LearnBlock.navigation.getTopNode(d[0])) : (c = new LearnBlock.utils.Coordinate(100, 100), a = LearnBlock.ASTNode.createWorkspaceNode(a, c), b.setCurNode(a))
 };
+//Gets the cursor from the flyouts workspace
 LearnBlock.navigation.getFlyoutCursor_ = function () {
     var a = LearnBlock.getMainWorkspace(),
         b = null;
     a.rendered && (b = (a = (b = a.getToolbox()) ? b.flyout_ : a.getFlyout()) ? a.workspace_.getCursor() : null);
     return b
 };
+//If there is a marked connection, tries connecting the block from the flyout to that connection
 LearnBlock.navigation.insertFromFlyout = function () {
     var a = LearnBlock.getMainWorkspace(),
         b = a.getFlyout();
@@ -8313,9 +8217,11 @@ LearnBlock.navigation.insertFromFlyout = function () {
             LearnBlock.navigation.removeMark_()
     } else LearnBlock.navigation.warn_("Trying to insert from the flyout when the flyout does not  exist or is not visible")
 };
+//Resets flyout information, and optionally closes the flyout
 LearnBlock.navigation.resetFlyout_ = function (a) {
     LearnBlock.navigation.getFlyoutCursor_() && (LearnBlock.navigation.getFlyoutCursor_().hide(), a && LearnBlock.getMainWorkspace().getFlyout().hide())
 };
+//Warns the user if the cursor or marker is on a type that can not be connected
 LearnBlock.navigation.modifyWarn_ = function () {
     var a = LearnBlock.getMainWorkspace().getMarker().getCurNode(),
         b = LearnBlock.getMainWorkspace().getCursor().getCurNode();
@@ -8326,12 +8232,14 @@ LearnBlock.navigation.modifyWarn_ = function () {
     return a == LearnBlock.ASTNode.types.FIELD ? (LearnBlock.navigation.warn_("Should not have been able to mark a field."), !1) : a == LearnBlock.ASTNode.types.BLOCK ? (LearnBlock.navigation.warn_("Should not have been able to mark a block."),
         !1) : a == LearnBlock.ASTNode.types.STACK ? (LearnBlock.navigation.warn_("Should not have been able to mark a stack."), !1) : b == LearnBlock.ASTNode.types.FIELD ? (LearnBlock.navigation.warn_("Cannot attach a field to anything else."), !1) : b == LearnBlock.ASTNode.types.WORKSPACE ? (LearnBlock.navigation.warn_("Cannot attach a workspace to anything else."), !1) : !0
 };
+//Disconnects the block from its parent and moves to the position of the workspace node
 LearnBlock.navigation.moveBlockToWorkspace_ = function (a, b) {
     if (a.isShadow()) return LearnBlock.navigation.warn_("Cannot move a shadow block to the workspace."), !1;
     a.getParent() && a.unplug(!1);
     a.moveTo(b.getWsCoordinate());
     return !0
 };
+//Handles the modifier key
 LearnBlock.navigation.modify_ = function () {
     var a = LearnBlock.getMainWorkspace().getMarker().getCurNode(),
         b = LearnBlock.getMainWorkspace().getCursor().getCurNode();
@@ -8347,23 +8255,28 @@ LearnBlock.navigation.modify_ = function () {
     LearnBlock.navigation.warn_("Unexpected state in LearnBlock.navigation.modify_.");
     return !1
 };
+//If one of the connections source blocks is a child of the other, disconnects the child
 LearnBlock.navigation.disconnectChild_ = function (a, b) {
     var c = a.getSourceBlock(),
         d = b.getSourceBlock();
     c.getRootBlock() == d.getRootBlock() && (-1 < c.getDescendants(!1).indexOf(d) ? LearnBlock.navigation.getInferiorConnection_(b).disconnect() : LearnBlock.navigation.getInferiorConnection_(a).disconnect())
 };
+//If the two blocks are compatible, moves the moving connection to the target connection and connect them
 LearnBlock.navigation.moveAndConnect_ = function (a, b) {
     if (!a || !b) return !1;
     var c = a.getSourceBlock();
     return b.canConnectWithReason_(a) == LearnBlock.Connection.CAN_CONNECT ? (LearnBlock.navigation.disconnectChild_(a, b), b.isSuperior() || c.getRootBlock().positionNearConnection(a, b), b.connect(a), !0) : !1
 };
+//If the given connection is superior, finds the inferior connection on the source block
 LearnBlock.navigation.getInferiorConnection_ = function (a) {
     var b = a.getSourceBlock();
     return a.isSuperior() ? b.previousConnection ? b.previousConnection : b.outputConnection ? b.outputConnection : null : a
 };
+//If the given connection is inferior, tries to find a superior connection to connect to
 LearnBlock.navigation.getSuperiorConnection_ = function (a) {
     return a.isSuperior() ? a : a.targetConnection ? a.targetConnection : null
 };
+//Tries to connect the  given connections
 LearnBlock.navigation.connect_ = function (a, b) {
     if (!a || !b) return !1;
     var c = LearnBlock.navigation.getInferiorConnection_(a),
@@ -8378,6 +8291,7 @@ LearnBlock.navigation.connect_ = function (a, b) {
     }
     return !1
 };
+//Tries to connect the given block to the destination connection
 LearnBlock.navigation.insertBlock = function (a, b) {
     switch (b.type) {
         case LearnBlock.PREVIOUS_STATEMENT:
@@ -8400,6 +8314,7 @@ LearnBlock.navigation.insertBlock = function (a, b) {
     LearnBlock.navigation.warn_("This block can not be inserted at the marked location.");
     return !1
 };
+//Disconnects the connection that the cursor is pointing to, and bumps blocks
 LearnBlock.navigation.disconnectBlocks_ = function () {
     var a = LearnBlock.getMainWorkspace(),
         b = a.getCursor().getCurNode();
@@ -8408,25 +8323,31 @@ LearnBlock.navigation.disconnectBlocks_ = function () {
         c.isConnected() ? (b = c.isSuperior() ? c : c.targetConnection, c = c.isSuperior() ? c.targetConnection : c, c.getSourceBlock().isShadow() ? LearnBlock.navigation.log_("Cannot disconnect a shadow block") : (b.disconnect(), c.bumpAwayFrom_(b), b.getSourceBlock().getRootBlock().bringToFront(), b = LearnBlock.ASTNode.createConnectionNode(b), a.getCursor().setCurNode(b))) : LearnBlock.navigation.log_("Cannot disconnect unconnected connection")
     } else LearnBlock.navigation.log_("Cannot disconnect blocks when the cursor is not on a connection")
 };
+//Moves the marker to the cursor's current location
 LearnBlock.navigation.markAtCursor_ = function () {
     var a = LearnBlock.getMainWorkspace();
     a.getMarker().setCurNode(a.getCursor().getCurNode())
 };
+//Removes the marker from its current location and hide it
 LearnBlock.navigation.removeMark_ = function () {
     var a = LearnBlock.getMainWorkspace();
     a.getMarker().setCurNode(null);
     a.getMarker().hide()
 };
+//Sets the current navigation state
 LearnBlock.navigation.setState = function (a) {
     LearnBlock.navigation.currentState_ = a
 };
+//Finds the source block of the location on a given node
 LearnBlock.navigation.getSourceBlock_ = function (a) {
     return a ? a.getType() === LearnBlock.ASTNode.types.BLOCK ? a.getLocation() : a.getType() === LearnBlock.ASTNode.types.STACK ? a.getLocation() : a.getType() === LearnBlock.ASTNode.types.WORKSPACE ? null : a.getLocation().getSourceBlock() : null
 };
+//Gets the top node on a block
 LearnBlock.navigation.getTopNode = function (a) {
     var b = a.previousConnection || a.outputConnection;
     return b ? LearnBlock.ASTNode.createConnectionNode(b) : LearnBlock.ASTNode.createBlockNode(a)
 };
+//Before a block is deleted, moves the cursor to the appropriate position
 LearnBlock.navigation.moveCursorOnBlockDelete = function (a) {
     var b = LearnBlock.getMainWorkspace();
     if (b && (b = b.getCursor())) {
@@ -8435,6 +8356,7 @@ LearnBlock.navigation.moveCursorOnBlockDelete = function (a) {
         c === a ? c.getParent() ? (a = c.previousConnection || c.outputConnection) && b.setCurNode(LearnBlock.ASTNode.createConnectionNode(a.targetConnection)) : b.setCurNode(LearnBlock.ASTNode.createWorkspaceNode(c.workspace, c.getRelativeToSurfaceXY())) : -1 < a.getChildren(!1).indexOf(c) && b.setCurNode(LearnBlock.ASTNode.createWorkspaceNode(c.workspace, c.getRelativeToSurfaceXY()))
     }
 };
+//When a block that the cursor is on is mutated, moves the cursor to the block level
 LearnBlock.navigation.moveCursorOnBlockMutation = function (a) {
     var b = LearnBlock.getMainWorkspace().getCursor();
     if (b) {
@@ -8443,9 +8365,11 @@ LearnBlock.navigation.moveCursorOnBlockMutation = function (a) {
         c === a && b.setCurNode(LearnBlock.ASTNode.createBlockNode(c))
     }
 };
+//Enables accessibility mode
 LearnBlock.navigation.enableKeyboardAccessibility = function () {
     LearnBlock.keyboardAccessibilityMode || (LearnBlock.keyboardAccessibilityMode = !0, LearnBlock.navigation.focusWorkspace_())
 };
+//Disables accessibility mode
 LearnBlock.navigation.disableKeyboardAccessibility = function () {
     if (LearnBlock.keyboardAccessibilityMode) {
         var a = LearnBlock.getMainWorkspace();
@@ -8455,25 +8379,31 @@ LearnBlock.navigation.disableKeyboardAccessibility = function () {
         LearnBlock.navigation.getFlyoutCursor_() && LearnBlock.navigation.getFlyoutCursor_().hide()
     }
 };
+//Navigation log handler
 LearnBlock.navigation.log_ = function (a) {
     LearnBlock.navigation.loggingCallback ? LearnBlock.navigation.loggingCallback("log", a) : console.log(a)
 };
+//Navigation warning handler
 LearnBlock.navigation.warn_ = function (a) {
     LearnBlock.navigation.loggingCallback ? LearnBlock.navigation.loggingCallback("warn", a) : console.warn(a)
 };
+//Navigation error handler
 LearnBlock.navigation.error_ = function (a) {
     LearnBlock.navigation.loggingCallback ? LearnBlock.navigation.loggingCallback("error", a) : console.error(a)
 };
+//Handler for all the keyboard navigation events
 LearnBlock.navigation.onKeyPress = function (a) {
     a = LearnBlock.user.keyMap.serializeKeyEvent(a);
     return (a = LearnBlock.user.keyMap.getActionByKeyCode(a)) ? LearnBlock.navigation.onBlocklyAction(a) : !1
 };
+//Executes any actions on the flyout, workspace, or toolbox that correspond to the given action
 LearnBlock.navigation.onBlocklyAction = function (a) {
     var b = LearnBlock.getMainWorkspace().options.readOnly,
         c = !1;
     LearnBlock.keyboardAccessibilityMode ? b ? -1 < LearnBlock.navigation.READONLY_ACTION_LIST.indexOf(a) && (c = LearnBlock.navigation.handleActions_(a)) : c = LearnBlock.navigation.handleActions_(a) : a.name === LearnBlock.navigation.actionNames.TOGGLE_KEYBOARD_NAV && (LearnBlock.navigation.enableKeyboardAccessibility(), c = !0);
     return c
 };
+//Handles the action or dispatches to the appropriate action handler
 LearnBlock.navigation.handleActions_ = function (a) {
     var b = LearnBlock.getMainWorkspace();
     if (a.name === LearnBlock.navigation.actionNames.TOGGLE_KEYBOARD_NAV) return LearnBlock.navigation.disableKeyboardAccessibility(), !0;
@@ -8488,6 +8418,7 @@ LearnBlock.navigation.handleActions_ = function (a) {
     }
     return LearnBlock.navigation.currentState_ === LearnBlock.navigation.STATE_FLYOUT ? LearnBlock.navigation.flyoutOnAction_(a) : LearnBlock.navigation.currentState_ === LearnBlock.navigation.STATE_TOOLBOX ? LearnBlock.navigation.toolboxOnAction_(a) : !1
 };
+//Handles all actions performed on the workspace
 LearnBlock.navigation.workspaceOnAction_ = function (a) {
     var b = LearnBlock.getMainWorkspace();
     switch (a.name) {
@@ -8510,6 +8441,7 @@ LearnBlock.navigation.workspaceOnAction_ = function (a) {
             return !1
     }
 };
+//Handles all actions performed on the flyout
 LearnBlock.navigation.flyoutOnAction_ = function (a) {
     switch (a.name) {
         case LearnBlock.navigation.actionNames.PREVIOUS:
@@ -8527,16 +8459,19 @@ LearnBlock.navigation.flyoutOnAction_ = function (a) {
             return !1
     }
 };
+//Handles all actions performed on the toolbox
 LearnBlock.navigation.toolboxOnAction_ = function (a) {
     if (a.name === LearnBlock.navigation.actionNames.EXIT) return LearnBlock.navigation.focusWorkspace_(), !0;
     var b = LearnBlock.getMainWorkspace().getToolbox().onBlocklyAction(a);
     return b || a.name !== LearnBlock.navigation.actionNames.IN ? b : (LearnBlock.navigation.focusFlyout_(), !0)
 };
+//Handles hitting the enter key on the workspace
 LearnBlock.navigation.handleEnterForWS_ = function () {
     var a = LearnBlock.getMainWorkspace().getCursor().getCurNode(),
         b = a.getType();
     b == LearnBlock.ASTNode.types.FIELD ? a.getLocation().showEditor_() : a.isConnection() || b == LearnBlock.ASTNode.types.WORKSPACE ? LearnBlock.navigation.markAtCursor_() : b == LearnBlock.ASTNode.types.BLOCK ? LearnBlock.navigation.warn_("Cannot mark a block.") : b == LearnBlock.ASTNode.types.STACK && LearnBlock.navigation.warn_("Cannot mark a stack.")
 };
+//Navigation actions
 LearnBlock.navigation.ACTION_PREVIOUS = new LearnBlock.Action(LearnBlock.navigation.actionNames.PREVIOUS, "Go to the previous location.");
 LearnBlock.navigation.ACTION_OUT = new LearnBlock.Action(LearnBlock.navigation.actionNames.OUT, "Go to the parent of the current location.");
 LearnBlock.navigation.ACTION_NEXT = new LearnBlock.Action(LearnBlock.navigation.actionNames.NEXT, "Go to the next location.");
@@ -10825,7 +10760,7 @@ LearnBlock.VerticalFlyout.prototype.reflowInternal_ = function () {
     }
 };
 
-
+//Class for a cursor
 LearnBlock.CursorSvg = function (a, b) {
     this.workspace_ = a;
     this.isMarker_ = b;
@@ -10844,9 +10779,11 @@ LearnBlock.CursorSvg.MARKER_COLOR = "#4286f4";
 LearnBlock.CursorSvg.CURSOR_CLASS = "blocklyCursor";
 LearnBlock.CursorSvg.MARKER_CLASS = "blocklyMarker";
 LearnBlock.CursorSvg.prototype.currentCursorSvg = null;
+//Returns the root node of the SVG or null if none exists
 LearnBlock.CursorSvg.prototype.getSvgRoot = function () {
     return this.svgGroup_
 };
+//Creates the DOM element for the cursor
 LearnBlock.CursorSvg.prototype.createDom = function () {
     this.svgGroup_ = LearnBlock.utils.dom.createSvgElement("g", {
         "class": this.isMarker_ ? LearnBlock.CursorSvg.MARKER_CLASS : LearnBlock.CursorSvg.CURSOR_CLASS
@@ -10854,10 +10791,12 @@ LearnBlock.CursorSvg.prototype.createDom = function () {
     this.createCursorSvg_();
     return this.svgGroup_
 };
+//Attaches the SVG root of the cursor to the SVG group of the parent
 LearnBlock.CursorSvg.prototype.setParent_ = function (a) {
     this.isMarker_ ? (this.parent_ && this.parent_.setMarkerSvg(null), a.setMarkerSvg(this.getSvgRoot())) : (this.parent_ && this.parent_.setCursorSvg(null), a.setCursorSvg(this.getSvgRoot()));
     this.parent_ = a
 };
+//Shows the cursor as a combination of the previous connection and block, the output connection and block, or just the block
 LearnBlock.CursorSvg.prototype.showWithBlockPrevOutput_ = function (a) {
     if (a) {
         var b = a.width,
@@ -10869,6 +10808,7 @@ LearnBlock.CursorSvg.prototype.showWithBlockPrevOutput_ = function (a) {
         this.showCurrent_()
     }
 };
+//Shows the visual representation of a workspace coordinate
 LearnBlock.CursorSvg.prototype.showWithCoordinates_ = function (a) {
     var b = a.getWsCoordinate();
     a = b.x;
@@ -10878,6 +10818,7 @@ LearnBlock.CursorSvg.prototype.showWithCoordinates_ = function (a) {
     this.setParent_(this.workspace_);
     this.showCurrent_()
 };
+//Shows the visual representation of a field
 LearnBlock.CursorSvg.prototype.showWithField_ = function (a) {
     a = a.getLocation();
     var b = a.getSize().width,
@@ -10886,6 +10827,7 @@ LearnBlock.CursorSvg.prototype.showWithField_ = function (a) {
     this.setParent_(a);
     this.showCurrent_()
 };
+//Shows the visual representation of an input
 LearnBlock.CursorSvg.prototype.showWithInput_ = function (a) {
     a = a.getLocation();
     var b = a.getSourceBlock();
@@ -10893,6 +10835,7 @@ LearnBlock.CursorSvg.prototype.showWithInput_ = function (a) {
     this.setParent_(b);
     this.showCurrent_()
 };
+//Shows the visual representation of a next connection
 LearnBlock.CursorSvg.prototype.showWithNext_ = function (a) {
     var b = a.getLocation();
     a = b.getSourceBlock();
@@ -10904,6 +10847,7 @@ LearnBlock.CursorSvg.prototype.showWithNext_ = function (a) {
     this.setParent_(a);
     this.showCurrent_()
 };
+//Shows the visual representation of a stack
 LearnBlock.CursorSvg.prototype.showWithStack_ = function (a) {
     a = a.getLocation();
     var b = a.getHeightWidth(),
@@ -10917,16 +10861,19 @@ LearnBlock.CursorSvg.prototype.showWithStack_ = function (a) {
     this.setParent_(a);
     this.showCurrent_()
 };
+//Shows the current cursor
 LearnBlock.CursorSvg.prototype.showCurrent_ = function () {
     this.hide();
     this.currentCursorSvg.style.display = ""
 };
+//Positions the cursor for a block
 LearnBlock.CursorSvg.prototype.positionBlock_ = function (a, b, c) {
     a = LearnBlock.utils.svgPaths.moveBy(-1 * b, c) + LearnBlock.utils.svgPaths.lineOnAxis("V", -1 * b) + LearnBlock.utils.svgPaths.lineOnAxis("H", a + 2 * b) + LearnBlock.utils.svgPaths.lineOnAxis("V", c);
     this.cursorBlock_.setAttribute("d", a);
     this.workspace_.RTL && this.flipRtl_(this.cursorBlock_);
     this.currentCursorSvg = this.cursorBlock_
 };
+//Positions the cursor for an input connection
 LearnBlock.CursorSvg.prototype.positionInput_ = function (a) {
     var b = a.getOffsetInBlock().x;
     a = a.getOffsetInBlock().y;
@@ -10935,24 +10882,28 @@ LearnBlock.CursorSvg.prototype.positionInput_ = function (a) {
     this.cursorInput_.setAttribute("transform", "translate(" + b + "," + a + ")" + (this.workspace_.RTL ? " scale(-1 1)" : ""));
     this.currentCursorSvg = this.cursorInput_
 };
+//Moves and shows the cursor at the specified coordinate in workspace units
 LearnBlock.CursorSvg.prototype.positionLine_ = function (a, b, c) {
     this.cursorSvgLine_.setAttribute("x", a);
     this.cursorSvgLine_.setAttribute("y", b);
     this.cursorSvgLine_.setAttribute("width", c);
     this.currentCursorSvg = this.cursorSvgLine_
 };
+//Positions the cursor for an output connection
 LearnBlock.CursorSvg.prototype.positionOutput_ = function (a, b) {
     var c = LearnBlock.utils.svgPaths.moveBy(a, 0) + LearnBlock.utils.svgPaths.lineOnAxis("h", -1 * (a - this.constants_.PUZZLE_TAB.width)) + LearnBlock.utils.svgPaths.lineOnAxis("v", this.constants_.TAB_OFFSET_FROM_TOP) + this.constants_.PUZZLE_TAB.pathDown + LearnBlock.utils.svgPaths.lineOnAxis("V", b) + LearnBlock.utils.svgPaths.lineOnAxis("H", a);
     this.cursorBlock_.setAttribute("d", c);
     this.workspace_.RTL && this.flipRtl_(this.cursorBlock_);
     this.currentCursorSvg = this.cursorBlock_
 };
+//Positions the cursor for a previous connection
 LearnBlock.CursorSvg.prototype.positionPrevious_ = function (a, b, c) {
     a = LearnBlock.utils.svgPaths.moveBy(-1 * b, c) + LearnBlock.utils.svgPaths.lineOnAxis("V", -1 * b) + LearnBlock.utils.svgPaths.lineOnAxis("H", this.constants_.NOTCH_OFFSET_LEFT) + this.constants_.NOTCH.pathLeft + LearnBlock.utils.svgPaths.lineOnAxis("H", a + 2 * b) + LearnBlock.utils.svgPaths.lineOnAxis("V", c);
     this.cursorBlock_.setAttribute("d", a);
     this.workspace_.RTL && this.flipRtl_(this.cursorBlock_);
     this.currentCursorSvg = this.cursorBlock_
 };
+//Moves and shows the cursor at the specified coordinate in workspace units
 LearnBlock.CursorSvg.prototype.positionRect_ = function (a, b, c, d) {
     this.cursorSvgRect_.setAttribute("x", a);
     this.cursorSvgRect_.setAttribute("y", b);
@@ -10960,19 +10911,23 @@ LearnBlock.CursorSvg.prototype.positionRect_ = function (a, b, c, d) {
     this.cursorSvgRect_.setAttribute("height", d);
     this.currentCursorSvg = this.cursorSvgRect_
 };
+//Flips the SVG paths in RTL
 LearnBlock.CursorSvg.prototype.flipRtl_ = function (a) {
     a.setAttribute("transform", "scale(-1 1)")
 };
+//Hides the cursor
 LearnBlock.CursorSvg.prototype.hide = function () {
     this.cursorSvgLine_.style.display = "none";
     this.cursorSvgRect_.style.display = "none";
     this.cursorInput_.style.display = "none";
     this.cursorBlock_.style.display = "none"
 };
+//Updates the cursor
 LearnBlock.CursorSvg.prototype.draw = function (a) {
     a ? a.getType() === LearnBlock.ASTNode.types.BLOCK ? (a = a.getLocation(), this.showWithBlockPrevOutput_(a)) : a.getType() === LearnBlock.ASTNode.types.OUTPUT ? (a = a.getLocation().getSourceBlock(), this.showWithBlockPrevOutput_(a)) : a.getLocation().type === LearnBlock.INPUT_VALUE ? this.showWithInput_(a) : a.getLocation().type === LearnBlock.NEXT_STATEMENT ? this.showWithNext_(a) : a.getType() === LearnBlock.ASTNode.types.PREVIOUS ? (a = a.getLocation().getSourceBlock(), this.showWithBlockPrevOutput_(a)) :
         a.getType() === LearnBlock.ASTNode.types.FIELD ? this.showWithField_(a) : a.getType() === LearnBlock.ASTNode.types.WORKSPACE ? this.showWithCoordinates_(a) : a.getType() === LearnBlock.ASTNode.types.STACK && this.showWithStack_(a) : this.hide()
 };
+//Creates the cursor SVG
 LearnBlock.CursorSvg.prototype.createCursorSvg_ = function () {
     var a = this.isMarker_ ? LearnBlock.CursorSvg.MARKER_COLOR : LearnBlock.CursorSvg.CURSOR_COLOR;
     this.cursorSvg_ = LearnBlock.utils.dom.createSvgElement("g", {
@@ -11035,32 +10990,42 @@ LearnBlock.CursorSvg.prototype.createCursorSvg_ = function () {
         }, this.cursorBlock_));
     return this.cursorSvg_
 };
+//Dispose of the cursor
 LearnBlock.CursorSvg.prototype.dispose = function () {
     this.svgGroup_ && LearnBlock.utils.dom.removeNode(this.svgGroup_)
 };
 
+//Utils svgPaths
 LearnBlock.utils.svgPaths = {};
+//Creates a string representing the given x, y pair
 LearnBlock.utils.svgPaths.point = function (a, b) {
     return " " + a + "," + b + " "
 };
+//Draws a curbic or quadratic curve
 LearnBlock.utils.svgPaths.curve = function (a, b) {
     return " " + a + b.join("")
 };
+//Moves the cursor to the given position without drawing a line
 LearnBlock.utils.svgPaths.moveTo = function (a, b) {
     return " M " + a + "," + b + " "
 };
+//Moves the cursor to the given position without drawing a line
 LearnBlock.utils.svgPaths.moveBy = function (a, b) {
     return " m " + a + "," + b + " "
 };
+//Draws a line from the current point to the end point
 LearnBlock.utils.svgPaths.lineTo = function (a, b) {
     return " l " + a + "," + b + " "
 };
+//Draws multiple lines connecting all of the given points in order
 LearnBlock.utils.svgPaths.line = function (a) {
     return " l" + a.join("")
 };
+//Draws a horizontal or vertical line
 LearnBlock.utils.svgPaths.lineOnAxis = function (a, b) {
     return " " + a + " " + b + " "
 };
+//Draws an elliptical arc curve
 LearnBlock.utils.svgPaths.arc = function (a, b, c, d) {
     return a + " " + c + " " + c + " " + b + d
 };

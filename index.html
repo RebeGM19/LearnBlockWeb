@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="Styles/styles.css">
     <script src="Scripts/Blocks/workspace.js"></script>
     <script src="Scripts/Blocks/blocks.js"></script>
-    <script src="Scripts/en.js"></script>
+    <script src="Scripts/code.js"></script>
 </head>
 
 <body>
@@ -19,20 +19,10 @@
     <table class="table" id="mainstructure">
         <tr>
             <td>
-                <h1>Zona superior</h1>
+                <h1 id="sup"></h1>
                 <div class="row mb-5">
                     <button type="button" onclick="alert('Crear nuevo bloque')" class="lang" key="bCreateBlock">Crear Nuevo Bloque</button>
-                    <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle lang" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" key="selectLang">Idioma</button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#">
-                                <div id="es" class="translate">Español</div>
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                <div id="en" class="translate">English</div>
-                            </a>
-                        </div>
-                    </div>
+                    <select id="languageMenu"></select>
                 </div>
 
             </td>
@@ -53,7 +43,7 @@
 
 
                 <tr>
-                    <div class="tab-content">
+                    <div class="tab-content" id="content_area">
 
                         <div class="tab-pane" id="python">
                             <p>Python</p>
@@ -79,7 +69,7 @@
                                     <block type="control_wait"></block>
                                 </category>
 
-                                <category name="Operators">
+                                <category name="%{BKY_OPERATORS}">
                                     <block type="operator_add"></block>
                                     <block type="operator_minus"></block>
                                     <block type="operator_mult"></block>
@@ -275,6 +265,7 @@
     </table>
 
 
+   <!--
     <script>
         var workspace = LearnBlock.inject('learnblockDiv', {
             toolbox: document.getElementById('toolbox'),
@@ -283,6 +274,7 @@
         });
 
     </script>
+    -->
     <!-- Scripts Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>

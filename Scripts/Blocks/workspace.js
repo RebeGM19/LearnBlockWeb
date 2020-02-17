@@ -1060,7 +1060,8 @@ LearnBlock.Xml.workspaceToDom = function (a, b) {
     var c = LearnBlock.utils.xml.createElement("xml"),
         d = LearnBlock.Xml.variablesToDom(LearnBlock.Variables.allUsedVarModels(a));
     d.hasChildNodes() && c.appendChild(d);
-    e = a.getTopBlocks(!0);
+    var e = a.getTopBlocks(!0);
+    var f;
     for (d = 0; f = e[d]; d++) c.appendChild(LearnBlock.Xml.blockToDomWithXY(f, b));
     return c
 };
@@ -8210,6 +8211,22 @@ LearnBlock.VariableModel.compareByName = function (a, b) {
 
 //Variables
 LearnBlock.Variables = {};
+LearnBlock.Variables.allUsedVarModels = function (a) {
+    var b = a.getAllBlocks(!1);
+    a = Object.create(null);
+    for (var c = 0; c < b.length; c++) {
+        var d = b[c].getVarModels();
+        if (d)
+            for (var e = 0; e < d.length; e++) {
+                var f = d[e],
+                    g = f.getId();
+                g && (a[g] = f)
+            }
+    }
+    b = [];
+    for (g in a) b.push(a[g]);
+    return b
+};
 //Returns a new variable name that is not yet being used
 LearnBlock.Variables.generateUniqueName = function (a) {
     a = a.getAllVariables();

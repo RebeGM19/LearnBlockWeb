@@ -3,7 +3,7 @@
 //Control blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "control_main",
-    message0: "main",
+    message0: "%{BKY_MAIN}",
     message1: "%1",
     args1: [{
         type: "input_statement",
@@ -12,11 +12,11 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 60
 }, {
     type: "control_if",
-    message0: "if %1",
+    message0: "%{BKY_IF} %1",
     args0: [{
         type: "input_value",
         name: "IF",
-        check: "Boolean"
+        check: null
     }],
     message1: "%1",
     args1: [{
@@ -28,11 +28,11 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 60
 }, {
     type: "control_elseif",
-    message0: "else if %1",
+    message0: "%{BKY_ELSEIF} %1",
     args0: [{
         type: "input_value",
         name: "IF",
-        check: "Boolean"
+        check: null
     }],
     message1: "%1",
     args1: [{
@@ -44,7 +44,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 60
 }, {
     type: "control_else",
-    message0: "else",
+    message0: "%{BKY_ELSE}",
     message1: "%1",
     args1: [{
         type: "input_statement",
@@ -55,11 +55,11 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 60
 }, {
     type: "control_while",
-    message0: "while %1",
+    message0: "%{BKY_WHILE} %1",
     args0: [{
         type: "input_value",
         name: "WHILE",
-        check: "Boolean"
+        check: null
     }],
     message1: "%1",
     args1: [{
@@ -71,7 +71,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 60
 }, {
     type: "control_forever",
-    message0: "forever",
+    message0: "%{BKY_FOREVER}",
     message1: "%1",
     args1: [{
         type: "input_statement",
@@ -82,7 +82,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 60
 }, {
     type: "control_time1",
-    message0: "elapsed_Time(%1)",
+    message0: "%{BKY_ELAPSED_TIME}",
     args0: [{
         type: "field_number",
         name: "NUM",
@@ -92,7 +92,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 100
 }, {
     type: "control_time2",
-    message0: "elapsed_Time(%1) %2",
+    message0: "%{BKY_ELAPSED_TIME} %2",
     args0: [{
         type: "field_number",
         name: "NUM",
@@ -106,7 +106,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 100
 }, {
     type: "control_wait",
-    message0: "wait(%1)",
+    message0: "%{BKY_WAIT}",
     args0: [{
         type: "field_number",
         name: "NUM",
@@ -126,9 +126,9 @@ LearnBlock.defineBlocksWithJsonArray([{
     args0: [{
         type: "input_value",
         name: "NUM",
-        check: "Number"
+        check: null
     }],
-    output: "Number",
+    output: null,
     colour: 230
 }, {
     type: "operator_minus",
@@ -136,9 +136,9 @@ LearnBlock.defineBlocksWithJsonArray([{
     args0: [{
         type: "input_value",
         name: "NUM",
-        check: "Number"
+        check: null
     }],
-    output: "Number",
+    output: null,
     colour: 230
 }, {
     type: "operator_mult",
@@ -146,9 +146,9 @@ LearnBlock.defineBlocksWithJsonArray([{
     args0: [{
         type: "input_value",
         name: "NUM",
-        check: "Number"
+        check: null
     }],
-    output: "Number",
+    output: null,
     colour: 230
 }, {
     type: "operator_div",
@@ -156,9 +156,9 @@ LearnBlock.defineBlocksWithJsonArray([{
     args0: [{
         type: "input_value",
         name: "NUM",
-        check: "Number"
+        check: null
     }],
-    output: "Number",
+    output: null,
     colour: 230
 }, {
     type: "operator_eq",
@@ -166,9 +166,9 @@ LearnBlock.defineBlocksWithJsonArray([{
     args0: [{
         type: "input_value",
         name: "NUM",
-        check: "Number"
+        check: null
     }],
-    output: "Number",
+    output: null,
     colour: 230
 }, {
     type: "operator_booleq",
@@ -176,9 +176,9 @@ LearnBlock.defineBlocksWithJsonArray([{
     args0: [{
         type: "input_value",
         name: "NUM",
-        check: "Number"
+        check: null
     }],
-    output: "Number",
+    output: null,
     colour: 230
 }, {
     type: "operator_sumeq",
@@ -186,9 +186,9 @@ LearnBlock.defineBlocksWithJsonArray([{
     args0: [{
         type: "input_value",
         name: "NUM",
-        check: "Number"
+        check: null
     }],
-    output: "Number",
+    output: null,
     colour: 230
 }, {
     type: "operator_minuseq",
@@ -196,9 +196,9 @@ LearnBlock.defineBlocksWithJsonArray([{
     args0: [{
         type: "input_value",
         name: "NUM",
-        check: "Number"
+        check: null
     }],
-    output: "Number",
+    output: null,
     colour: 230
 }, {
     type: "operator_multeq",
@@ -206,9 +206,9 @@ LearnBlock.defineBlocksWithJsonArray([{
     args0: [{
         type: "input_value",
         name: "NUM",
-        check: "Number"
+        check: null
     }],
-    output: "Number",
+    output: null,
     colour: 230
 }, {
     type: "operator_diveq",
@@ -216,29 +216,29 @@ LearnBlock.defineBlocksWithJsonArray([{
     args0: [{
         type: "input_value",
         name: "NUM",
-        check: "Number"
+        check: null
     }],
-    output: "Number",
+    output: null,
     colour: 230
 }, {
     type: "operator_true",
-    message0: "true",
-    output: "Boolean",
+    message0: "%{BKY_TRUE}",
+    output: null,
     colour: 230
 }, {
     type: "operator_false",
-    message0: "false",
-    output: "Boolean",
-    style: "math_blocks"
+    message0: "%{BKY_FALSE}",
+    output: null,
+    colour: 230
 }, {
     type: "operator_lessthan",
     message0: "< %1",
     args0: [{
         type: "input_value",
         name: "NUM",
-        check: "Number"
+        check: null
     }],
-    output: "Number",
+    output: null,
     colour: 230
 }, {
     type: "operator_morethan",
@@ -246,39 +246,39 @@ LearnBlock.defineBlocksWithJsonArray([{
     args0: [{
         type: "input_value",
         name: "NUM",
-        check: "Number"
+        check: null
     }],
-    output: "Number",
+    output: null,
     colour: 230
 }, {
     type: "operator_and",
-    message0: "and %1",
+    message0: "%{BKY_AND} %1",
     args0: [{
         type: "input_value",
         name: "BOOL",
-        check: "Boolean"
+        check: null
     }],
-    output: "Boolean",
+    output: null,
     colour: 230
 }, {
     type: "operator_or",
-    message0: "or %1",
+    message0: "%{BKY_OR} %1",
     args0: [{
         type: "input_value",
         name: "BOOL",
-        check: "Boolean"
+        check: null
     }],
-    output: "Boolean",
+    output: null,
     colour: 230
 }, {
     type: "operator_not",
-    message0: "not %1",
+    message0: "%{BKY_NOT} %1",
     args0: [{
         type: "input_value",
         name: "BOOL",
-        check: "Boolean"
+        check: null
     }],
-    output: "Boolean",
+    output: null,
     colour: 230
 }, {
     type: "operator_parenthesisr",
@@ -335,7 +335,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     args0: [{
         type: "field_input",
         name: "TEXT",
-        text: "Hello World!"
+        text: "%{BKY_SAMPLE_TEXT}"
     }],
     output: "Text",
     colour: 60
@@ -345,7 +345,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     args0: [{
         type: "field_input",
         name: "TEXT",
-        text: "Hello World!"
+        text: "%{BKY_SAMPLE_TEXT}"
     }, {
         type: "input_value",
         name: "VAL",
@@ -418,54 +418,54 @@ LearnBlock.defineBlocksWithJsonArray([{
 //Emotions blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "emotion_neutral",
-    message0: "express_Neutral()",
+    message0: "%{BKY_EXPRESS_NEUTRAL}",
     previousStatement: null,
     nextStatement: null,
     colour: 0
 }, {
     type: "emotion_joy",
-    message0: "express_Joy()",
+    message0: "%{BKY_EXPRESS_JOY}",
     previousStatement: null,
     nextStatement: null,
     colour: 0
 }, {
     type: "emotion_fear",
-    message0: "express_Fear()",
+    message0: "%{BKY_EXPRESS_FEAR}",
     previousStatement: null,
     nextStatement: null,
     colour: 0
 }, {
     type: "emotion_sadness",
-    message0: "express_Sadness()",
+    message0: "%{BKY_EXPRESS_SADNESS}",
     previousStatement: null,
     nextStatement: null,
     colour: 0
 }, {
     type: "emotion_anger",
-    message0: "express_Anger()",
+    message0: "%{BKY_EXPRESS_ANGER}",
     previousStatement: null,
     nextStatement: null,
     colour: 0
 }, {
     type: "emotion_disgust",
-    message0: "express_Disgust()",
+    message0: "%{BKY_EXPRESS_DISGUST}",
     previousStatement: null,
     nextStatement: null,
     colour: 0
 }, {
     type: "emotion_surprise",
-    message0: "express_Surprise()",
+    message0: "%{BKY_EXPRESS_SURPRISE}",
     previousStatement: null,
     nextStatement: null,
     colour: 0
 }, {
     type: "emotion_isNeutral1",
-    message0: "is_Neutral()",
+    message0: "%{BKY_IS_NEUTRAL}",
     output: null,
     colour: 300
 }, {
     type: "emotion_isNeutral2",
-    message0: "is_Neutral() %1",
+    message0: "%{BKY_IS_NEUTRAL} %1",
     args0: [{
         type: "input_value",
         name: "EMOTION",
@@ -475,12 +475,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 300
 }, {
     type: "emotion_isJoy1",
-    message0: "is_Joy()",
+    message0: "%{BKY_IS_JOY}",
     output: null,
     colour: 300
 }, {
     type: "emotion_isJoy2",
-    message0: "is_Joy() %1",
+    message0: "%{BKY_IS_JOY} %1",
     args0: [{
         type: "input_value",
         name: "EMOTION",
@@ -490,12 +490,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 300
 }, {
     type: "emotion_isScared1",
-    message0: "is_Scared()",
+    message0: "%{BKY_IS_FEAR}",
     output: null,
     colour: 300
 }, {
     type: "emotion_isScared2",
-    message0: "is_Scared() %1",
+    message0: "%{BKY_IS_FEAR} %1",
     args0: [{
         type: "input_value",
         name: "EMOTION",
@@ -505,12 +505,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 300
 }, {
     type: "emotion_isSad1",
-    message0: "is_Sad()",
+    message0: "%{BKY_IS_SADNESS}",
     output: null,
     colour: 300
 }, {
     type: "emotion_isSad2",
-    message0: "is_Sad() %1",
+    message0: "%{BKY_IS_SADNESS} %1",
     args0: [{
         type: "input_value",
         name: "EMOTION",
@@ -520,12 +520,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 300
 }, {
     type: "emotion_isAngry1",
-    message0: "is_Angry()",
+    message0: "%{BKY_IS_ANGER}",
     output: null,
     colour: 300
 }, {
     type: "emotion_isAngry2",
-    message0: "is_Angry() %1",
+    message0: "%{BKY_IS_ANGER} %1",
     args0: [{
         type: "input_value",
         name: "EMOTION",
@@ -535,12 +535,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 300
 }, {
     type: "emotion_isDisgust1",
-    message0: "is_Disgust()",
+    message0: "%{BKY_IS_DISGUST}",
     output: null,
     colour: 300
 }, {
     type: "emotion_isDisgust2",
-    message0: "is_Disgust() %1",
+    message0: "%{BKY_IS_DISGUST} %1",
     args0: [{
         type: "input_value",
         name: "EMOTION",
@@ -550,12 +550,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 300
 }, {
     type: "emotion_isSurprised1",
-    message0: "is_Surprised()",
+    message0: "%{BKY_IS_SURPRISE}",
     output: null,
     colour: 300
 }, {
     type: "emotion_isSurprised2",
-    message0: "is_Surprised() %1",
+    message0: "%{BKY_IS_SURPRISE} %1",
     args0: [{
         type: "input_value",
         name: "EMOTION",
@@ -570,11 +570,11 @@ LearnBlock.defineBlocksWithJsonArray([{
 //Speaker blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "speaker_text",
-    message0: "say_text(%1)",
+    message0: "%{BKY_SAY_SOMETHING}",
     args0: [{
         type: "field_input",
         name: "TEXT",
-        text: "Hello World!"
+        text: "%{BKY_SAMPLE_TEXT}"
     }],
     previousStatement: null,
     nextStatement: null,
@@ -586,31 +586,31 @@ LearnBlock.defineBlocksWithJsonArray([{
 //Base blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "base_slowdown",
-    message0: "slow_down()",
+    message0: "%{BKY_SLOW_DOWN}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "base_turnright",
-    message0: "turn_right()",
+    message0: "%{BKY_TURN_RIGHT}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "base_turnleft",
-    message0: "turn_left()",
+    message0: "%{BKY_TURN_LEFT}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "base_turnback",
-    message0: "turn_back()",
+    message0: "%{BKY_TURN_BACK}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "base_turn",
-    message0: "turn(%1)",
+    message0: "%{BKY_TURN}",
     args0: [{
         type: "field_number",
         name: "NUM",
@@ -621,7 +621,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "green"
 }, {
     type: "base_setorientation",
-    message0: "set_orientation(%1)",
+    message0: "%{BKY_SET_ORIENTATION}",
     args0: [{
         type: "field_number",
         name: "NUM",
@@ -632,19 +632,19 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "green"
 }, {
     type: "base_resetorientation",
-    message0: "reset_orientation()",
+    message0: "%{BKY_RESET_ORIENTATION}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "base_stopbot",
-    message0: "stop_bot()",
+    message0: "%{BKY_STOP_BOT}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "base_setmove",
-    message0: "set_move(%1, %2)",
+    message0: "%{BKY_SET_MOVE}",
     args0: [{
         type: "field_number",
         name: "NUM1",
@@ -659,30 +659,30 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "green"
 }, {
     type: "base_movestraight",
-    message0: "move_straight()",
+    message0: "%{BKY_MOVE_STRAIGHT}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "base_moveright",
-    message0: "move_right()",
+    message0: "%{BKY_MOVE_RIGHT}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "base_moveleft",
-    message0: "move_left()",
+    message0: "%{BKY_MOVE_LEFT}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "base_moveleft1",
-    message0: "is_moving_left()",
+    message0: "%{BKY_IS_MOVING_LEFT}",
     output: null,
     colour: "red"
 }, {
     type: "base_moveleft2",
-    message0: "is_moving_left() %1",
+    message0: "%{BKY_IS_MOVING_LEFT} %1",
     args0: [{
         type: "input_value",
         name: "EMOTION",
@@ -692,12 +692,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "red"
 }, {
     type: "base_moveright1",
-    message0: "is_moving_right()",
+    message0: "%{BKY_IS_MOVING_RIGHT}",
     output: null,
     colour: "red"
 }, {
     type: "base_moveright2",
-    message0: "is_moving_right() %1",
+    message0: "%{BKY_IS_MOVING_RIGHT} %1",
     args0: [{
         type: "input_value",
         name: "EMOTION",
@@ -707,12 +707,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "red"
 }, {
     type: "base_movestraight1",
-    message0: "is_moving_straight()",
+    message0: "%{BKY_IS_MOVING_STRAIGHT}",
     output: null,
     colour: "red"
 }, {
     type: "base_movestraight2",
-    message0: "is_moving_straight() %1",
+    message0: "%{BKY_IS_MOVING_STRAIGHT} %1",
     args0: [{
         type: "input_value",
         name: "EMOTION",
@@ -722,12 +722,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "red"
 }, {
     type: "base_turnleft1",
-    message0: "is_turning_left()",
+    message0: "%{BKY_IS_TURNING_LEFT}",
     output: null,
     colour: "red"
 }, {
     type: "base_turnleft2",
-    message0: "is_turning_left() %1",
+    message0: "%{BKY_IS_TURNING_LEFT} %1",
     args0: [{
         type: "input_value",
         name: "EMOTION",
@@ -737,12 +737,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "red"
 }, {
     type: "base_turnright1",
-    message0: "is_turning_left()",
+    message0: "%{BKY_IS_TURNING_RIGHT}",
     output: null,
     colour: "red"
 }, {
     type: "base_turnright2",
-    message0: "is_turning_left() %1",
+    message0: "%{BKY_IS_TURNING_RIGHT} %1",
     args0: [{
         type: "input_value",
         name: "EMOTION",
@@ -752,12 +752,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "red"
 }, {
     type: "base_turn1",
-    message0: "is_turning()",
+    message0: "%{BKY_IS_TURNING}",
     output: null,
     colour: "red"
 }, {
     type: "base_turn2",
-    message0: "is_turning() %1",
+    message0: "%{BKY_IS_TURNING} %1",
     args0: [{
         type: "input_value",
         name: "EMOTION",
@@ -772,25 +772,25 @@ LearnBlock.defineBlocksWithJsonArray([{
 //Motor blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "motor_floor",
-    message0: "look_floor()",
+    message0: "%{BKY_LOOK_FLOOR}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "motor_up",
-    message0: "look_up()",
+    message0: "%{BKY_LOOK_UP}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "motor_front",
-    message0: "look_front()",
+    message0: "%{BKY_LOOK_FRONT}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "motor_anglecamera",
-    message0: "setAngleCamera(%1)",
+    message0: "%{BKY_SET_ANGLE_CAMERA}",
     args0: [{
         type: "field_number",
         name: "NUM",
@@ -801,7 +801,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "green"
 }, {
     type: "motor_anglemotor",
-    message0: "setAngleMotor(%1, %2)",
+    message0: "%{BKY_SET_ANGLE_MOTOR}",
     args0: [{
         type: "field_input",
         name: "TEXT",
@@ -821,12 +821,12 @@ LearnBlock.defineBlocksWithJsonArray([{
 //Camera blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "cam_centerred1",
-    message0: "is_center_red_line()",
+    message0: "%{BKY_IS_CENTER_RED_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_centerred2",
-    message0: "is_center_red_line() %1",
+    message0: "%{BKY_IS_CENTER_RED_LINE} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -836,12 +836,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_leftred1",
-    message0: "is_left_red_line()",
+    message0: "%{BKY_IS_LEFT_RED_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_leftred2",
-    message0: "is_left_red_line() %1",
+    message0: "%{BKY_IS_LEFT_RED_LINE} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -851,12 +851,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_rightred1",
-    message0: "is_right_red_line()",
+    message0: "%{BKY_IS_RIGHT_RED_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_rightred2",
-    message0: "is_right_red_line() %1",
+    message0: "%{BKY_IS_RIGHT_RED_LINE} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -866,12 +866,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_isred1",
-    message0: "is_there_red_line()",
+    message0: "%{BKY_IS_THERE_RED_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_isred2",
-    message0: "is_there_red_line() %1",
+    message0: "%{BKY_IS_THERE_RED_LINE} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -881,12 +881,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_centerblack1",
-    message0: "is_center_black_line()",
+    message0: "%{BKY_IS_CENTER_BLACK_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_centerblack2",
-    message0: "is_center_black_line() %1",
+    message0: "%{BKY_IS_CENTER_BLACK_LINE} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -896,12 +896,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_leftblack1",
-    message0: "is_left_black_line()",
+    message0: "%{BKY_IS_LEFT_BLACK_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_leftblack2",
-    message0: "is_left_black_line() %1",
+    message0: "%{BKY_IS_LEFT_BLACK_LINE} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -911,12 +911,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_rightblack1",
-    message0: "is_right_black_line()",
+    message0: "%{BKY_IS_RIGHT_BLACK_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_rightblack2",
-    message0: "is_right_black_line() %1",
+    message0: "%{BKY_IS_RIGHT_BLACK_LINE} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -926,12 +926,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_isblack1",
-    message0: "is_there_black_line()",
+    message0: "%{BKY_IS_THERE_BLACK_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_isblack2",
-    message0: "is_there_black_line() %1",
+    message0: "%{BKY_IS_THERE_BLACK_LINE} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -941,12 +941,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_centerblue1",
-    message0: "is_center_blue_line()",
+    message0: "%{BKY_IS_CENTER_BLUE_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_centerblue2",
-    message0: "is_center_blue_line() %1",
+    message0: "%{BKY_IS_CENTER_BLUE_LINE} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -956,12 +956,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_leftblue1",
-    message0: "is_left_blue_line()",
+    message0: "%{BKY_IS_LEFT_BLUE_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_leftblue2",
-    message0: "is_left_blue_line() %1",
+    message0: "%{BKY_IS_LEFT_BLUE_LINE} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -971,12 +971,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_rightblue1",
-    message0: "is_right_blue_line()",
+    message0: "%{BKY_IS_RIGHT_BLUE_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_rightblue2",
-    message0: "is_right_blue_line() %1",
+    message0: "%{BKY_IS_RIGHT_BLUE_LINE} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -986,12 +986,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_isblue1",
-    message0: "is_there_blue_line()",
+    message0: "%{BKY_IS_THERE_BLUE_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_isblue2",
-    message0: "is_there_blue_line() %1",
+    message0: "%{BKY_IS_THERE_BLUE_LINE} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -1001,12 +1001,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_faceleft1",
-    message0: "is_left_face()",
+    message0: "%{BKY_IS_LEFT_FACE}",
     output: null,
     colour: 0
 }, {
     type: "cam_faceleft2",
-    message0: "is_left_face() %1",
+    message0: "%{BKY_IS_LEFT_FACE} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -1016,12 +1016,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_faceright1",
-    message0: "is_right_face()",
+    message0: "%{BKY_IS_RIGHT_FACE}",
     output: null,
     colour: 0
 }, {
     type: "cam_faceright2",
-    message0: "is_right_face() %1",
+    message0: "%{BKY_IS_RIGHT_FACE} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -1031,12 +1031,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_faceup1",
-    message0: "is_up_face()",
+    message0: "%{BKY_IS_UP_FACE}",
     output: null,
     colour: 0
 }, {
     type: "cam_faceup2",
-    message0: "is_up_face() %1",
+    message0: "%{BKY_IS_UP_FACE} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -1046,12 +1046,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_facedown1",
-    message0: "is_down_face()",
+    message0: "%{BKY_IS_DOWN_FACE}",
     output: null,
     colour: 0
 }, {
     type: "cam_facedown2",
-    message0: "is_down_face() %1",
+    message0: "%{BKY_IS_DOWN_FACE} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -1061,12 +1061,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_facecenter1",
-    message0: "is_center_face()",
+    message0: "%{BKY_IS_CENTER_FACE}",
     output: null,
     colour: 0
 }, {
     type: "cam_facecenter2",
-    message0: "is_center_face() %1",
+    message0: "%{BKY_IS_CENTER_FACE} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -1076,12 +1076,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_isface1",
-    message0: "is_there_face()",
+    message0: "%{BKY_IS_THERE_FACE}",
     output: null,
     colour: 0
 }, {
     type: "cam_isface2",
-    message0: "is_there_face() %1",
+    message0: "%{BKY_IS_THERE_FACE} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -1091,12 +1091,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_linecross1",
-    message0: "is_line_crossing()",
+    message0: "%{BKY_IS_LINE_CROSSING}",
     output: null,
     colour: 0
 }, {
     type: "cam_linecross2",
-    message0: "is_line_crossing() %1",
+    message0: "%{BKY_IS_LINE_CROSSING} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -1106,12 +1106,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_facehappy1",
-    message0: "is_any_face_happy()",
+    message0: "%{BKY_IS_ANY_FACE_HAPPY}",
     output: null,
     colour: 0
 }, {
     type: "cam_facehappy2",
-    message0: "is_any_face_happy() %1",
+    message0: "%{BKY_IS_ANY_FACE_HAPPY} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -1121,12 +1121,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_faceangry1",
-    message0: "is_any_face_angry()",
+    message0: "%{BKY_IS_ANY_FACE_ANGRY}",
     output: null,
     colour: 0
 }, {
     type: "cam_faceangry2",
-    message0: "is_any_face_angry() %1",
+    message0: "%{BKY_IS_ANY_FACE_ANGRY} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -1136,12 +1136,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_faceneutral1",
-    message0: "is_any_face_neutral()",
+    message0: "%{BKY_IS_ANY_FACE_NEUTRAL}",
     output: null,
     colour: 0
 }, {
     type: "cam_faceneutral2",
-    message0: "is_any_face_neutral() %1",
+    message0: "%{BKY_IS_ANY_FACE_NEUTRAL} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -1151,12 +1151,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_facesad1",
-    message0: "is_any_face_sad()",
+    message0: "%{BKY_IS_ANY_FACE_SAD}",
     output: null,
     colour: 0
 }, {
     type: "cam_facesad2",
-    message0: "is_any_face_sad() %1",
+    message0: "%{BKY_IS_ANY_FACE_SAD} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -1166,12 +1166,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_facesurprised1",
-    message0: "is_any_face_surprised()",
+    message0: "%{BKY_IS_ANY_FACE_SURPRISED}",
     output: null,
     colour: 0
 }, {
     type: "cam_facesurprised2",
-    message0: "is_any_face_surprised() %1",
+    message0: "%{BKY_IS_ANY_FACE_SURPRISED} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -1181,7 +1181,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_istag1",
-    message0: "is_tag(%1)",
+    message0: "%{BKY_IS_TAG}",
     args0: [{
         type: "field_number",
         name: "NUM",
@@ -1191,7 +1191,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_istag2",
-    message0: "is_tag(%1) %2",
+    message0: "%{BKY_IS_TAG} %2",
     args0: [{
         type: "field_number",
         name: "NUM",
@@ -1205,12 +1205,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_isanytag1",
-    message0: "is_any_tag()",
+    message0: "%{BKY_IS_ANY_TAG}",
     output: null,
     colour: 0
 }, {
     type: "cam_isanytag2",
-    message0: "is_any_tag() %1",
+    message0: "%{BKY_IS_ANY_TAG} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -1220,12 +1220,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_tagleft1",
-    message0: "tag_on_the_left()",
+    message0: "%{BKY_TAG_ON_THE_LEFT}",
     output: null,
     colour: 0
 }, {
     type: "cam_tagleft2",
-    message0: "tag_on_the_left() %1",
+    message0: "%{BKY_TAG_ON_THE_LEFT} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -1235,12 +1235,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_tagright1",
-    message0: "tag_on_the_right()",
+    message0: "%{BKY_TAG_ON_THE_RIGHT}",
     output: null,
     colour: 0
 }, {
     type: "cam_tagright2",
-    message0: "tag_on_the_right() %1",
+    message0: "%{BKY_TAG_ON_THE_RIGHT} %1",
     args0: [{
         type: "input_value",
         name: "CAM",
@@ -1250,7 +1250,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_tagcenter1",
-    message0: "tag_on_the_center(%1)",
+    message0: "%{BKY_TAG_ON_THE_CENTER}",
     args0: [{
         type: "field_number",
         name: "NUM",
@@ -1260,7 +1260,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_tagcenter2",
-    message0: "tag_on_the_center(%1) %2",
+    message0: "%{BKY_TAG_ON_THE_CENTER} %2",
     args0: [{
         type: "field_number",
         name: "NUM",
@@ -1274,7 +1274,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_image1",
-    message0: "is_image(%1)",
+    message0: "%{BKY_IS_IMAGE}",
     args0: [{
         type: "field_input",
         name: "TEXT",
@@ -1284,7 +1284,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_image2",
-    message0: "is_image(%1) %2",
+    message0: "%{BKY_IS_IMAGE} %2",
     args0: [{
         type: "field_input",
         name: "TEXT",
@@ -1303,7 +1303,7 @@ LearnBlock.defineBlocksWithJsonArray([{
 //Distance blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "dist_front1",
-    message0: "is_front_obstacle(%1)",
+    message0: "%{BKY_IS_FRONT_OBSTACLE}",
     args0: [{
         type: "field_number",
         name: "NUM",
@@ -1313,7 +1313,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "blue"
 }, {
     type: "dist_front2",
-    message0: "is_front_obstacle(%1) %2",
+    message0: "%{BKY_IS_FRONT_OBSTACLE} %2",
     args0: [{
         type: "field_number",
         name: "NUM",
@@ -1327,7 +1327,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "blue"
 }, {
     type: "dist_left1",
-    message0: "is_left_obstacle(%1)",
+    message0: "%{BKY_IS_LEFT_OBSTACLE}",
     args0: [{
         type: "field_number",
         name: "NUM",
@@ -1337,7 +1337,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "blue"
 }, {
     type: "dist_left2",
-    message0: "is_left_obstacle(%1) %2",
+    message0: "%{BKY_IS_LEFT_OBSTACLE} %2",
     args0: [{
         type: "field_number",
         name: "NUM",
@@ -1351,7 +1351,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "blue"
 }, {
     type: "dist_right1",
-    message0: "is_right_obstacle(%1)",
+    message0: "%{BKY_IS_RIGHT_OBSTACLE}",
     args0: [{
         type: "field_number",
         name: "NUM",
@@ -1361,7 +1361,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "blue"
 }, {
     type: "dist_right2",
-    message0: "is_right_obstacle(%1) %2",
+    message0: "%{BKY_IS_RIGHT_OBSTACLE} %2",
     args0: [{
         type: "field_number",
         name: "NUM",
@@ -1375,7 +1375,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "blue"
 }, {
     type: "dist_free1",
-    message0: "is_obstacle_free(%1)",
+    message0: "%{BKY_IS_OBSTACLE_FREE}",
     args0: [{
         type: "field_number",
         name: "NUM",
@@ -1385,7 +1385,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "blue"
 }, {
     type: "dist_free2",
-    message0: "is_obstacle_free(%1) %2",
+    message0: "%{BKY_IS_OBSTACLE_FREE} %2",
     args0: [{
         type: "field_number",
         name: "NUM",
@@ -1399,37 +1399,37 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "blue"
 }, {
     type: "dist_mindist1",
-    message0: "get_min_distance(%1, %2, %3)",
+    message0: "%{BKY_GET_MIN_DISTANCE}",
     args0: [{
         type: "field_dropdown",
         name: "BOOL0",
-        options: [["true", "TRUE"], ["false", "FALSE"]]
+        options: [["%{BKY_TRUE}", "TRUE"], ["%{BKY_FALSE}", "FALSE"]]
     }, {
         type: "field_dropdown",
         name: "BOOL1",
-        options: [["true", "TRUE"], ["false", "FALSE"]]
+        options: [["%{BKY_TRUE}", "TRUE"], ["%{BKY_FALSE}", "FALSE"]]
     }, {
         type: "field_dropdown",
         name: "BOOL2",
-        options: [["true", "TRUE"], ["false", "FALSE"]]
+        options: [["%{BKY_TRUE}", "TRUE"], ["%{BKY_FALSE}", "FALSE"]]
     }],
     output: null,
     colour: "blue"
 }, {
     type: "dist_mindist2",
-    message0: "get_min_distance(%1, %2, %3) %4",
+    message0: "%{BKY_GET_MIN_DISTANCE} %4",
     args0: [{
         type: "field_dropdown",
         name: "BOOL0",
-        options: [["true", "TRUE"], ["false", "FALSE"]]
+        options: [["%{BKY_TRUE}", "TRUE"], ["%{BKY_FALSE}", "FALSE"]]
     }, {
         type: "field_dropdown",
         name: "BOOL1",
-        options: [["true", "TRUE"], ["false", "FALSE"]]
+        options: [["%{BKY_TRUE}", "TRUE"], ["%{BKY_FALSE}", "FALSE"]]
     }, {
         type: "field_dropdown",
         name: "BOOL2",
-        options: [["true", "TRUE"], ["false", "FALSE"]]
+        options: [["%{BKY_TRUE}", "TRUE"], ["%{BKY_FALSE}", "FALSE"]]
     }, {
         type: "input_value",
         name: "DIST",
@@ -1444,12 +1444,12 @@ LearnBlock.defineBlocksWithJsonArray([{
 //Ground blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "ground_thereis1",
-    message0: "is_there_ground()",
+    message0: "%{BKY_IS_THERE_GROUND}",
     output: null,
     colour: 0
 }, {
     type: "ground_thereis2",
-    message0: "is_there_ground() %1",
+    message0: "%{BKY_IS_THERE_GROUND} %1",
     args0: [{
         type: "input_value",
         name: "GROUND",
@@ -1459,12 +1459,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "ground_center1",
-    message0: "is_center_ground_line()",
+    message0: "%{BKY_IS_CENTER_GROUND_LINE}",
     output: null,
     colour: 0
 }, {
     type: "ground_center2",
-    message0: "is_center_ground_line() %1",
+    message0: "%{BKY_IS_CENTER_GROUND_LINE} %1",
     args0: [{
         type: "input_value",
         name: "GROUND",
@@ -1474,12 +1474,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "ground_right1",
-    message0: "is_right_ground_line()",
+    message0: "%{BKY_IS_RIGHT_GROUND_LINE}",
     output: null,
     colour: 0
 }, {
     type: "ground_right2",
-    message0: "is_right_ground_line() %1",
+    message0: "%{BKY_IS_RIGHT_GROUND_LINE} %1",
     args0: [{
         type: "input_value",
         name: "GROUND",
@@ -1489,12 +1489,12 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "ground_left1",
-    message0: "is_left_ground_line()",
+    message0: "%{BKY_IS_LEFT_GROUND_LINE}",
     output: null,
     colour: 0
 }, {
     type: "ground_left2",
-    message0: "is_left_ground_line() %1",
+    message0: "%{BKY_IS_LEFT_GROUND_LINE} %1",
     args0: [{
         type: "input_value",
         name: "GROUND",
@@ -1503,6 +1503,8 @@ LearnBlock.defineBlocksWithJsonArray([{
     output: null,
     colour: 0
 }]);
+
+
 
 
 
@@ -1536,8 +1538,7 @@ LearnBlock.Blocks.procedures_callnoreturn = {
         return this.getFieldValue("NAME")
     },
     renameProcedure: function (a, b) {
-        LearnBlock.Names.equals(a,
-            this.getProcedureCall()) && (this.setFieldValue(b, "NAME"), this.setTooltip((this.outputConnection ? LearnBlock.Msg.PROCEDURES_CALLRETURN_TOOLTIP : LearnBlock.Msg.PROCEDURES_CALLNORETURN_TOOLTIP).replace("%1", b)))
+        LearnBlock.Names.equals(a, this.getProcedureCall()) && (this.setFieldValue(b, "NAME"))
     },
     mutationToDom: function () {
         var a = LearnBlock.utils.xml.createElement("mutation");

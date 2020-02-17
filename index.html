@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="Scripts/scripts.js"></script>
-    <script src="Scripts/translations.js"></script>
     <link rel="stylesheet" href="Styles/styles.css">
     <script src="Scripts/Blocks/workspace.js"></script>
     <script src="Scripts/Blocks/blocks.js"></script>
@@ -21,7 +20,7 @@
             <td>
                 <h1 id="sup"></h1>
                 <div class="row mb-5">
-                    <button type="button" onclick="alert('Crear nuevo bloque')" class="lang" key="bCreateBlock">Crear Nuevo Bloque</button>
+                    <button type="button" onclick="alert('Crear nuevo bloque')" class="lang" key="bCreateBlock" id="newblock">Crear Nuevo Bloque</button>
                     <select id="languageMenu"></select>
                 </div>
 
@@ -57,7 +56,7 @@
                             <div id="learnblockDiv"></div>
                             <div id="toolbox" style="display: none">
 
-                                <category name="Control" expanded="true">
+                                <category name="%{BKY_CONTROL}" expanded="true">
                                     <block type="control_main"></block>
                                     <block type="control_if"></block>
                                     <block type="control_elseif"></block>
@@ -91,18 +90,18 @@
                                     <block type="operator_parenthesisl"></block>
                                 </category>
 
-                                <category name="Values">
+                                <category name="%{BKY_VALUES}">
                                     <block type="val_num1"></block>
                                     <block type="val_num2"></block>
                                     <block type="val_text1"></block>
                                     <block type="val_text2"></block>
                                 </category>
 
-                                <category name="Variables" custom="VARIABLE_DYNAMIC"></category>
+                                <category name="%{BKY_VARIABLES}" custom="VARIABLE_DYNAMIC"></category>
 
-                                <category name="Functions" custom="PROCEDURE"></category>
+                                <category name="%{BKY_FUNCTIONS}" custom="PROCEDURE"></category>
 
-                                <category name="Emotions">
+                                <category name="%{BKY_EMOTIONS}">
                                     <block type="emotion_neutral"></block>
                                     <block type="emotion_joy"></block>
                                     <block type="emotion_fear"></block>
@@ -126,11 +125,11 @@
                                     <block type="emotion_isSurprised2"></block>
                                 </category>
 
-                                <category name="Speaker">
+                                <category name="%{BKY_SPEAKER}">
                                     <block type="speaker_text"></block>
                                 </category>
 
-                                <category name="Base">
+                                <category name="%{BKY_BASE}">
                                     <block type="base_slowdown"></block>
                                     <block type="base_turnright"></block>
                                     <block type="base_turnleft"></block>
@@ -157,7 +156,7 @@
                                     <block type="base_turn2"></block>
                                 </category>
 
-                                <category name="Motor">
+                                <category name="%{BKY_MOTOR}">
                                     <block type="motor_floor"></block>
                                     <block type="motor_up"></block>
                                     <block type="motor_front"></block>
@@ -165,7 +164,7 @@
                                     <block type="motor_anglemotor"></block>
                                 </category>
 
-                                <category name="Camera">
+                                <category name="%{BKY_CAMERA}">
                                     <block type="cam_centerred1"></block>
                                     <block type="cam_centerred2"></block>
                                     <block type="cam_leftred1"></block>
@@ -228,7 +227,7 @@
                                     <block type="cam_image2"></block>
                                 </category>
 
-                                <category name="Distances">
+                                <category name="%{BKY_DISTANCES}">
                                     <block type="dist_front1"></block>
                                     <block type="dist_front2"></block>
                                     <block type="dist_left1"></block>
@@ -241,7 +240,7 @@
                                     <block type="dist_mindist2"></block>
                                 </category>
 
-                                <category name="Ground">
+                                <category name="%{BKY_GROUND}">
                                     <block type="ground_thereis1"></block>
                                     <block type="ground_thereis2"></block>
                                     <block type="ground_center1"></block>
@@ -265,7 +264,7 @@
     </table>
 
 
-   <!--
+
     <script>
         var workspace = LearnBlock.inject('learnblockDiv', {
             toolbox: document.getElementById('toolbox'),
@@ -274,7 +273,7 @@
         });
 
     </script>
-    -->
+
     <!-- Scripts Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>

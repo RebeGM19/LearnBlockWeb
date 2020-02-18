@@ -253,7 +253,7 @@ LearnBlock.utils.style.getContainerOffsetToScrollInto = function (a, b, c) {
 
 //UserAgent utils
 LearnBlock.utils.userAgent = {};
-//UserAgent detection ????
+//UserAgent detection
 (function (a) {
     function b(a) {
         return -1 != c.indexOf(a.toUpperCase())
@@ -5508,20 +5508,6 @@ LearnBlock.BlockSvg.prototype.getBoundingRectangle = function () {
 LearnBlock.BlockSvg.prototype.markDirty = function () {
     for (var a = 0, b; b = this.inputList[a]; a++) b.markDirty()
 };
-//Opens the text input ????
-LearnBlock.BlockSvg.prototype.tab = function (a, b) {
-    var c = this.createTabList_(),
-        d = c.indexOf(a); - 1 == d && (d = b ? -1 : c.length);
-    (c = c[b ? d + 1 : d - 1]) ? c instanceof LearnBlock.Field ? c.showEditor_() : c.tab(null, b): (c = this.getParent()) && c.tab(this, b)
-};
-//Creates a list of all text fields and connected inputs ????
-LearnBlock.BlockSvg.prototype.createTabList_ = function () {
-    for (var a = [], b = 0, c; c = this.inputList[b]; b++) {
-        for (var d = 0, e; e = c.fieldRow[d]; d++) e.isTabNavigable() && e.isVisible() && a.push(e);
-        c.connection && (c = c.connection.targetBlock()) && a.push(c)
-    }
-    return a
-};
 //Handles a mouse-down on an svg block
 LearnBlock.BlockSvg.prototype.onMouseDown_ = function (a) {
     var b = this.workspace && this.workspace.getGesture(a);
@@ -5631,8 +5617,6 @@ LearnBlock.BlockSvg.prototype.addSelect = function () {
 LearnBlock.BlockSvg.prototype.removeSelect = function () {
     LearnBlock.utils.dom.removeClass(this.svgGroup_, "blocklySelected")
 };
-//Updates image of cursor when in trash ????
-LearnBlock.BlockSvg.prototype.setDeleteStyle = function (a) {};
 //Changes the colour
 LearnBlock.BlockSvg.prototype.setColour = function (a) {
     LearnBlock.BlockSvg.superClass_.setColour.call(this, a);
@@ -8316,7 +8300,7 @@ LearnBlock.Variables.getOrCreateVariablePackage = function (a, b, c, d) {
     e || (e = LearnBlock.Variables.createVariable_(a, b, c, d));
     return e
 };
-//Looks up  a variable on the given workspace
+//Looks up a variable on the given workspace
 LearnBlock.Variables.getVariable = function (a, b, c, d) {
     var e = a.getPotentialVariableMap();
     if (b) {
@@ -9918,8 +9902,7 @@ LearnBlock.Flyout.prototype.show = function (a) {
     this.setVisible(!0);
     var b = [],
         c = [];
-    this.permanentlyDisabled_.length =
-        0;
+    this.permanentlyDisabled_.length = 0;
     for (var d = this.horizontalLayout_ ? this.GAP_X : this.GAP_Y, e = 0, f; f = a[e]; e++)
         if (f.tagName) switch (f.tagName.toUpperCase()) {
             case "BLOCK":
@@ -12108,7 +12091,6 @@ LearnBlock.Toolbox.prototype.syncTrees_ = function (a, b, c) {
                     break
                 }
                 case "BLOCK":
-                case "LABEL":
                 case "BUTTON":
                     b.blocks.push(g), e = g
         }
@@ -12223,5 +12205,3 @@ LearnBlock.VariablesDynamic.flyoutCategoryBlocks = function (a) {
 };
 
 LearnBlock.requires = {};
-
-

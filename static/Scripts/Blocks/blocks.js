@@ -1506,8 +1506,6 @@ LearnBlock.defineBlocksWithJsonArray([{
 
 
 
-
-
 //Procedures functions
 LearnBlock.Blocks.procedures = {};
 LearnBlock.Blocks.procedures_defnoreturn = {
@@ -1519,8 +1517,7 @@ LearnBlock.Blocks.procedures_defnoreturn = {
         this.statementConnection_ = null;
     },
     setStatements_: function (a) {
-        this.hasStatements_ !== a && (a ? (this.appendStatementInput("STACK").appendField(LearnBlock.Msg.PROCEDURES_DEFNORETURN_DO), this.getInput("RETURN") && this.moveInputBefore("STACK", "RETURN")) : this.removeInput("STACK", !0), this.hasStatements_ =
-            a)
+        this.hasStatements_ !== a && (a ? (this.appendStatementInput("STACK").appendField(LearnBlock.Msg.PROCEDURES_DEFNORETURN_DO), this.getInput("RETURN") && this.moveInputBefore("STACK", "RETURN")) : this.removeInput("STACK", !0), this.hasStatements_ = a)
     },
     getProcedureDef: function () {
         return [this.getFieldValue("NAME"), !1]

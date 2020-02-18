@@ -4,13 +4,17 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="Scripts/scripts.js"></script>
-    <link rel="stylesheet" href="Styles/styles.css">
-    <script src="Scripts/Blocks/workspace.js"></script>
-    <script src="Scripts/Blocks/blocks.js"></script>
-    <script src="Scripts/code.js"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='Styles/styles.css') }}">
+
+    <script src="{{ url_for('static', filename='Scripts/scripts.js') }}"></script>
+    <script src="{{ url_for('static', filename='Scripts/Blocks/workspace.js') }}"></script>
+    <script src="{{ url_for('static', filename='Scripts/Blocks/blocks.js') }}"></script>
+    <script src="{{ url_for('static', filename='Scripts/code.js') }}"></script>
+
 </head>
 
 <body>

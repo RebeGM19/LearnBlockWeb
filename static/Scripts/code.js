@@ -103,5 +103,5 @@ Code.initLanguage = function () {
     document.getElementById('sup').textContent = MSG['sup'];
     document.getElementById('newblock').textContent = MSG['newblock'];
 };
-document.write('<script src="Scripts/Languages/' + Code.LANG + '.js"></script>\n');
+document.write('<script src="static/Scripts/Languages/' + Code.LANG + '.js"></script>\n');
 window.addEventListener('load', Code.init);

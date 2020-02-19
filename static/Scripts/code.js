@@ -36,6 +36,7 @@ Code.loadBlocks = function (defaultXml) {
     } else if (loadOnce) {
         delete window.sessionStorage.loadOnceBlocks;
         var xml = LearnBlock.Xml.textToDom(loadOnce);
+        console.log(xml);
         LearnBlock.Xml.domToWorkspace(xml, workspace);
     } else if (defaultXml) {
         var xml = LearnBlock.Xml.textToDom(defaultXml);
@@ -102,6 +103,7 @@ Code.initLanguage = function () {
     languageMenu.addEventListener('change', Code.changeLanguage, true);
     document.getElementById('sup').textContent = MSG['sup'];
     document.getElementById('newblock').textContent = MSG['newblock'];
+    document.getElementById('execute').textContent = MSG['execute'];
 };
 document.write('<script src="static/Scripts/Languages/' + Code.LANG + '.js"></script>\n');
 window.addEventListener('load', Code.init);

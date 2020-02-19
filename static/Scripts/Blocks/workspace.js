@@ -3945,7 +3945,7 @@ LearnBlock.Block.prototype.unplug = function (a) {
 LearnBlock.Block.prototype.unplugFromRow_ = function (a) {
     var b = null;
     this.outputConnection.isConnected() && (b = this.outputConnection.targetConnection, this.outputConnection.disconnect());
-    if (b && a && (a = this.getOnlyValueConnection_()) && a.isConnected() && !a.targetBlock().isShadow())
+    if (b && a && (a = this.getOnlyValueConnection_()) && a.isConnected())
         if (a = a.targetConnection, a.disconnect(), a.checkType_(b)) b.connect(a);
         else a.onFailedConnect(b)
 };

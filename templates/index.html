@@ -24,7 +24,7 @@
             <td>
                 <h1 id="sup"></h1>
                 <div class="row mb-5">
-                    <button type="button" onclick="alert('Crear nuevo bloque')" class="lang" key="bCreateBlock" id="newblock">Crear Nuevo Bloque</button>
+                    <button type="button" onclick="alert('Crear nuevo bloque')" class="lang" key="bCreateBlock" id="newblock"></button>
                     <select id="languageMenu"></select>
                 </div>
 
@@ -41,6 +41,8 @@
                         <li><button type="button" href="#python" data-toggle="tab">Python</button></li>
                         <li><button type="button" href="#blocktext" data-toggle="tab">Block-Text</button></li>
                         <li><button type="button" href="#learnblock" data-toggle="tab">LearnBlock</button></li>
+                        <li id="sepButtons"></li>
+                        <li><button type="button" onclick="execute()" id="execute"></button></li>
                     </ul>
                 </tr>
 

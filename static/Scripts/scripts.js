@@ -1,32 +1,27 @@
-function allowDrop(ev) {
-    ev.preventDefault();
+//Loads the blocks currently on the workspace
+function execute() {
+    var loadBlocks;
+    if (window.sessionStorage) {
+        var xml = LearnBlock.Xml.workspaceToDom(Code.workspace);
+        var text = LearnBlock.Xml.domToText(xml);
+        window.sessionStorage.loadOnceBlocks = text;
+    }
+    try {
+        loadBlocks = window.sessionStorage.loadOnceBlocks;
+    } catch (e) {
+        loadBlocks = null;
+    }
+    splitArrayBlocks(loadBlocks);
 }
 
-function drag(ev) {
-    ev.dataTransfer.setData("text", ev.target.id);
+//Formats the text that specifies the blocks on the workspace
+function splitArrayBlocks(loadBlocks) {
+    var result = loadBlocks.split(">");
+    //Discards the first and the last element (xml definitions)
+    for (var i = 1; i < result.length-1; i++) {
+        if (result[i] != "") {
+            result[i] = result[i] + ">";
+            console.log(result[i]);
+        }
+    }
 }
-
-function drop(ev) {
-    ev.preventDefault();
-    var data = ev.dataTransfer.getData("text");
-    ev.target.appendChild(document.getElementById(data));
-}
-
-function duplicateBlock(str) {
-    var para = document.createElement("div");
-    para.setAttribute('id', "dBlock" + str);
-    para.setAttribute('draggable', "true");
-    para.setAttribute('ondragstart', "drag(event)");
-    para.innerHTML = "Bloque";
-    document.getElementById("div2").appendChild(para);
-}
-
-$(function () {
-    $('#myTab a:last').tab('show');
-})
-
-$('a[data-toggle="tab"]').on('shown', function (e) {
-    e.target // activated tab
-    e.relatedTarget // previous tab
-})
-

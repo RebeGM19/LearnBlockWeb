@@ -3,7 +3,8 @@
 //Mensajes
 var MSG = {
     sup: "Zona Superior",
-    newblock: "Crear Nuevo Bloque"
+    newblock: "Crear Nuevo Bloque",
+    execute: "Ejecutar"
 };
 
 //Utils

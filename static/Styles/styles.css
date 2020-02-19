@@ -3,6 +3,10 @@
     height: 680px;
 }
 
+#sepButtons{
+    width: 300px;
+}
+
 #div1 {
     float: left;
     width: 100px;

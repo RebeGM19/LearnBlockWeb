@@ -36,7 +36,6 @@ Code.loadBlocks = function (defaultXml) {
     } else if (loadOnce) {
         delete window.sessionStorage.loadOnceBlocks;
         var xml = LearnBlock.Xml.textToDom(loadOnce);
-        console.log(xml);
         LearnBlock.Xml.domToWorkspace(xml, workspace);
     } else if (defaultXml) {
         var xml = LearnBlock.Xml.textToDom(defaultXml);

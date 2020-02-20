@@ -11,17 +11,13 @@ function execute() {
     } catch (e) {
         loadBlocks = null;
     }
-    splitArrayBlocks(loadBlocks);
+    $.ajax({
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        url: "/result",
+        traditional: "true",
+        data: JSON.stringify(loadBlocks),
+        dataType: "json"
+    });
 }
 
-//Formats the text that specifies the blocks on the workspace
-function splitArrayBlocks(loadBlocks) {
-    var result = loadBlocks.split(">");
-    //Discards the first and the last element (xml definitions)
-    for (var i = 1; i < result.length-1; i++) {
-        if (result[i] != "") {
-            result[i] = result[i] + ">";
-            console.log(result[i]);
-        }
-    }
-}

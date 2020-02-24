@@ -12,7 +12,7 @@ def get_blocks():
     if request.method == 'POST':
         blocks = request.get_json()
         blocksList = format_blocks(blocks)
-        prueba()
+        #prueba()
     return '', 200
 
 def format_blocks(blocks):

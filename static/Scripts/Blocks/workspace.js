@@ -1104,6 +1104,7 @@ LearnBlock.Xml.allFieldsToDom_ = function (a, b) {
 LearnBlock.Xml.blockToDom = function (a, b) {
     var c = LearnBlock.utils.xml.createElement("block");
     c.setAttribute("type", a.type);
+    c.setAttribute("blocktextname", a.btname);
     b || (c.id = a.id);
     if (a.mutationToDom) {
         var d = a.mutationToDom();
@@ -3867,6 +3868,7 @@ LearnBlock.Block = function (a, b, c) {
     a.blockDB_[this.id] = this;
     this.previousConnection = this.nextConnection = this.outputConnection = null;
     this.inputList = [];
+    this.btname = null;
     this.inputsInline = void 0;
     this.disabled = !1;
     this.tooltip = "";
@@ -4289,9 +4291,10 @@ LearnBlock.Block.prototype.appendStatementInput = function (a) {
 LearnBlock.Block.prototype.appendDummyInput = function (a) {
     return this.appendInput_(LearnBlock.DUMMY_INPUT, a || "")
 };
-//Initializes thr block using a JSON description
+//Initializes the block using a JSON description
 LearnBlock.Block.prototype.jsonInit = function (a) {
     var b = a.type ? 'Block "' + a.type + '": ' : "";
+    this.btname = a.blocktextname;
     if (a.output && a.previousStatement) throw Error(b + "Must not have both an output and a previousStatement.");
     a.style && a.style.hat && (this.hat = a.style.hat, a.style = null);
     if (a.style && a.colour) throw Error(b + "Must not have both a colour and a style.");

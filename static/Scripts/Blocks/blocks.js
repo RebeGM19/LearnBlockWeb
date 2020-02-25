@@ -640,30 +640,35 @@ LearnBlock.defineBlocksWithJsonArray([{
 //Base blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "base_slowdown",
+    blocktextname: "slow_down",
     message0: "%{BKY_SLOW_DOWN}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "base_turnright",
+    blocktextname: "turn_right",
     message0: "%{BKY_TURN_RIGHT}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "base_turnleft",
+    blocktextname: "turn_left",
     message0: "%{BKY_TURN_LEFT}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "base_turnback",
+    blocktextname: "turn_back",
     message0: "%{BKY_TURN_BACK}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "base_turn",
+    blocktextname: "turn",
     message0: "%{BKY_TURN}",
     args0: [{
         type: "field_number",
@@ -675,6 +680,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "green"
 }, {
     type: "base_setorientation",
+    blocktextname: "set_orientation",
     message0: "%{BKY_SET_ORIENTATION}",
     args0: [{
         type: "field_number",
@@ -686,18 +692,21 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "green"
 }, {
     type: "base_resetorientation",
+    blocktextname: "reset_orientation",
     message0: "%{BKY_RESET_ORIENTATION}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "base_stopbot",
+    blocktextname: "stop_bot",
     message0: "%{BKY_STOP_BOT}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "base_setmove",
+    blocktextname: "set_move",
     message0: "%{BKY_SET_MOVE}",
     args0: [{
         type: "field_number",
@@ -713,29 +722,34 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "green"
 }, {
     type: "base_movestraight",
+    blocktextname: "move_straight",
     message0: "%{BKY_MOVE_STRAIGHT}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "base_moveright",
+    blocktextname: "move_right",
     message0: "%{BKY_MOVE_RIGHT}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "base_moveleft",
+    blocktextname: "move_left",
     message0: "%{BKY_MOVE_LEFT}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "base_moveleft1",
+    blocktextname: "is_moving_left",
     message0: "%{BKY_IS_MOVING_LEFT}",
     output: null,
     colour: "red"
 }, {
     type: "base_moveleft2",
+    blocktextname: "is_moving_left",
     message0: "%{BKY_IS_MOVING_LEFT} %1",
     args0: [{
         type: "input_value",
@@ -746,11 +760,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "red"
 }, {
     type: "base_moveright1",
+    blocktextname: "is_moving_right",
     message0: "%{BKY_IS_MOVING_RIGHT}",
     output: null,
     colour: "red"
 }, {
     type: "base_moveright2",
+    blocktextname: "is_moving_right",
     message0: "%{BKY_IS_MOVING_RIGHT} %1",
     args0: [{
         type: "input_value",
@@ -761,11 +777,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "red"
 }, {
     type: "base_movestraight1",
+    blocktextname: "is_moving_straight",
     message0: "%{BKY_IS_MOVING_STRAIGHT}",
     output: null,
     colour: "red"
 }, {
     type: "base_movestraight2",
+    blocktextname: "is_moving_straight",
     message0: "%{BKY_IS_MOVING_STRAIGHT} %1",
     args0: [{
         type: "input_value",
@@ -776,11 +794,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "red"
 }, {
     type: "base_turnleft1",
+    blocktextname: "is_turning_left",
     message0: "%{BKY_IS_TURNING_LEFT}",
     output: null,
     colour: "red"
 }, {
     type: "base_turnleft2",
+    blocktextname: "is_turning_left",
     message0: "%{BKY_IS_TURNING_LEFT} %1",
     args0: [{
         type: "input_value",
@@ -791,11 +811,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "red"
 }, {
     type: "base_turnright1",
+    blocktextname: "is_turning_right",
     message0: "%{BKY_IS_TURNING_RIGHT}",
     output: null,
     colour: "red"
 }, {
     type: "base_turnright2",
+    blocktextname: "is_turning_right",
     message0: "%{BKY_IS_TURNING_RIGHT} %1",
     args0: [{
         type: "input_value",
@@ -806,11 +828,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "red"
 }, {
     type: "base_turn1",
+    blocktextname: "is_turning",
     message0: "%{BKY_IS_TURNING}",
     output: null,
     colour: "red"
 }, {
     type: "base_turn2",
+    blocktextname: "is_turning",
     message0: "%{BKY_IS_TURNING} %1",
     args0: [{
         type: "input_value",
@@ -826,24 +850,28 @@ LearnBlock.defineBlocksWithJsonArray([{
 //Motor blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "motor_floor",
+    blocktextname: "look_floor",
     message0: "%{BKY_LOOK_FLOOR}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "motor_up",
+    blocktextname: "look_up",
     message0: "%{BKY_LOOK_UP}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "motor_front",
+    blocktextname: "look_front",
     message0: "%{BKY_LOOK_FRONT}",
     previousStatement: null,
     nextStatement: null,
     colour: "green"
 }, {
     type: "motor_anglecamera",
+    blocktextname: "setAngleCamera",
     message0: "%{BKY_SET_ANGLE_CAMERA}",
     args0: [{
         type: "field_number",
@@ -855,6 +883,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "green"
 }, {
     type: "motor_anglemotor",
+    blocktextname: "setAngleMotor",
     message0: "%{BKY_SET_ANGLE_MOTOR}",
     args0: [{
         type: "field_input",
@@ -875,11 +904,13 @@ LearnBlock.defineBlocksWithJsonArray([{
 //Camera blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "cam_centerred1",
+    blocktextname: "is_center_red_line",
     message0: "%{BKY_IS_CENTER_RED_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_centerred2",
+    blocktextname: "is_center_red_line",
     message0: "%{BKY_IS_CENTER_RED_LINE} %1",
     args0: [{
         type: "input_value",
@@ -890,11 +921,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_leftred1",
+    blocktextname: "is_left_red_line",
     message0: "%{BKY_IS_LEFT_RED_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_leftred2",
+    blocktextname: "is_left_red_line",
     message0: "%{BKY_IS_LEFT_RED_LINE} %1",
     args0: [{
         type: "input_value",
@@ -905,11 +938,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_rightred1",
+    blocktextname: "is_right_red_line",
     message0: "%{BKY_IS_RIGHT_RED_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_rightred2",
+    blocktextname: "is_right_red_line",
     message0: "%{BKY_IS_RIGHT_RED_LINE} %1",
     args0: [{
         type: "input_value",
@@ -920,11 +955,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_isred1",
+    blocktextname: "is_there_red_line",
     message0: "%{BKY_IS_THERE_RED_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_isred2",
+    blocktextname: "is_there_red_line",
     message0: "%{BKY_IS_THERE_RED_LINE} %1",
     args0: [{
         type: "input_value",
@@ -935,11 +972,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_centerblack1",
+    blocktextname: "is_center_black_line",
     message0: "%{BKY_IS_CENTER_BLACK_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_centerblack2",
+    blocktextname: "is_center_black_line",
     message0: "%{BKY_IS_CENTER_BLACK_LINE} %1",
     args0: [{
         type: "input_value",
@@ -950,11 +989,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_leftblack1",
+    blocktextname: "is_left_black_line",
     message0: "%{BKY_IS_LEFT_BLACK_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_leftblack2",
+    blocktextname: "is_left_black_line",
     message0: "%{BKY_IS_LEFT_BLACK_LINE} %1",
     args0: [{
         type: "input_value",
@@ -965,11 +1006,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_rightblack1",
+    blocktextname: "is_right_black_line",
     message0: "%{BKY_IS_RIGHT_BLACK_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_rightblack2",
+    blocktextname: "is_right_black_line",
     message0: "%{BKY_IS_RIGHT_BLACK_LINE} %1",
     args0: [{
         type: "input_value",
@@ -980,11 +1023,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_isblack1",
+    blocktextname: "is_there_black_line",
     message0: "%{BKY_IS_THERE_BLACK_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_isblack2",
+    blocktextname: "is_there_black_line",
     message0: "%{BKY_IS_THERE_BLACK_LINE} %1",
     args0: [{
         type: "input_value",
@@ -995,11 +1040,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_centerblue1",
+    blocktextname: "is_center_blue_line",
     message0: "%{BKY_IS_CENTER_BLUE_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_centerblue2",
+    blocktextname: "is_center_blue_line",
     message0: "%{BKY_IS_CENTER_BLUE_LINE} %1",
     args0: [{
         type: "input_value",
@@ -1010,11 +1057,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_leftblue1",
+    blocktextname: "is_left_blue_line",
     message0: "%{BKY_IS_LEFT_BLUE_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_leftblue2",
+    blocktextname: "is_left_blue_line",
     message0: "%{BKY_IS_LEFT_BLUE_LINE} %1",
     args0: [{
         type: "input_value",
@@ -1025,11 +1074,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_rightblue1",
+    blocktextname: "is_right_blue_line",
     message0: "%{BKY_IS_RIGHT_BLUE_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_rightblue2",
+    blocktextname: "is_right_blue_line",
     message0: "%{BKY_IS_RIGHT_BLUE_LINE} %1",
     args0: [{
         type: "input_value",
@@ -1040,11 +1091,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_isblue1",
+    blocktextname: "is_there_blue_line",
     message0: "%{BKY_IS_THERE_BLUE_LINE}",
     output: null,
     colour: 0
 }, {
     type: "cam_isblue2",
+    blocktextname: "is_there_blue_line",
     message0: "%{BKY_IS_THERE_BLUE_LINE} %1",
     args0: [{
         type: "input_value",
@@ -1055,11 +1108,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_faceleft1",
+    blocktextname: "is_left_face",
     message0: "%{BKY_IS_LEFT_FACE}",
     output: null,
     colour: 0
 }, {
     type: "cam_faceleft2",
+    blocktextname: "is_left_face",
     message0: "%{BKY_IS_LEFT_FACE} %1",
     args0: [{
         type: "input_value",
@@ -1070,11 +1125,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_faceright1",
+    blocktextname: "is_right_face",
     message0: "%{BKY_IS_RIGHT_FACE}",
     output: null,
     colour: 0
 }, {
     type: "cam_faceright2",
+    blocktextname: "is_right_face",
     message0: "%{BKY_IS_RIGHT_FACE} %1",
     args0: [{
         type: "input_value",
@@ -1085,11 +1142,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_faceup1",
+    blocktextname: "is_up_face",
     message0: "%{BKY_IS_UP_FACE}",
     output: null,
     colour: 0
 }, {
     type: "cam_faceup2",
+    blocktextname: "is_up_face",
     message0: "%{BKY_IS_UP_FACE} %1",
     args0: [{
         type: "input_value",
@@ -1100,11 +1159,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_facedown1",
+    blocktextname: "is_down_face",
     message0: "%{BKY_IS_DOWN_FACE}",
     output: null,
     colour: 0
 }, {
     type: "cam_facedown2",
+    blocktextname: "is_down_face",
     message0: "%{BKY_IS_DOWN_FACE} %1",
     args0: [{
         type: "input_value",
@@ -1115,11 +1176,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_facecenter1",
+    blocktextname: "is_center_face",
     message0: "%{BKY_IS_CENTER_FACE}",
     output: null,
     colour: 0
 }, {
     type: "cam_facecenter2",
+    blocktextname: "is_center_face",
     message0: "%{BKY_IS_CENTER_FACE} %1",
     args0: [{
         type: "input_value",
@@ -1130,11 +1193,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_isface1",
+    blocktextname: "is_there_face",
     message0: "%{BKY_IS_THERE_FACE}",
     output: null,
     colour: 0
 }, {
     type: "cam_isface2",
+    blocktextname: "is_there_face",
     message0: "%{BKY_IS_THERE_FACE} %1",
     args0: [{
         type: "input_value",
@@ -1145,11 +1210,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_linecross1",
+    blocktextname: "is_line_crossing",
     message0: "%{BKY_IS_LINE_CROSSING}",
     output: null,
     colour: 0
 }, {
     type: "cam_linecross2",
+    blocktextname: "is_line_crossing",
     message0: "%{BKY_IS_LINE_CROSSING} %1",
     args0: [{
         type: "input_value",
@@ -1160,11 +1227,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_facehappy1",
+    blocktextname: "is_any_face_happy",
     message0: "%{BKY_IS_ANY_FACE_HAPPY}",
     output: null,
     colour: 0
 }, {
     type: "cam_facehappy2",
+    blocktextname: "is_any_face_happy",
     message0: "%{BKY_IS_ANY_FACE_HAPPY} %1",
     args0: [{
         type: "input_value",
@@ -1175,11 +1244,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_faceangry1",
+    blocktextname: "is_any_face_angry",
     message0: "%{BKY_IS_ANY_FACE_ANGRY}",
     output: null,
     colour: 0
 }, {
     type: "cam_faceangry2",
+    blocktextname: "is_any_face_angry",
     message0: "%{BKY_IS_ANY_FACE_ANGRY} %1",
     args0: [{
         type: "input_value",
@@ -1190,11 +1261,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_faceneutral1",
+    blocktextname: "is_any_face_neutral",
     message0: "%{BKY_IS_ANY_FACE_NEUTRAL}",
     output: null,
     colour: 0
 }, {
     type: "cam_faceneutral2",
+    blocktextname: "is_any_face_neutral",
     message0: "%{BKY_IS_ANY_FACE_NEUTRAL} %1",
     args0: [{
         type: "input_value",
@@ -1205,11 +1278,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_facesad1",
+    blocktextname: "is_any_face_sad",
     message0: "%{BKY_IS_ANY_FACE_SAD}",
     output: null,
     colour: 0
 }, {
     type: "cam_facesad2",
+    blocktextname: "is_any_face_sad",
     message0: "%{BKY_IS_ANY_FACE_SAD} %1",
     args0: [{
         type: "input_value",
@@ -1220,11 +1295,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_facesurprised1",
+    blocktextname: "is_any_face_surprised",
     message0: "%{BKY_IS_ANY_FACE_SURPRISED}",
     output: null,
     colour: 0
 }, {
     type: "cam_facesurprised2",
+    blocktextname: "is_any_face_surprised",
     message0: "%{BKY_IS_ANY_FACE_SURPRISED} %1",
     args0: [{
         type: "input_value",
@@ -1235,6 +1312,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_istag1",
+    blocktextname: "is_tag",
     message0: "%{BKY_IS_TAG}",
     args0: [{
         type: "field_number",
@@ -1245,6 +1323,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_istag2",
+    blocktextname: "is_tag",
     message0: "%{BKY_IS_TAG} %2",
     args0: [{
         type: "field_number",
@@ -1259,11 +1338,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_isanytag1",
+    blocktextname: "is_any_tag",
     message0: "%{BKY_IS_ANY_TAG}",
     output: null,
     colour: 0
 }, {
     type: "cam_isanytag2",
+    blocktextname: "is_any_tag",
     message0: "%{BKY_IS_ANY_TAG} %1",
     args0: [{
         type: "input_value",
@@ -1274,11 +1355,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_tagleft1",
+    blocktextname: "tag_on_the_left",
     message0: "%{BKY_TAG_ON_THE_LEFT}",
     output: null,
     colour: 0
 }, {
     type: "cam_tagleft2",
+    blocktextname: "tag_on_the_left",
     message0: "%{BKY_TAG_ON_THE_LEFT} %1",
     args0: [{
         type: "input_value",
@@ -1289,11 +1372,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_tagright1",
+    blocktextname: "tag_on_the_right",
     message0: "%{BKY_TAG_ON_THE_RIGHT}",
     output: null,
     colour: 0
 }, {
     type: "cam_tagright2",
+    blocktextname: "tag_on_the_right",
     message0: "%{BKY_TAG_ON_THE_RIGHT} %1",
     args0: [{
         type: "input_value",
@@ -1304,6 +1389,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_tagcenter1",
+    blocktextname: "tag_on_the_center",
     message0: "%{BKY_TAG_ON_THE_CENTER}",
     args0: [{
         type: "field_number",
@@ -1314,6 +1400,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_tagcenter2",
+    blocktextname: "tag_on_the_center",
     message0: "%{BKY_TAG_ON_THE_CENTER} %2",
     args0: [{
         type: "field_number",
@@ -1328,6 +1415,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_image1",
+    blocktextname: "is_image",
     message0: "%{BKY_IS_IMAGE}",
     args0: [{
         type: "field_input",
@@ -1338,6 +1426,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "cam_image2",
+    blocktextname: "is_image",
     message0: "%{BKY_IS_IMAGE} %2",
     args0: [{
         type: "field_input",
@@ -1357,6 +1446,7 @@ LearnBlock.defineBlocksWithJsonArray([{
 //Distance blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "dist_front1",
+    blocktextname: "is_front_obstacle",
     message0: "%{BKY_IS_FRONT_OBSTACLE}",
     args0: [{
         type: "field_number",
@@ -1367,6 +1457,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "blue"
 }, {
     type: "dist_front2",
+    blocktextname: "is_front_obstacle",
     message0: "%{BKY_IS_FRONT_OBSTACLE} %2",
     args0: [{
         type: "field_number",
@@ -1381,6 +1472,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "blue"
 }, {
     type: "dist_left1",
+    blocktextname: "is_left_obstacle",
     message0: "%{BKY_IS_LEFT_OBSTACLE}",
     args0: [{
         type: "field_number",
@@ -1391,6 +1483,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "blue"
 }, {
     type: "dist_left2",
+    blocktextname: "is_left_obstacle",
     message0: "%{BKY_IS_LEFT_OBSTACLE} %2",
     args0: [{
         type: "field_number",
@@ -1405,6 +1498,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "blue"
 }, {
     type: "dist_right1",
+    blocktextname: "is_right_obstacle",
     message0: "%{BKY_IS_RIGHT_OBSTACLE}",
     args0: [{
         type: "field_number",
@@ -1415,6 +1509,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "blue"
 }, {
     type: "dist_right2",
+    blocktextname: "is_right_obstacle",
     message0: "%{BKY_IS_RIGHT_OBSTACLE} %2",
     args0: [{
         type: "field_number",
@@ -1429,6 +1524,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "blue"
 }, {
     type: "dist_free1",
+    blocktextname: "is_obstacle_free",
     message0: "%{BKY_IS_OBSTACLE_FREE}",
     args0: [{
         type: "field_number",
@@ -1439,6 +1535,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "blue"
 }, {
     type: "dist_free2",
+    blocktextname: "is_obstacle_free",
     message0: "%{BKY_IS_OBSTACLE_FREE} %2",
     args0: [{
         type: "field_number",
@@ -1453,6 +1550,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "blue"
 }, {
     type: "dist_mindist1",
+    blocktextname: "get_min_distance",
     message0: "%{BKY_GET_MIN_DISTANCE}",
     args0: [{
         type: "field_dropdown",
@@ -1471,6 +1569,7 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: "blue"
 }, {
     type: "dist_mindist2",
+    blocktextname: "get_min_distance",
     message0: "%{BKY_GET_MIN_DISTANCE} %4",
     args0: [{
         type: "field_dropdown",
@@ -1498,11 +1597,13 @@ LearnBlock.defineBlocksWithJsonArray([{
 //Ground blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "ground_thereis1",
+    blocktextname: "is_there_ground",
     message0: "%{BKY_IS_THERE_GROUND}",
     output: null,
     colour: 0
 }, {
     type: "ground_thereis2",
+    blocktextname: "is_there_ground",
     message0: "%{BKY_IS_THERE_GROUND} %1",
     args0: [{
         type: "input_value",
@@ -1513,11 +1614,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "ground_center1",
+    blocktextname: "is_center_ground_line",
     message0: "%{BKY_IS_CENTER_GROUND_LINE}",
     output: null,
     colour: 0
 }, {
     type: "ground_center2",
+    blocktextname: "is_center_ground_line",
     message0: "%{BKY_IS_CENTER_GROUND_LINE} %1",
     args0: [{
         type: "input_value",
@@ -1528,11 +1631,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "ground_right1",
+    blocktextname: "is_right_ground_line",
     message0: "%{BKY_IS_RIGHT_GROUND_LINE}",
     output: null,
     colour: 0
 }, {
     type: "ground_right2",
+    blocktextname: "is_right_ground_line",
     message0: "%{BKY_IS_RIGHT_GROUND_LINE} %1",
     args0: [{
         type: "input_value",
@@ -1543,11 +1648,13 @@ LearnBlock.defineBlocksWithJsonArray([{
     colour: 0
 }, {
     type: "ground_left1",
+    blocktextname: "is_left_ground_line",
     message0: "%{BKY_IS_LEFT_GROUND_LINE}",
     output: null,
     colour: 0
 }, {
     type: "ground_left2",
+    blocktextname: "is_left_ground_line",
     message0: "%{BKY_IS_LEFT_GROUND_LINE} %1",
     args0: [{
         type: "input_value",

@@ -272,11 +272,18 @@
 
 
     <script>
+        var content = {{contents|tojson}};
+        console.log(content);
+
+        //A ver si parseando o yendo linea a linea lo coge
+
         var workspace = LearnBlock.inject('learnblockDiv', {
             toolbox: document.getElementById('toolbox'),
             horizontalLayout: false,
             scrollbars: true
         });
+
+        //LearnBlock.defineBlocksWithJsonArray(JSON.parse(content));
 
     </script>
 

@@ -1,5 +1,7 @@
 'use strict';
 
+//console.log(content);
+
 //Control blocks
 LearnBlock.defineBlocksWithJsonArray([{
     type: "control_main",
@@ -125,7 +127,6 @@ LearnBlock.defineBlocksWithJsonArray([{
     nextStatement: null,
     colour: 230
 }]);
-
 
 
 //Operators blocks

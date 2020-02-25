@@ -4,7 +4,11 @@ app = Flask(__name__)
 
 @app.route("/")
 def init():
-    return render_template('index.html')
+    f = open("test.json", "r")
+    if f.mode == 'r':
+        contents = f.read()
+        print(contents)
+    return render_template('index.html', contents=contents)
 
 
 @app.route("/result", methods=['POST'])

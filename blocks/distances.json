@@ -1,0 +1,147 @@
+[{
+    "type": "dist_front1",
+    "blocktextname": "is_front_obstacle",
+    "message0": "%{BKY_IS_FRONT_OBSTACLE}",
+    "args0": [{
+        "type": "field_number",
+        "name": "NUM",
+        "value": 0
+    }],
+    "output": null,
+    "colour": "blue"
+}, {
+    "type": "dist_front2",
+    "blocktextname": "is_front_obstacle",
+    "message0": "%{BKY_IS_FRONT_OBSTACLE} %2",
+    "args0": [{
+        "type": "field_number",
+        "name": "NUM",
+        "value": 0
+    }, {
+        "type": "input_value",
+        "name": "DIST",
+        "check": null
+    }],
+    "output": null,
+    "colour": "blue"
+}, {
+    "type": "dist_left1",
+    "blocktextname": "is_left_obstacle",
+    "message0": "%{BKY_IS_LEFT_OBSTACLE}",
+    "args0": [{
+        "type": "field_number",
+        "name": "NUM",
+        "value": 0
+    }],
+    "output": null,
+    "colour": "blue"
+}, {
+    "type": "dist_left2",
+    "blocktextname": "is_left_obstacle",
+    "message0": "%{BKY_IS_LEFT_OBSTACLE} %2",
+    "args0": [{
+        "type": "field_number",
+        "name": "NUM",
+        "value": 0
+    }, {
+        "type": "input_value",
+        "name": "DIST",
+        "check": null
+    }],
+    "output": null,
+    "colour": "blue"
+}, {
+    "type": "dist_right1",
+    "blocktextname": "is_right_obstacle",
+    "message0": "%{BKY_IS_RIGHT_OBSTACLE}",
+    "args0": [{
+        "type": "field_number",
+        "name": "NUM",
+        "value": 0
+    }],
+    "output": null,
+    "colour": "blue"
+}, {
+    "type": "dist_right2",
+    "blocktextname": "is_right_obstacle",
+    "message0": "%{BKY_IS_RIGHT_OBSTACLE} %2",
+    "args0": [{
+        "type": "field_number",
+        "name": "NUM",
+        "value": 0
+    }, {
+        "type": "input_value",
+        "name": "DIST",
+        "check": null
+    }],
+    "output": null,
+    "colour": "blue"
+}, {
+    "type": "dist_free1",
+    "blocktextname": "is_obstacle_free",
+    "message0": "%{BKY_IS_OBSTACLE_FREE}",
+    "args0": [{
+        "type": "field_number",
+        "name": "NUM",
+        "value": 0
+    }],
+    "output": null,
+    "colour": "blue"
+}, {
+    "type": "dist_free2",
+    "blocktextname": "is_obstacle_free",
+    "message0": "%{BKY_IS_OBSTACLE_FREE} %2",
+    "args0": [{
+        "type": "field_number",
+        "name": "NUM",
+        "value": 0
+    }, {
+        "type": "input_value",
+        "name": "DIST",
+        "check": null
+    }],
+    "output": null,
+    "colour": "blue"
+}, {
+    "type": "dist_mindist1",
+    "blocktextname": "get_min_distance",
+    "message0": "%{BKY_GET_MIN_DISTANCE}",
+    "args0": [{
+        "type": "field_dropdown",
+        "name": "BOOL0",
+        "options": [["%{BKY_TRUE}", "TRUE"], ["%{BKY_FALSE}", "FALSE"]]
+    }, {
+        "type": "field_dropdown",
+        "name": "BOOL1",
+        "options": [["%{BKY_TRUE}", "TRUE"], ["%{BKY_FALSE}", "FALSE"]]
+    }, {
+        "type": "field_dropdown",
+        "name": "BOOL2",
+        "options": [["%{BKY_TRUE}", "TRUE"], ["%{BKY_FALSE}", "FALSE"]]
+    }],
+    "output": null,
+    "colour": "blue"
+}, {
+    "type": "dist_mindist2",
+    "blocktextname": "get_min_distance",
+    "message0": "%{BKY_GET_MIN_DISTANCE} %4",
+    "args0": [{
+        "type": "field_dropdown",
+        "name": "BOOL0",
+        "options": [["%{BKY_TRUE}", "TRUE"], ["%{BKY_FALSE}", "FALSE"]]
+    }, {
+        "type": "field_dropdown",
+        "name": "BOOL1",
+        "options": [["%{BKY_TRUE}", "TRUE"], ["%{BKY_FALSE}", "FALSE"]]
+    }, {
+        "type": "field_dropdown",
+        "name": "BOOL2",
+        "options": [["%{BKY_TRUE}", "TRUE"], ["%{BKY_FALSE}", "FALSE"]]
+    }, {
+        "type": "input_value",
+        "name": "DIST",
+        "check": null
+    }],
+    "output": null,
+    "colour": "blue"
+}]

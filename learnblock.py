@@ -4,22 +4,40 @@ app = Flask(__name__)
 
 @app.route("/")
 def init():
-    f = open("test.json", "r")
+    # Loads blocks from json definition in json files
+    control = loadBlocks("blocks/control.json")
+    operators = loadBlocks("blocks/operators.json")
+    values = loadBlocks("blocks/values.json")
+    variables = loadBlocks("blocks/variables.json")
+    emotions = loadBlocks("blocks/emotions.json")
+    speaker = loadBlocks("blocks/speaker.json")
+    base = loadBlocks("blocks/base.json")
+    motor = loadBlocks("blocks/motor.json")
+    camera = loadBlocks("blocks/camera.json")
+    distances = loadBlocks("blocks/distances.json")
+    ground = loadBlocks("blocks/ground.json")
+
+    return render_template('index.html', control=control, operators=operators, values=values, variables=variables, emotions=emotions, speaker=speaker, base=base, motor=motor, camera=camera, distances=distances, ground=ground)
+
+
+# Loads a file
+def loadBlocks(route):
+    f = open(route, "r")
     if f.mode == 'r':
-        contents = f.read()
-        print(contents)
-    return render_template('index.html', contents=contents)
+        result = f.read()
+    return result
 
 
 @app.route("/result", methods=['POST'])
-def get_blocks():
+def getBlocks():
     if request.method == 'POST':
         blocks = request.get_json()
-        blocksList = format_blocks(blocks)
+        blocksList = formatBlocks(blocks)
         #prueba()
     return '', 200
 
-def format_blocks(blocks):
+
+def formatBlocks(blocks):
     blocksList = blocks.split(">")
     array = []
     for i in range(1, len(blocksList)-2):

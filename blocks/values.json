@@ -1,0 +1,53 @@
+[{
+    "type": "val_num1",
+    "blocktextname": "val",
+    "message0": "%1",
+    "args0": [{
+        "type": "field_number",
+        "name": "NUM",
+        "value": 0
+    }],
+    "output": "Number",
+    "colour": 60
+}, {
+    "type": "val_num2",
+    "blocktextname": "val",
+    "message0": "%1 %2",
+    "args0": [{
+        "type": "field_number",
+        "name": "NUM",
+        "value": 0
+    }, {
+        "type": "input_value",
+        "name": "VAL",
+        "check": null
+    }],
+    "output": "Number",
+    "colour": 60
+}, {
+    "type": "val_text1",
+    "blocktextname": "val",
+    "message0": "%1",
+    "args0": [{
+        "type": "field_input",
+        "name": "TEXT",
+        "text": "%{BKY_SAMPLE_TEXT}"
+    }],
+    "output": "Text",
+    "colour": 60
+}, {
+    "type": "val_text2",
+    "blocktextname": "val",
+    "message0": "%1 %2",
+    "args0": [{
+        "type": "field_input",
+        "name": "TEXT",
+        "text": "%{BKY_SAMPLE_TEXT}"
+    }, {
+        "type": "input_value",
+        "name": "VAL",
+        "check": null
+    }],
+    "output": "Text",
+    "colour": 60
+}]

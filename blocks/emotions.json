@@ -1,0 +1,169 @@
+[{
+    "type": "emotion_neutral",
+    "blocktextname": "expressNeutral",
+    "message0": "%{BKY_EXPRESS_NEUTRAL}",
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour": 0
+}, {
+    "type": "emotion_joy",
+    "blocktextname": "expressJoy",
+    "message0": "%{BKY_EXPRESS_JOY}",
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour": 0
+}, {
+    "type": "emotion_fear",
+    "blocktextname": "expressFear",
+    "message0": "%{BKY_EXPRESS_FEAR}",
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour": 0
+}, {
+    "type": "emotion_sadness",
+    "blocktextname": "expressSadness",
+    "message0": "%{BKY_EXPRESS_SADNESS}",
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour": 0
+}, {
+    "type": "emotion_anger",
+    "blocktextname": "expressAnger",
+    "message0": "%{BKY_EXPRESS_ANGER}",
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour": 0
+}, {
+    "type": "emotion_disgust",
+    "blocktextname": "expressDisgust",
+    "message0": "%{BKY_EXPRESS_DISGUST}",
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour": 0
+}, {
+    "type": "emotion_surprise",
+    "blocktextname": "expressSurprise",
+    "message0": "%{BKY_EXPRESS_SURPRISE}",
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour": 0
+}, {
+    "type": "emotion_isNeutral1",
+    "blocktextname": "is_Neutral",
+    "message0": "%{BKY_IS_NEUTRAL}",
+    "output": null,
+    "colour": 300
+}, {
+    "type": "emotion_isNeutral2",
+    "blocktextname": "is_Neutral",
+    "message0": "%{BKY_IS_NEUTRAL} %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "EMOTION",
+        "check": null
+    }],
+    "output": null,
+    "colour": 300
+}, {
+    "type": "emotion_isJoy1",
+    "blocktextname": "is_Joy",
+    "message0": "%{BKY_IS_JOY}",
+    "output": null,
+    "colour": 300
+}, {
+    "type": "emotion_isJoy2",
+    "blocktextname": "is_Joy",
+    "message0": "%{BKY_IS_JOY} %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "EMOTION",
+        "check": null
+    }],
+    "output": null,
+    "colour": 300
+}, {
+    "type": "emotion_isScared1",
+    "blocktextname": "is_Scared",
+    "message0": "%{BKY_IS_FEAR}",
+    "output": null,
+    "colour": 300
+}, {
+    "type": "emotion_isScared2",
+    "blocktextname": "is_Scared",
+    "message0": "%{BKY_IS_FEAR} %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "EMOTION",
+        "check": null
+    }],
+    "output": null,
+    "colour": 300
+}, {
+    "type": "emotion_isSad1",
+    "blocktextname": "is_Sadness",
+    "message0": "%{BKY_IS_SADNESS}",
+    "output": null,
+    "colour": 300
+}, {
+    "type": "emotion_isSad2",
+    "blocktextname": "is_Sadness",
+    "message0": "%{BKY_IS_SADNESS} %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "EMOTION",
+        "check": null
+    }],
+    "output": null,
+    "colour": 300
+}, {
+    "type": "emotion_isAngry1",
+    "blocktextname": "is_Angry",
+    "message0": "%{BKY_IS_ANGER}",
+    "output": null,
+    "colour": 300
+}, {
+    "type": "emotion_isAngry2",
+    "blocktextname": "is_Angry",
+    "message0": "%{BKY_IS_ANGER} %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "EMOTION",
+        "check": null
+    }],
+    "output": null,
+    "colour": 300
+}, {
+    "type": "emotion_isDisgust1",
+    "blocktextname": "is_Disgust",
+    "message0": "%{BKY_IS_DISGUST}",
+    "output": null,
+    "colour": 300
+}, {
+    "type": "emotion_isDisgust2",
+    "blocktextname": "is_Disgust",
+    "message0": "%{BKY_IS_DISGUST} %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "EMOTION",
+        "check": null
+    }],
+    "output": null,
+    "colour": 300
+}, {
+    "type": "emotion_isSurprised1",
+    "blocktextname": "is_Surprised",
+    "message0": "%{BKY_IS_SURPRISE}",
+    "output": null,
+    "colour": 300
+}, {
+    "type": "emotion_isSurprised2",
+    "blocktextname": "is_Surprised",
+    "message0": "%{BKY_IS_SURPRISE} %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "EMOTION",
+        "check": null
+    }],
+    "output": null,
+    "colour": 300
+}]

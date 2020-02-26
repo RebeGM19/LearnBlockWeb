@@ -1,0 +1,200 @@
+[{
+    "type": "operator_add",
+    "blocktextname": "+",
+    "message0": "+ %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "NUM",
+        "check": null
+    }],
+    "output": null,
+    "colour": 230
+}, {
+    "type": "operator_minus",
+    "blocktextname": "-",
+    "message0": "- %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "NUM",
+        "check": null
+    }],
+    "output": null,
+    "colour": 230
+}, {
+    "type": "operator_mult",
+    "blocktextname": "*",
+    "message0": "* %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "NUM",
+        "check": null
+    }],
+    "output": null,
+    "colour": 230
+}, {
+    "type": "operator_div",
+    "blocktextname": "/",
+    "message0": "/ %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "NUM",
+        "check": null
+    }],
+    "output": null,
+    "colour": 230
+}, {
+    "type": "operator_eq",
+    "blocktextname": "=",
+    "message0": "= %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "NUM",
+        "check": null
+    }],
+    "output": null,
+    "colour": 230
+}, {
+    "type": "operator_booleq",
+    "blocktextname": "==",
+    "message0": "== %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "NUM",
+        "check": null
+    }],
+    "output": null,
+    "colour": 230
+}, {
+    "type": "operator_sumeq",
+    "blocktextname": "+=",
+    "message0": "+= %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "NUM",
+        "check": null
+    }],
+    "output": null,
+    "colour": 230
+}, {
+    "type": "operator_minuseq",
+    "blocktextname": "-=",
+    "message0": "-= %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "NUM",
+        "check": null
+    }],
+    "output": null,
+    "colour": 230
+}, {
+    "type": "operator_multeq",
+    "blocktextname": "*=",
+    "message0": "*= %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "NUM",
+        "check": null
+    }],
+    "output": null,
+    "colour": 230
+}, {
+    "type": "operator_diveq",
+    "blocktextname": "/=",
+    "message0": "/= %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "NUM",
+        "check": null
+    }],
+    "output": null,
+    "colour": 230
+}, {
+    "type": "operator_true",
+    "blocktextname": "True",
+    "message0": "%{BKY_TRUE}",
+    "output": null,
+    "colour": 230
+}, {
+    "type": "operator_false",
+    "blocktextname": "False",
+    "message0": "%{BKY_FALSE}",
+    "output": null,
+    "colour": 230
+}, {
+    "type": "operator_lessthan",
+    "blocktextname": "<",
+    "message0": "< %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "NUM",
+        "check": null
+    }],
+    "output": null,
+    "colour": 230
+}, {
+    "type": "operator_morethan",
+    "blocktextname": ">",
+    "message0": "> %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "NUM",
+        "check": null
+    }],
+    "output": null,
+    "colour": 230
+}, {
+    "type": "operator_and",
+    "blocktextname": "and",
+    "message0": "%{BKY_AND} %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "BOOL",
+        "check": null
+    }],
+    "output": null,
+    "colour": 230
+}, {
+    "type": "operator_or",
+    "blocktextname": "or",
+    "message0": "%{BKY_OR} %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "BOOL",
+        "check": null
+    }],
+    "output": null,
+    "colour": 230
+}, {
+    "type": "operator_not",
+    "blocktextname": "not",
+    "message0": "%{BKY_NOT} %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "BOOL",
+        "check": null
+    }],
+    "output": null,
+    "colour": 230
+}, {
+    "type": "operator_parenthesisr",
+    "blocktextname": ")",
+    "message0": ") %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "NUM",
+        "check": null
+    }],
+    "output": null,
+    "colour": 230
+}, {
+    "type": "operator_parenthesisl",
+    "blocktextname": "(",
+    "message0": "( %1",
+    "args0": [{
+        "type": "input_value",
+        "name": "NUM",
+        "check": null
+    }],
+    "output": null,
+    "colour": 230
+}]

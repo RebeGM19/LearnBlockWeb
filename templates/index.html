@@ -272,18 +272,35 @@
 
 
     <script>
-        var content = {{contents|tojson}};
-        console.log(content);
-
-        //A ver si parseando o yendo linea a linea lo coge
+        //Loads blocks from json definition
+        var control = {{control|tojson}};
+        loadBlocks(control);
+        var operators = {{operators|tojson}};
+        loadBlocks(operators);
+        var values = {{values|tojson}};
+        loadBlocks(values);
+        var variables = {{variables|tojson}};
+        loadBlocks(variables);
+        var emotions = {{emotions|tojson}};
+        loadBlocks(emotions);
+        var speaker = {{speaker|tojson}};
+        loadBlocks(speaker);
+        var base = {{base|tojson}};
+        loadBlocks(base);
+        var motor = {{motor|tojson}};
+        loadBlocks(motor);
+        var camera = {{camera|tojson}};
+        loadBlocks(camera);
+        var distances = {{distances|tojson}};
+        loadBlocks(distances);
+        var ground = {{ground|tojson}};
+        loadBlocks(ground);
 
         var workspace = LearnBlock.inject('learnblockDiv', {
             toolbox: document.getElementById('toolbox'),
             horizontalLayout: false,
             scrollbars: true
         });
-
-        //LearnBlock.defineBlocksWithJsonArray(JSON.parse(content));
 
     </script>
 

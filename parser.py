@@ -4,6 +4,7 @@ app = Flask(__name__)
 
 
 def createBlock(name, type_, value, statement, next_):
+    #print("Crea block " + name)
     dic = {}
     dic["RIGHT"] = value
     dic["BOTTOM"] = next_
@@ -18,47 +19,49 @@ def searchName(string):
     name = string[positionIni+15:positionFinal]
     return name
 
-def process(arrayBlocks, position):
-    block = arrayBlocks[position]
-    value = None
-    statement = None
-    next_ = None
-    result = None
-    #print(block)
-    #print(position)
-    if block.find("<block ") != -1:
-        print("Entra primer if")
-        name = searchName(block)
-        if block.find("/>") != -1:
-            result = createBlock(name, None, value, statement, next_)
-            nextBlock = arrayBlocks[position+1]
-            if nextBlock.find("</value>") != -1:
-                print("entra")
-                process(arrayBlocks, position+2)
-        else:
-            print("Hola")
-            nextBlock = arrayBlocks[position+1]
-            if nextBlock.find("<statement ") != -1:
-                print("Entra statement")
-                statement = process(arrayBlocks, position+2)
-            if nextBlock.find("<value ") != -1:
-                value = process(arrayBlocks, position+2)
-            if nextBlock.find("<next>") != -1:
-                next_ = process(arrayBlocks, position+2)
-
-
-            result = createBlock(name, None, value, statement, next_)
-            # Quedan por procesar variables y funciones
-            # Asignar tipo
-            # Mirar los fields
-    elif block.find("<statement ") != -1:
-        print("Entra if statement")
-        print(arrayBlocks[position+1])
-        statement = process(arrayBlocks, position+1)
-        #print(statement)
-        #print(result)
-    #result = createBlock(searchName(arrayBlocks[position+1]), None, value, statement, next_)
+def processStatements(arrayBlocks, position, next_, result):
+    if(arrayBlocks[position].find("</statement>") == -1):
+        if arrayBlocks[position].find("<block ") != -1:
+            name = searchName(arrayBlocks[position])
+            if arrayBlocks[position].find("/>") == -1:  #Bloque normal
+                if arrayBlocks[position+1].find("<next>") == -1:
+                    next_ = processStatements(arrayBlocks, position+2, next_, result) #Procesa el siguiente bloque de debajo
+            name = searchName(arrayBlocks[position])
+            result = createBlock(name, None, None, None, next_)
     return result
+
+def processValues(arrayBlocks, position, value, result):
+    name = ""
+    if(arrayBlocks[position].find("</value>") == -1):
+        if arrayBlocks[position].find("<block ") != -1:
+            name = searchName(arrayBlocks[position])
+            if arrayBlocks[position].find("/>") == -1:  #Bloque normal
+                if arrayBlocks[position+1].find("<value ") != -1:
+                    value = processValues(arrayBlocks, position+2, value, result) #Procesa el siguiente bloque de la derecha
+            name = searchName(arrayBlocks[position])
+            result = createBlock(name, None, value, None, None)
+            #print(result)
+    return result
+
+def process(arrayBlocks, position, value, statement, next_, result, name):
+    print("Entra proceso")
+    block = arrayBlocks[position]
+    if block.find("<block ") != -1: #Mirar esta condicion
+        name = searchName(block)
+        if block.find("/>") == -1:
+            i = position + 1
+            #if(arrayBlocks[i].find("</block>") == -1):
+            if(i < len(arrayBlocks)):
+                if arrayBlocks[i].find("<statement ") != -1:
+                    print("Entra if statement")
+                    statement = processStatements(arrayBlocks, i+1, None, None)
+                if arrayBlocks[i].find("<value ") != -1:
+                    value = processValues(arrayBlocks, i+1, None, None)
+                process(arrayBlocks, i+1, value, statement, next_, result, name)
+    result = createBlock(name, None, value, statement, next_)
+    print(result)
+    return result
+
 
 # Mirar:
     # Si con una llamada a process es suficiente

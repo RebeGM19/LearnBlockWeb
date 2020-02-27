@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 from learnbot_dsl.learnbotCode.Parser import __parserFromString, __generatePy, cleanCode
 from parser import searchName, createBlock, process
-from learnbot_dsl.learnbotCode.LearnBlock import toLBotPy#, parserOtherBlocks
+from learnbot_dsl.learnbotCode.LearnBlock import toLBotPy #, parserOtherBlocks
 app = Flask(__name__)
 
 @app.route("/")
@@ -36,8 +36,9 @@ def getBlocks():
         blocks = request.get_json()
         blocksList = formatBlocks(blocks)
         print("------------------------------------------")
-        print(process(blocksList, 0))
-        result = toLBotPy(process(blocksList, 0), 1)
+        preResult = process(blocksList, 0, None, None, None, None, None)
+        #print(preResult)
+        result = toLBotPy(preResult, 1)
         print("------------------------------------------")
         print(result)
         print("------------------------------------------")

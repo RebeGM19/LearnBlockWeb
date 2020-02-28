@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from learnbot_dsl.learnbotCode.Parser import __parserFromString, __generatePy, cleanCode
-from parser import searchName, createBlock, process
+from parser import searchName, createBlock, convert
 from learnbot_dsl.learnbotCode.LearnBlock import toLBotPy #, parserOtherBlocks
 app = Flask(__name__)
 
@@ -36,11 +36,12 @@ def getBlocks():
         blocks = request.get_json()
         blocksList = formatBlocks(blocks)
         print("------------------------------------------")
-        preResult = process(blocksList, 0, None, None, None, None, None)
+        #preResult = process(blocksList, 0, None, None, None, None, None)
         #print(preResult)
-        result = toLBotPy(preResult, 1)
+        convert(listToString(blocksList))
+        #result = toLBotPy(preResult, 1)
         print("------------------------------------------")
-        print(result)
+        #print(result)
         print("------------------------------------------")
         #prueba()
     return '', 200
@@ -49,12 +50,20 @@ def getBlocks():
 def formatBlocks(blocks):
     blocksList = blocks.split(">")
     array = []
+    array.append("<?xml version=\"1.0\"?>")
     for i in range(1, len(blocksList)-2):
         blocksList[i] = blocksList[i] + ">"
         array.append(blocksList[i])
     for block in array:
         print(block)
     return array
+
+def listToString(s):
+    str1 = ""
+    for ele in s:
+        str1 += ele
+    return str1
+
 
 def prueba():
     textprueba = """

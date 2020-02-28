@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request
 from learnbot_dsl.learnbotCode.Parser import __parserFromString, __generatePy, cleanCode
+import xml.etree.ElementTree as ET
+import re
 app = Flask(__name__)
 
 
@@ -19,53 +21,86 @@ def searchName(string):
     name = string[positionIni+15:positionFinal]
     return name
 
-def processStatements(arrayBlocks, position, next_, result):
-    if(arrayBlocks[position].find("</statement>") == -1):
-        if arrayBlocks[position].find("<block ") != -1:
-            name = searchName(arrayBlocks[position])
-            if arrayBlocks[position].find("/>") == -1:  #Bloque normal
-                if arrayBlocks[position+1].find("<next>") == -1:
-                    next_ = processStatements(arrayBlocks, position+2, next_, result) #Procesa el siguiente bloque de debajo
-            name = searchName(arrayBlocks[position])
-            result = createBlock(name, None, None, None, next_)
+
+
+def getValues(valuesTree):
+    result = None
+    block = valuesTree.find('block')
+    print(block.tag, block.get('blocktextname'))
+    if block.find('value') != -1:
+        value = block.find('value')
+        result = value
     return result
 
-def processValues(arrayBlocks, position, value, result):
-    name = ""
-    if(arrayBlocks[position].find("</value>") == -1):
-        if arrayBlocks[position].find("<block ") != -1:
-            name = searchName(arrayBlocks[position])
-            if arrayBlocks[position].find("/>") == -1:  #Bloque normal
-                if arrayBlocks[position+1].find("<value ") != -1:
-                    value = processValues(arrayBlocks, position+2, value, result) #Procesa el siguiente bloque de la derecha
-            name = searchName(arrayBlocks[position])
-            result = createBlock(name, None, value, None, None)
-            #print(result)
+def getStatements(statTree):
+    result = None
+    block = statTree.find('block')
+    print(block.tag, block.get('blocktextname'))
+    next_ = block.find('next')
+    value = block.find('value')
+    if next_ != None:
+        result = next_
     return result
 
-def process(arrayBlocks, position, value, statement, next_, result, name):
-    print("Entra proceso")
-    block = arrayBlocks[position]
-    if block.find("<block ") != -1: #Mirar esta condicion
-        name = searchName(block)
-        if block.find("/>") == -1:
-            i = position + 1
-            #if(arrayBlocks[i].find("</block>") == -1):
-            if(i < len(arrayBlocks)):
-                if arrayBlocks[i].find("<statement ") != -1:
-                    print("Entra if statement")
-                    statement = processStatements(arrayBlocks, i+1, None, None)
-                if arrayBlocks[i].find("<value ") != -1:
-                    value = processValues(arrayBlocks, i+1, None, None)
-                process(arrayBlocks, i+1, value, statement, next_, result, name)
-    result = createBlock(name, None, value, statement, next_)
-    print(result)
+def getNext(nextTree):
+    result = None
+    block = nextTree.find('block')
+    if block != None:
+        print(block.tag, block.get('blocktextname'))
+
+        value = block.find('value')
+        valTree = value
+        while(valTree != None):
+            valTree = getValues(valTree)
+
+        statement = block.find('statement')
+        if statement != None:
+            firstStat = statement.find('block')  # Primer bloque del statement
+            print(firstStat.tag, firstStat.get('blocktextname'))
+            next_ = firstStat.find('next')
+            statTree = next_
+            while(statTree != None):
+                statTree = getStatements(statTree)
+
+        next_ = block.find('next')
+        if next_ != None:
+            result = next_
+
     return result
+
+def convert(blocksString):
+    root = ET.fromstring(re.sub(r"(<\?xml[^>]+\?>)", r"\1<root>", blocksString) + "</root>")
+    print(root.tag, root.attrib)
+    for block in root:
+        print (block.tag, block.get('blocktextname'))
+
+        value = block.find('value')
+        valTree = value
+        while(valTree != None):
+            valTree = getValues(valTree)
+            # Crear bloque y meterlo en RIGHT
+
+
+        statement = block.find('statement')
+        firstStat = statement.find('block')  # Primer bloque del statement
+        print(firstStat.tag, firstStat.get('blocktextname'))
+        next_ = firstStat.find('next')
+        statTree = next_
+        while(statTree != None):
+            statTree = getStatements(statTree)
+            # Crear bloque y meterlo en BOTTOMIN
+
+
+        nextBlock = block.find('next')
+        nextTree = nextBlock
+        while(nextTree != None):
+            nextTree = getNext(nextTree)
+            # Crear bloque y meterlo en BOTTOM
 
 
 # Mirar:
-    # Si con una llamada a process es suficiente
-    # Si se necesita un array con lo que devuelve process por cada bloque
+    # Fields
+    # Variables
 
 
 if __name__ == '__main__':

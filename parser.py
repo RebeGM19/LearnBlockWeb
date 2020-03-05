@@ -1,8 +1,6 @@
-from flask import Flask, render_template, request
 from learnbot_dsl.learnbotCode.Parser import __parserFromString, __generatePy, cleanCode
 import xml.etree.ElementTree as ET
 import re
-app = Flask(__name__)
 
 
 def createBlock(name, type_):
@@ -33,6 +31,9 @@ def insertBlock(firstBlock, block, specification):
             thisBlock = aux
 
 
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Algo no funcionaba y ahora funciona wtf??
 
 def getValues(valuesTree):
     result = None
@@ -44,7 +45,6 @@ def getValues(valuesTree):
     return result
 
 def getStatements(statTree, firstBlock):
-    print("Entra get statements")
     result = None
     newBlock = None
     block = statTree.find('block')
@@ -163,21 +163,19 @@ def convert(blocksString):
 
         nextBlock = firstStat.find('next')
         nextTree = nextBlock
-        lastBlock = createBlock("Last", None)
-        while(nextTree != None and lastBlock != None):
-            print("Bucle")
-            nextValue = getNext(nextTree, statementBlock)
-            nextTree = nextValue[0]
-            lastBlock = nextValue[1]
-            # Crear bloque y meterlo en BOTTOM
-        insertBlock(statementBlock, lastBlock, "BOTTOM")
+        if nextBlock != None:  # Comprueba esto, a ver qué has hecho aquí, melona
+            lastBlock = createBlock("Last", None)
+            while(nextTree != None and lastBlock != None):
+                nextValue = getNext(nextTree, statementBlock)
+                nextTree = nextValue[0]
+                lastBlock = nextValue[1]
+                # Creates block and adds it at BOTTOM
+            insertBlock(statementBlock, lastBlock, "BOTTOM")
         print(mainBlock)
+        return mainBlock
 
 
 # Mirar:
     # Fields
     # Variables
 
-
-if __name__ == '__main__':
-    app.run(debug=False)

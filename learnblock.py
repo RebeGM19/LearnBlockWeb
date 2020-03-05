@@ -29,22 +29,22 @@ def loadBlocks(route):
         result = f.read()
     return result
 
-
-@app.route("/result", methods=['POST'])
+@app.route("/result", methods=['GET', 'POST'])
 def getBlocks():
     if request.method == 'POST':
         blocks = request.get_json()
         blocksList = formatBlocks(blocks)
         print("------------------------------------------")
-        #preResult = process(blocksList, 0, None, None, None, None, None)
-        #print(preResult)
-        convert(listToString(blocksList))
-        #result = toLBotPy(preResult, 1)
+        preResult = convert(listToString(blocksList))
+        result = toLBotPy(preResult, 1)
         print("------------------------------------------")
         #print(result)
-        print("------------------------------------------")
-        #prueba()
-    return '', 200
+        #print("------------------------------------------")
+        blocktext = str(result)
+        print(blocktext)
+        return blocktext, 200
+    else:
+        return '', 200
 
 
 def formatBlocks(blocks):

@@ -23,6 +23,7 @@
         <tr>
             <td>
                 <h1 id="sup"></h1>
+                <p>{{ blocktext }}</p>
                 <div class="row mb-5">
                     <button type="button" onclick="alert('Crear nuevo bloque')" class="lang" key="bCreateBlock" id="newblock"></button>
                     <select id="languageMenu"></select>
@@ -55,7 +56,7 @@
                         </div>
 
                         <div class="tab-pane" id="blocktext">
-                            <p>Block-Text</p>
+                           <textarea id="resultblocktext"></textarea> <!-- Configurar tamaño fijo del textarea o buscar otro elemento html que no se coma los intros y tabs -->
                         </div>
 
                         <div class="tab-pane active" id="learnblock">

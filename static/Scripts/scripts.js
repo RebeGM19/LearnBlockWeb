@@ -17,7 +17,12 @@ function execute() {
         url: "/result",
         traditional: "true",
         data: JSON.stringify(loadBlocks),
-        dataType: "json"
+        dataType: "text",
+        success: function(data) {
+            //alert(data);
+            document.getElementById("resultblocktext").innerHTML += data;
+        }
     });
 }
+
 

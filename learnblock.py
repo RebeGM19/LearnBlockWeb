@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request
+from learnbot_dsl.learnbotCode.guiCreateBlock import *
+from learnbot_dsl.learnbotCode.LearnBlock import *
 from learnbot_dsl.learnbotCode.Parser import __parserFromString, __generatePy, cleanCode
 from parser import searchName, createBlock, convert
-from learnbot_dsl.learnbotCode.LearnBlock import toLBotPy #, parserOtherBlocks
 app = Flask(__name__)
 
 @app.route("/")
@@ -29,6 +30,38 @@ def loadBlocks(route):
         result = f.read()
     return result
 
+def convertUserFunctions(blocks):
+    text = ""
+    for b in [block for block in blocks if block[1]["TYPE"] is USERFUNCTION]:
+        text += "def " + toLBotPy(b, 1)
+        text += "\nend\n\n"
+    return text
+
+def convertMainFunctions(blocks):
+    text = ""
+    #for b in [block for block in blocks if "main" == block[0]]:
+    for b in blocks:  # Esto hay que cambiarlo
+        print(blocks[0])
+        print(blocks[1]["BOTTOMIN"][0])
+        if blocks[0] != "main":
+            continue
+        text += b[0] + ":\n"
+        print(b[0])
+        print(b[1])
+        if b[1]["BOTTOMIN"] != None:  # Ojito a esto
+            text += "\t" + toLBotPy(b[1]["BOTTOMIN"], 2)
+        else:
+            text += "pass"
+        text += "\nend\n\n"
+    return text
+
+
+def convertBlocks(blocks):
+    #text = convertUserFunctions(blocks)
+    #text += "\n\n"
+    text = convertMainFunctions(blocks)
+    return text
+
 @app.route("/result", methods=['GET', 'POST'])
 def getBlocks():
     if request.method == 'POST':
@@ -36,7 +69,9 @@ def getBlocks():
         blocksList = formatBlocks(blocks)
         print("------------------------------------------")
         preResult = convert(listToString(blocksList))
-        result = toLBotPy(preResult, 1)
+        print(preResult[0])
+        #result = toLBotPy(preResult, 1)
+        result = convertBlocks(preResult)
         print("------------------------------------------")
         #print(result)
         #print("------------------------------------------")

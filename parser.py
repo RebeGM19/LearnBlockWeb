@@ -1,4 +1,5 @@
 from learnbot_dsl.learnbotCode.Parser import __parserFromString, __generatePy, cleanCode
+from learnbot_dsl.learnbotCode.guiCreateBlock import *
 import xml.etree.ElementTree as ET
 import re
 
@@ -9,7 +10,7 @@ def createBlock(name, type_):
     dic["RIGHT"] = None
     dic["BOTTOMIN"] = None
     dic["BOTTOM"] = None
-    # Añadir VARIABLES
+    dic["VARIABLES"] = None
     dic["TYPE"] = type_
     return name, dic
 
@@ -29,6 +30,21 @@ def insertBlock(firstBlock, block, specification):
         else:
             aux = thisBlock[1][specification]
             thisBlock = aux
+
+def getType(string):
+    positionFinal = string.find("_")
+    finalType = None
+    type_ = string[:positionFinal]
+    if type_ == "control":
+        finalType = CONTROL
+    if type_ == "procedures":
+        finalType = USERFUNCTION
+    if type_ == "variables":
+        finalType = VARIABLE
+    if type_ == "base" or type_ == "cam" or type_ == "dist" or type_ == "emotion" or type_ == "ground" or type_ == "motor" or type_ == "speaker":
+        finalType = FUNTION
+    print(finalType)
+    return finalType
 
 
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -54,24 +70,24 @@ def getStatements(statTree, firstBlock):
     statement = block.find('statement')
     if value != None:
         result = getValues(value)
-        newBlock = createBlock(value.find('block').get('blocktextname'), None)
+        newBlock = createBlock(value.find('block').get('blocktextname'), getType(value.find('block').get('type')))
         if newBlock != None and firstBlock != None:
             insertBlock(firstBlock, newBlock, "RIGHT")
             while(value != None):
                 value = getValues(value)
                 if value != None:
-                    thisBlock = createBlock(value.find('block').get('blocktextname'), None)
+                    thisBlock = createBlock(value.find('block').get('blocktextname'), getType(value.find('block').get('type')))
                     insertBlock(firstBlock, thisBlock, "RIGHT")  # Cambiar FirstBlock, debe insertar el anterior (se puede recuperar con el return newBlock??)
     if statement != None:
-        blockStatement = createBlock(statement.get('blocktextname'), None)
+        blockStatement = createBlock(statement.get('blocktextname'), getType(statement.get('type')))
         result = getStatements(statement, blockStatement)[0]
     if next_ != None:
         result = getNext(next_, firstBlock)[0]
         if firstBlock != None:
             if result != None:
-                newBlock = createBlock(result.find('block').get('blocktextname'), None)
+                newBlock = createBlock(result.find('block').get('blocktextname'), getType(result.find('block').get('type')))
             else:
-                newBlock = createBlock(next_.find('block').get('blocktextname'), None)
+                newBlock = createBlock(next_.find('block').get('blocktextname'), getType(result.find('block').get('type')))
             insertBlock(firstBlock, newBlock, "BOTTOM")
     return result, newBlock
 
@@ -81,23 +97,23 @@ def getNext(nextTree, firstBlock):
     block = nextTree.find('block')
     if block != None:
         print(block.tag, block.get('blocktextname'))
-        newBlock = createBlock(block.get('blocktextname'), None)
+        newBlock = createBlock(block.get('blocktextname'), getType(block.get('type')))
 
         value = block.find('value')
         if value != None:
             valTree = value
-            valueBlock = createBlock(value.find('block').get('blocktextname'), None)
+            valueBlock = createBlock(value.find('block').get('blocktextname'), getType(value.find('block').get('type')))
             insertBlock(newBlock, valueBlock, "RIGHT")
             while(valTree != None):
                 valTree = getValues(valTree)
                 if valTree != None:
-                    thisBlock = createBlock(valTree.find('block').get('blocktextname'), None)
+                    thisBlock = createBlock(valTree.find('block').get('blocktextname'), getType(valTree.find('block').get('type')))
                     insertBlock(newBlock, thisBlock, "RIGHT")
 
         statement = block.find('statement')
         if statement != None:
             firstStat = statement.find('block')  # Primer bloque del statement
-            statementBlock = createBlock(firstStat.get('blocktextname'), None)
+            statementBlock = createBlock(firstStat.get('blocktextname'), getType(firstStat.get('type')))
             insertBlock(newBlock, statementBlock, "BOTTOMIN")
             while(statement != None):
                 statement = getStatements(statement, statementBlock)[0]
@@ -118,46 +134,44 @@ def convert(blocksString):
     for block in root:
         print (block.tag, block.get('blocktextname'))
 
-        mainBlock = createBlock(block.get('blocktextname'), None)
+        mainBlock = createBlock(block.get('blocktextname'), getType(block.get('type')))
 
         value = block.find('value')
         if value != None:
             valTree = value
-            valueBlock = createBlock(value.find('block').get('blocktextname'), None)
+            valueBlock = createBlock(value.find('block').get('blocktextname'), getType(value.find('block').get('type')))
             insertBlock(mainBlock, valueBlock, "RIGHT")
             while(valTree != None):
                 valTree = getValues(valTree)
                 # Creates a block and adds it at RIGHT
                 if valTree != None:
-                    thisBlock = createBlock(valTree.find('block').get('blocktextname'), None)
+                    thisBlock = createBlock(valTree.find('block').get('blocktextname'), getType(valTree.find('block').get('type')))
                     insertBlock(valueBlock, thisBlock, "RIGHT")
             #print(valueBlock)
 
         statement = block.find('statement')
         if statement != None:
             firstStat = statement.find('block')  # Primer bloque del statement
-            statementBlock = createBlock(statement.find('block').get('blocktextname'), None)
+            statementBlock = createBlock(statement.find('block').get('blocktextname'), getType(statement.find('block').get('type')))
             insertBlock(mainBlock, statementBlock, "BOTTOMIN")
             print(firstStat.tag, firstStat.get('blocktextname'))
 
             if firstStat.find('value') != -1 and firstStat.find('value') != None:
                 valTree = firstStat.find('value')
-                firstValue = createBlock(valTree.find('block').get('blocktextname'), None)
+                firstValue = createBlock(valTree.find('block').get('blocktextname'), getType(valTree.find('block').get('type')))
                 insertBlock(statementBlock, firstValue, "RIGHT")
                 while(valTree != None):
                     valTree = getValues(valTree)
                     if valTree != None:
-                        thisBlock = createBlock(valTree.find('block').get('blocktextname'), None)
+                        thisBlock = createBlock(valTree.find('block').get('blocktextname'), getType(valTree.find('block').get('type')))
                         insertBlock(statementBlock, thisBlock, "RIGHT")
 
             if firstStat.find('statement') != -1 and firstStat.find('statement') != None:
                 insideStatement = firstStat.find('statement')
                 insideTree = insideStatement
-                newBlock = createBlock(insideStatement.find('block').get('blocktextname'), None)
+                newBlock = createBlock(insideStatement.find('block').get('blocktextname'), getType(insideStatement.find('block').get('type')))
                 insertBlock(statementBlock, newBlock, "BOTTOMIN")
                 while(insideTree != None):
-                    print("buclesito")
-                    print(newBlock[0])
                     insideTree = getStatements(insideTree, newBlock)[0]
             #print(statementBlock)
 

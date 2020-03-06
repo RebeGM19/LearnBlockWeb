@@ -20,7 +20,7 @@ function execute() {
         dataType: "text",
         success: function(data) {
             //alert(data);
-            document.getElementById("resultblocktext").innerHTML += data;
+            document.getElementById("resultblocktext").innerHTML = data;
         }
     });
 }

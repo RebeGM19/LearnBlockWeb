@@ -11,14 +11,14 @@ function execute() {
     } catch (e) {
         loadBlocks = null;
     }
-    $.ajax({
+    $.ajax({ //When blocks are loaded, the parser function is executed and the Block-Text code is returned
         type: "POST",
         contentType: "application/json;charset=utf-8",
         url: "/result",
         traditional: "true",
         data: JSON.stringify(loadBlocks),
         dataType: "text",
-        success: function(data) {
+        success: function(data) { //The code is shown in an html element
             //alert(data);
             document.getElementById("resultblocktext").innerHTML = data;
         }

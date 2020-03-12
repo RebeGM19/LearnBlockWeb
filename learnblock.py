@@ -30,6 +30,7 @@ def loadBlocks(route):
         result = f.read()
     return result
 
+# De momento na
 def convertUserFunctions(blocks):
     text = ""
     for b in [block for block in blocks if block[1]["TYPE"] is USERFUNCTION]:
@@ -37,6 +38,7 @@ def convertUserFunctions(blocks):
         text += "\nend\n\n"
     return text
 
+# De momento na
 def convertMainFunctions(blocks):
     text = ""
     #for b in [block for block in blocks if "main" == block[0]]:
@@ -55,13 +57,14 @@ def convertMainFunctions(blocks):
         text += "\nend\n\n"
     return text
 
-
+# De momento na
 def convertBlocks(blocks):
     #text = convertUserFunctions(blocks)
     #text += "\n\n"
     text = convertMainFunctions(blocks)
     return text
 
+# When the button "execute" is clicked, gets the blocks in the workspace, parses them and returns the equivalent Block-Text (and Python) code
 @app.route("/result", methods=['GET', 'POST'])
 def getBlocks():
     if request.method == 'POST':
@@ -70,6 +73,7 @@ def getBlocks():
         print("------------------------------------------")
         preResult = convert(listToString(blocksList))
         print(preResult[0])
+        #result = parserOtherBlocks(preResult, toLBotPy)
         result = toLBotPy(preResult, 1)
         #result = convertBlocks(preResult)
         print("------------------------------------------")
@@ -81,7 +85,7 @@ def getBlocks():
     else:
         return '', 200
 
-
+# Mirar esto ?????
 def formatBlocks(blocks):
     blocksList = blocks.split(">")
     array = []
@@ -93,13 +97,14 @@ def formatBlocks(blocks):
         print(block)
     return array
 
+# Mirar esto ?????
 def listToString(s):
     str1 = ""
     for ele in s:
         str1 += ele
     return str1
 
-
+# Prueba que la llamada al parser de python funciona (sí funciona jej)
 def prueba():
     textprueba = """
 

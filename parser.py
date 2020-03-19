@@ -162,6 +162,7 @@ def getNext(nextTree, firstBlock):
 def convert(blocksString):
     root = ET.fromstring(re.sub(r"(<\?xml[^>]+\?>)", r"\1<root>", blocksString) + "</root>")
     print(root.tag, root.attrib)
+    listBlocks = []
     for block in root:
         print (block.tag, block.get('blocktextname'))
 
@@ -183,7 +184,7 @@ def convert(blocksString):
                     insertBlock(valueBlock, thisBlock, "RIGHT")
             #print(valueBlock)
 
-        # The second elements to be processed are the blocks inside the first one (statements, BottomIn)
+        # The next elements to be processed are the blocks inside the first one (statements, BottomIn)
         statement = block.find('statement')
         if statement != None:
             # Processes the first element inside the block, creates and inserts it at BottomIn
@@ -221,10 +222,11 @@ def convert(blocksString):
             while(nextTree != None and lastBlock != None):
                 nextValue = getNext(nextTree, statementBlock)
                 nextTree = nextValue[0]
-                lastBlock = nextValue[1]ç
+                lastBlock = nextValue[1]
             insertBlock(statementBlock, lastBlock, "BOTTOM")
         print(mainBlock)
-        return mainBlock
+        listBlocks.append(mainBlock)
+    return listBlocks
 
 
 # Mirar:

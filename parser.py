@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 import re
 
 # Creates a block with the appropiate structure. The Block-Text parser gets this structure to generate the code.
-def createBlock(name, type_, variables):
+def createBlock(name, type_, variables, block):
     #print("Crea block " + name)
     dic = {}
     dic["RIGHT"] = None
@@ -12,6 +12,16 @@ def createBlock(name, type_, variables):
     dic["BOTTOM"] = None
     dic["VARIABLES"] = variables
     dic["TYPE"] = type_
+
+    # Changes the block name depending on the type
+
+    # User procedure definition
+    if type_ == USERFUNCTION and block.find('field') != None:
+        name = block.find('field').text
+    # User procedure call
+    if type_ == USERFUNCTION and block.find('mutation') != None:
+        name = block.find('mutation').get('name')
+
     return name, dic
 
 # Gets the block name. ¿?¿?¿?¿?
@@ -89,19 +99,19 @@ def getStatements(statTree, firstBlock):
     if value != None:
         # This process returns all the blocks at the right, not just the first one
         result = getValues(value)
-        newBlock = createBlock(value.find('block').get('blocktextname'), getType(value.find('block').get('type')), getVariables(value.find('block')))
+        newBlock = createBlock(value.find('block').get('blocktextname'), getType(value.find('block').get('type')), getVariables(value.find('block')), value.find('block'))
         if newBlock != None and firstBlock != None:
             insertBlock(firstBlock, newBlock, "RIGHT")
             while(value != None):
                 value = getValues(value)
                 if value != None:
-                    thisBlock = createBlock(value.find('block').get('blocktextname'), getType(value.find('block').get('type')), getVariables(value.find('block')))
+                    thisBlock = createBlock(value.find('block').get('blocktextname'), getType(value.find('block').get('type')), getVariables(value.find('block')), value.find('block'))
                     insertBlock(firstBlock, thisBlock, "RIGHT")  # Cambiar FirstBlock, debe insertar el anterior (se puede recuperar con el return newBlock??) CASO RARO
 
     # If the first block has other blocks inside it, processes those blocks (BottomIn, getStatements)
     if statement != None:
         # Recursion to get the elements inside the block
-        blockStatement = createBlock(statement.get('blocktextname'), getType(statement.get('type')), getVariables(statement))
+        blockStatement = createBlock(statement.get('blocktextname'), getType(statement.get('type')), getVariables(statement), statement)
         result = getStatements(statement, blockStatement)[0]
 
     # If the first block has other blocks under it, processes those blocks (Bottom, getNext)
@@ -110,10 +120,10 @@ def getStatements(statTree, firstBlock):
         if firstBlock != None:
             if result != None:
                 # If the block has other blocks under it, processes them
-                newBlock = createBlock(result.find('block').get('blocktextname'), getType(result.find('block').get('type')), getVariables(result.find('block')))
+                newBlock = createBlock(result.find('block').get('blocktextname'), getType(result.find('block').get('type')), getVariables(result.find('block')), result.find('block'))
             else:
                 # If the block does not have other blocks under it, creates it as if it was the last one
-                newBlock = createBlock(next_.find('block').get('blocktextname'), getType(result.find('block').get('type')), getVariables(result.find('block')))
+                newBlock = createBlock(next_.find('block').get('blocktextname'), getType(result.find('block').get('type')), getVariables(result.find('block')), result.find('block'))
             insertBlock(firstBlock, newBlock, "BOTTOM")
     return result, newBlock
 
@@ -125,25 +135,25 @@ def getNext(nextTree, firstBlock):
     # If there is a block under the given one
     if block != None:
         print(block.tag, block.get('blocktextname'))
-        newBlock = createBlock(block.get('blocktextname'), getType(block.get('type')), getVariables(block))
+        newBlock = createBlock(block.get('blocktextname'), getType(block.get('type')), getVariables(block), block)
 
         value = block.find('value')
         # If the block has other blocks at its right, processes them (Right, getValues)
         if value != None:
             valTree = value
-            valueBlock = createBlock(value.find('block').get('blocktextname'), getType(value.find('block').get('type')), getVariables(value.find('block')))
+            valueBlock = createBlock(value.find('block').get('blocktextname'), getType(value.find('block').get('type')), getVariables(value.find('block')), value.find('block'))
             insertBlock(newBlock, valueBlock, "RIGHT")
             while(valTree != None):
                 valTree = getValues(valTree)
                 if valTree != None:
-                    thisBlock = createBlock(valTree.find('block').get('blocktextname'), getType(valTree.find('block').get('type')), getVariables(valTree.find('block')))
+                    thisBlock = createBlock(valTree.find('block').get('blocktextname'), getType(valTree.find('block').get('type')), getVariables(valTree.find('block')), valTree.find('block'))
                     insertBlock(newBlock, thisBlock, "RIGHT")
 
         # If the block has other blocks inside it, processes them (BottomIn, getStatements)
         statement = block.find('statement')
         if statement != None:
             firstStat = statement.find('block')  # Primer bloque del statement
-            statementBlock = createBlock(firstStat.get('blocktextname'), getType(firstStat.get('type')), getVariables(firstStat))
+            statementBlock = createBlock(firstStat.get('blocktextname'), getType(firstStat.get('type')), getVariables(firstStat), firstStat)
             insertBlock(newBlock, statementBlock, "BOTTOMIN")
             while(statement != None):
                 statement = getStatements(statement, statementBlock)[0]
@@ -167,20 +177,20 @@ def convert(blocksString):
         print (block.tag, block.get('blocktextname'))
 
         # The first block must be alwais a main block
-        mainBlock = createBlock(block.get('blocktextname'), getType(block.get('type')), getVariables(block))
+        mainBlock = createBlock(block.get('blocktextname'), getType(block.get('type')), getVariables(block), block)
 
         # The first blocks to be processed are the blocks at the right (ojo con esto, revisar)
         value = block.find('value')
         if value != None:
             valTree = value
             # Creates the first block at the right
-            valueBlock = createBlock(value.find('block').get('blocktextname'), getType(value.find('block').get('type')), getVariables(value.find('block')))
+            valueBlock = createBlock(value.find('block').get('blocktextname'), getType(value.find('block').get('type')), getVariables(value.find('block')), value.find('block'))
             insertBlock(mainBlock, valueBlock, "RIGHT")
             # Processes the other blocks at the right, and creates them
             while(valTree != None):
                 valTree = getValues(valTree)
                 if valTree != None:
-                    thisBlock = createBlock(valTree.find('block').get('blocktextname'), getType(valTree.find('block').get('type')), getVariables(valTree.find('block')))
+                    thisBlock = createBlock(valTree.find('block').get('blocktextname'), getType(valTree.find('block').get('type')), getVariables(valTree.find('block')), valTree.find('block'))
                     insertBlock(valueBlock, thisBlock, "RIGHT")
             #print(valueBlock)
 
@@ -189,26 +199,26 @@ def convert(blocksString):
         if statement != None:
             # Processes the first element inside the block, creates and inserts it at BottomIn
             firstStat = statement.find('block')
-            statementBlock = createBlock(statement.find('block').get('blocktextname'), getType(statement.find('block').get('type')), getVariables(statement.find('block')))
+            statementBlock = createBlock(statement.find('block').get('blocktextname'), getType(statement.find('block').get('type')), getVariables(statement.find('block')), statement.find('block'))
             insertBlock(mainBlock, statementBlock, "BOTTOMIN")
             print(firstStat.tag, firstStat.get('blocktextname'))
 
             # If the first element has blocks at the right, processes them (Right)
             if firstStat.find('value') != -1 and firstStat.find('value') != None:
                 valTree = firstStat.find('value')
-                firstValue = createBlock(valTree.find('block').get('blocktextname'), getType(valTree.find('block').get('type')), getVariables(valTree.find('block')))
+                firstValue = createBlock(valTree.find('block').get('blocktextname'), getType(valTree.find('block').get('type')), getVariables(valTree.find('block')), valTree.find('block'))
                 insertBlock(statementBlock, firstValue, "RIGHT")
                 while(valTree != None):
                     valTree = getValues(valTree)
                     if valTree != None:
-                        thisBlock = createBlock(valTree.find('block').get('blocktextname'), getType(valTree.find('block').get('type')), getVariables(valTree.find('block')))
+                        thisBlock = createBlock(valTree.find('block').get('blocktextname'), getType(valTree.find('block').get('type')), getVariables(valTree.find('block')), valTree.find('block'))
                         insertBlock(statementBlock, thisBlock, "RIGHT")
 
             # If the first element has blocks inside it, processes them (BottomIn)
             if firstStat.find('statement') != -1 and firstStat.find('statement') != None:
                 insideStatement = firstStat.find('statement')
                 insideTree = insideStatement
-                newBlock = createBlock(insideStatement.find('block').get('blocktextname'), getType(insideStatement.find('block').get('type')), getVariables(insideStatement.find('block')))
+                newBlock = createBlock(insideStatement.find('block').get('blocktextname'), getType(insideStatement.find('block').get('type')), getVariables(insideStatement.find('block')), insideStatement.find('block'))
                 insertBlock(statementBlock, newBlock, "BOTTOMIN")
                 while(insideTree != None):
                     insideTree = getStatements(insideTree, newBlock)[0]
@@ -218,7 +228,7 @@ def convert(blocksString):
         nextBlock = firstStat.find('next')
         nextTree = nextBlock
         if nextBlock != None:  # Comprueba esto, a ver qué has hecho aquí, melona
-            lastBlock = createBlock("Last", None, None)
+            lastBlock = createBlock("Last", None, None, nextBlock)
             while(nextTree != None and lastBlock != None):
                 nextValue = getNext(nextTree, statementBlock)
                 nextTree = nextValue[0]
@@ -231,6 +241,5 @@ def convert(blocksString):
 
 # Mirar:
     # Vals (numeros y strings) -> ¿Cómo se meten en el bloque???????
-    # Procedimientos
     # Declaración de variables
 

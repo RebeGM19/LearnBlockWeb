@@ -3,8 +3,33 @@ from learnbot_dsl.learnbotCode.guiCreateBlock import *
 import xml.etree.ElementTree as ET
 import re
 
+
+# Gets the block name. ¿?¿?¿?¿?
+def searchName(string):
+    positionIni = string.find("blocktextname=\"")
+    positionFinal = string.find("\" id=")
+    name = string[positionIni+15:positionFinal]
+    return name
+
 # Creates a block with the appropiate structure. The Block-Text parser gets this structure to generate the code.
 def createBlock(name, type_, variables, block):
+    # First of all, changes the block name depending on the type
+
+    # String or num value
+    if name == "val":
+        name = block.find('field').text
+        variables = None
+
+    # User procedure
+    if type_ == USERFUNCTION:
+        # Procedure definition
+        if block.find('field') != None:
+            name = block.find('field').text
+        # Procedure call
+        if block.find('mutation') != None:
+            name = block.find('mutation').get('name')
+        variables = None
+
     #print("Crea block " + name)
     dic = {}
     dic["RIGHT"] = None
@@ -13,23 +38,7 @@ def createBlock(name, type_, variables, block):
     dic["VARIABLES"] = variables
     dic["TYPE"] = type_
 
-    # Changes the block name depending on the type
-
-    # User procedure definition
-    if type_ == USERFUNCTION and block.find('field') != None:
-        name = block.find('field').text
-    # User procedure call
-    if type_ == USERFUNCTION and block.find('mutation') != None:
-        name = block.find('mutation').get('name')
-
     return name, dic
-
-# Gets the block name. ¿?¿?¿?¿?
-def searchName(string):
-    positionIni = string.find("blocktextname=\"")
-    positionFinal = string.find("\" id=")
-    name = string[positionIni+15:positionFinal]
-    return name
 
 # Inserts a block into another block, on the pertinent dic attribute
 def insertBlock(firstBlock, block, specification):

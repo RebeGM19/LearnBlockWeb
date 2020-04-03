@@ -2,6 +2,21 @@ from learnbot_dsl.learnbotCode.guiCreateBlock import *
 from learnbot_dsl.learnbotCode.VisualBlock import toLBotPy
 from parser import searchName, createBlock, convert
 
+listVariables = []
+
+# Gets the user variables definitions. Only variable declarations at the beginning of the code
+def processVars(variables):
+    global listVariables
+    listVariables = variables.split(",")
+    listVariables.pop()
+
+# Gets the user variables and parses them to give the initial definition (var = None)
+def convertVariables():
+    text = ""
+    if len(listVariables) > 0:
+            for name in listVariables:
+                text += name + " = None\n"
+    return text
 
 # Gets the user functions definitions and parses them to Block-Text
 def convertUserFunctions(blocks):
@@ -26,7 +41,9 @@ def convertMainFunctions(blocks):
 
 # Returns the complete code in Block-Text according to the blocks in the workspace
 def parserBlockText(blocks):
-    preResult = convert(blocks)
-    result = convertUserFunctions(preResult)
-    result += convertMainFunctions(preResult)
+    result = ""
+    result += convertVariables()
+    result += "\n \n"
+    result += convertUserFunctions(convert(blocks))
+    result += convertMainFunctions(convert(blocks))
     return result

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 from learnbot_dsl.learnbotCode.guiCreateBlock import *
 from learnbot_dsl.learnbotCode.Parser import __parserFromString, __generatePy, cleanCode
-from btParser import parserBlockText
+from btParser import processVars, parserBlockText
 app = Flask(__name__)
 
 @app.route("/")
@@ -29,18 +29,36 @@ def loadBlocks(route):
         result = f.read()
     return result
 
+# Gets the variables declared by the user
+def getVars(result):
+    finalVars = result.find("\n")
+    variables = result[:finalVars]
+    return variables
+
 
 # When the button "execute" is clicked, gets the blocks in the workspace, parses them and returns the equivalent Block-Text (and Python) code
 @app.route("/result", methods=['GET', 'POST'])
 def getBlocks():
     if request.method == 'POST':
         blocks = request.get_json()
+        processVars(getVars(blocks))
         blocksList = formatBlocks(blocks)
         print("------------------------------------------")
         toParser = listToString(blocksList)
         blocktext = parserBlockText(toParser)
         print("------------------------------------------")
         print(blocktext)
+
+        try:
+            # COMPLETAR CON EL RESTO DEL CODIGO PYTHON QUE VIENE POR DEFECTO
+            text = __generatePy(__parserFromString(blocktext))
+            text = cleanCode(_code=text)
+            print("--------Clean code--------\n\n", text)
+        except ParseException as pe:
+            print(pe.line)
+            print(' ' * (pe.col - 1) + '^')
+            print(pe)
+
         return blocktext, 200
     else:
         return '', 200
@@ -63,61 +81,6 @@ def listToString(s):
     for ele in s:
         str1 += ele
     return str1
-
-# Prueba que la llamada al parser de python funciona (sí funciona jej)
-def prueba():
-    textprueba = """
-
-
-    when hay_alguien_triste = function.is_there_somebody_sad():
-    	if 1 < time_hay_alguien_triste:
-    		function.expressSadness()
-    	end
-    end
-
-    when start:
-    	function.look_up()
-    	function.expressNeutral()
-    end
-
-    when hay_alguien_sorprendido = function.is_there_somebody_surprised():
-    	if 1 < time_hay_alguien_sorprendido:
-    		function.expressSurprise()
-    	end
-    end
-
-    when hay_alguien_enfadado = function.is_there_somebody_angry():
-    	if 1 < time_hay_alguien_enfadado:
-    		function.expressAnger()
-    	end
-    end
-
-    when hay_alguien_neutral = function.is_there_somebody_neutral():
-    	if 1 < time_hay_alguien_neutral:
-    		function.expressNeutral()
-    	end
-    end
-
-    when hay_alguien_alegre = function.is_there_somebody_happy():
-    	if 1 < time_hay_alguien_alegre:
-    		function.expressJoy()
-    	end
-    end
-
-    """
-    try:
-        print(textprueba)
-        print("---------------Parser from string---------------\n\n")
-        print(__parserFromString(textprueba))
-        text = __generatePy(__parserFromString(textprueba))
-        print("--------------Generate py----------------\n\n")
-        print(text)
-        text = cleanCode(_code=text)
-        print("--------Clean code--------\n\n", text)
-    except ParseException as pe:
-        print(pe.line)
-        print(' ' * (pe.col - 1) + '^')
-        print(pe)
 
 
 if __name__ == '__main__':

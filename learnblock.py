@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from learnbot_dsl.learnbotCode.guiCreateBlock import *
-from learnbot_dsl.learnbotCode.Parser import __parserFromString, __generatePy, cleanCode
+from learnbot_dsl.learnbotCode.Parser import __parserFromString, __generatePy, cleanCode, parserLearntBotCodeFromCode
 from btParser import processVars, parserBlockText
 app = Flask(__name__)
 
@@ -50,9 +50,7 @@ def getBlocks():
         print(blocktext)
 
         try:
-            # COMPLETAR CON EL RESTO DEL CODIGO PYTHON QUE VIENE POR DEFECTO
-            text = __generatePy(__parserFromString(blocktext))
-            text = cleanCode(_code=text)
+            text = parserLearntBotCodeFromCode(blocktext, 'LearnBotClient')
             print("--------Clean code--------\n\n", text)
         except ParseException as pe:
             print(pe.line)

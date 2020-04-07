@@ -110,7 +110,7 @@
     "output": null,
     "colour": 100
 }, {
-    "type": "control_wait",
+    "type": "fcontrol_wait",
     "blocktextname": "sleep",
     "message0": "%{BKY_WAIT}",
     "args0": [{

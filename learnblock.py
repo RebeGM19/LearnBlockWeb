@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
-from learnbot_dsl.learnbotCode.guiCreateBlock import *
-from learnbot_dsl.learnbotCode.Parser import __parserFromString, __generatePy, cleanCode, parserLearntBotCodeFromCode
+from learnblockCode.guiCreateBlock import *
+from learnblockCode.Parser import __parserFromString, __generatePy, cleanCode, parserLearntBotCodeFromCode
 from btParser import processVars, parserBlockText
 app = Flask(__name__)
 

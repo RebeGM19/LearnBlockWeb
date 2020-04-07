@@ -1,5 +1,5 @@
-from learnbot_dsl.learnbotCode.Parser import __parserFromString, __generatePy, cleanCode
-from learnbot_dsl.learnbotCode.guiCreateBlock import *
+from learnblockCode.Parser import __parserFromString, __generatePy, cleanCode
+from learnblockCode.guiCreateBlock import *
 import xml.etree.ElementTree as ET
 import re
 
@@ -70,9 +70,9 @@ def getType(string):
         finalType = USERFUNCTION
     if type_ == "variables":
         finalType = VARIABLE
-    if type_ == "base" or type_ == "cam" or type_ == "dist" or type_ == "emotion" or type_ == "ground" or type_ == "motor" or type_ == "speaker":
+    if type_ == "base" or type_ == "cam" or type_ == "dist" or type_ == "emotion" or type_ == "ground" or type_ == "motor" or type_ == "speaker" or type_ == "fcontrol":
         finalType = FUNTION
-    #print(finalType)
+    print(finalType)
     return finalType
 
 
@@ -257,18 +257,18 @@ def convert(blocksString):
                     while(insideTree != None):
                         insideTree = getStatements(insideTree, newBlock)[0]
 
-            # Otherwise, if the first element has blocks under it, processes them (Bottom)
-            nextBlock = firstStat.find('next')
-            nextTree = nextBlock
-            if nextBlock != None:  # Comprueba esto, a ver qué has hecho aquí, melona
-                lastBlock = createBlock("Last", None, None, nextBlock)
-                while(nextTree != None and lastBlock != None):
-                    nextValue = getNext(nextTree, statementBlock)
-                    nextTree = nextValue[0]
-                    lastBlock = nextValue[1]
-                insertBlock(statementBlock, lastBlock, "BOTTOM")
-            print(mainBlock)
-            listBlocks.append(mainBlock)
+                # Otherwise, if the first element has blocks under it, processes them (Bottom)
+                nextBlock = firstStat.find('next')
+                nextTree = nextBlock
+                if nextBlock != None:  # Comprueba esto, a ver qué has hecho aquí, melona
+                    lastBlock = createBlock("Last", None, None, nextBlock)
+                    while(nextTree != None and lastBlock != None):
+                        nextValue = getNext(nextTree, statementBlock)
+                        nextTree = nextValue[0]
+                        lastBlock = nextValue[1]
+                    insertBlock(statementBlock, lastBlock, "BOTTOM")
+                print(mainBlock)
+                listBlocks.append(mainBlock)
     return listBlocks
 
 

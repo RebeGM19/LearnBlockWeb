@@ -51,7 +51,7 @@ LearnBlock.Msg["OR"] = "O";
 LearnBlock.Msg["NOT"] = "No";
 
 //Bloque Textp
-LearnBlock.Msg["SAMPLE_TEXT"] = "¡Hola Mundo!";
+LearnBlock.Msg["SAMPLE_TEXT"] = "Hola_Mundo";
 
 //Bloques Variables
 LearnBlock.Msg["VARIABLES_SET"] = "poner %1 a %2";
@@ -60,7 +60,7 @@ LearnBlock.Msg["NEW_NUMBER_VARIABLE"] = "Crear variable número...";
 LearnBlock.Msg["NEW_STRING_VARIABLE"] = "Crear variable texto...";
 
 //Bloques Funciones
-LearnBlock.Msg["PROCEDURES_DEFNORETURN_PROCEDURE"] = "hacer algo";
+LearnBlock.Msg["PROCEDURES_DEFNORETURN_PROCEDURE"] = "hacer_algo";
 
 //Bloques Emociones
 LearnBlock.Msg["EXPRESS_NEUTRAL"] = "no_expresar_nada()";

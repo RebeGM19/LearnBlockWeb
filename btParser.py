@@ -1,5 +1,5 @@
-from learnbot_dsl.learnbotCode.guiCreateBlock import *
-from learnbot_dsl.learnbotCode.VisualBlock import toLBotPy
+from learnblockCode.guiCreateBlock import *
+from learnblockCode.VisualBlock import toLBotPy
 from parser import searchName, createBlock, convert
 
 listVariables = []

@@ -7,6 +7,11 @@ function getVarsNames(vars){
     return result;
 }
 
+function getBothCodes(fullCode){
+    var array = fullCode.split("----------\n\n");
+    return array;
+}
+
 //Loads the blocks currently on the workspace
 function execute() {
     var loadBlocks;
@@ -33,8 +38,9 @@ function execute() {
         data: JSON.stringify(result),
         dataType: "text",
         success: function(data) { //The code is shown in an html element
-            //alert(data);
-            document.getElementById("resultblocktext").innerHTML = data;
+            codes = getBothCodes(data);
+            document.getElementById("resultblocktext").innerHTML = codes[0];
+            document.getElementById("resultpython").innerHTML = codes[1];
         }
     });
 }

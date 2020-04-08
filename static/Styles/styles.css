@@ -29,6 +29,12 @@
     margin-left: 1%;
 }
 
+#resultblocktext, #resultpython{
+    width: 98%;
+    height: 680px;
+    resize: none;
+}
+
 /* Casilla categoria */
 .blocklyTreeRow {
     height: 120px;

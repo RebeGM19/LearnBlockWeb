@@ -272,6 +272,3 @@ def convert(blocksString):
     return listBlocks
 
 
-# Mirar:
-    # Declaración de variables PRIMERAS LINEAS DEL CODIGO
-

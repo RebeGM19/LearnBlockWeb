@@ -16,6 +16,7 @@ def convertVariables():
     if len(listVariables) > 0:
             for name in listVariables:
                 text += name + " = None\n"
+            text += "\n\n"
     return text
 
 # Gets the user functions definitions and parses them to Block-Text
@@ -43,7 +44,6 @@ def convertMainFunctions(blocks):
 def parserBlockText(blocks):
     result = ""
     result += convertVariables()
-    result += "\n \n"
     result += convertUserFunctions(convert(blocks))
     result += convertMainFunctions(convert(blocks))
     return result

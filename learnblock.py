@@ -49,15 +49,12 @@ def getBlocks():
         print("------------------------------------------")
         print(blocktext)
 
-        try:
-            text = parserLearntBotCodeFromCode(blocktext, 'LearnBotClient')
-            print("--------Clean code--------\n\n", text)
-        except ParseException as pe:
-            print(pe.line)
-            print(' ' * (pe.col - 1) + '^')
-            print(pe)
+        text = parserLearntBotCodeFromCode(blocktext, 'LearnBotClient')
+        print("--------Clean code--------\n\n", text)
 
-        return blocktext, 200
+        result = blocktext + "----------\n" + text
+
+        return result, 200
     else:
         return '', 200
 

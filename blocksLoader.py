@@ -32,14 +32,14 @@ def getNameAndShape(block, name, shape):
     if shape == "block5":  # Else/Forever blocks' shape
         resultShape = "\"message0\": \"%{BKY_" + bkyName + "}\", \"message1\": \"%1\", \"args1\": [{\"type\": \"input_statement\", \"name\": \"DO\"}], \"previousStatement\": null, \"nextStatement\": null, "
 
-    if shape == "block4":  # ElapsedTime1 blocks' shape
+    if shape == "block4" or shape == "blockLeft":  # ElapsedTime1 blocks' shape REVISAR blockLeft
         resultShape = "\"message0\": \"%{BKY_" + bkyName + "}\", "
-        if block["variables"] != None:
+        if 'variables' in block:
             resultShape += "\"args0\": [" + getParameters(block["variables"])[0] + "], "
         resultShape += "\"output\": null, "
 
-    if shape == "block3":  # ElapsedTime2 blocks' shape
-        if block["variables"] != None:
+    if shape == "block3" or shape == "blockBoth":  # ElapsedTime2 blocks' shape REVISAR blockBoth
+        if 'variables' in block:
             inputPos = getParameters(block["variables"])[1]+1
             resultShape = "\"message0\": \"%{BKY_" + bkyName + "} %" + str(inputPos) + "\", "
             resultShape += "\"args0\": [" + getParameters(block["variables"])[0] + ", {\"type\": \"input_value\", \"name\": \"NUM\", \"check\": null}], "
@@ -48,9 +48,9 @@ def getNameAndShape(block, name, shape):
             resultShape += "\"args0\": [{\"type\": \"input_value\", \"name\": \"NUM\", \"check\": null}], "
         resultShape += "\"output\": null, "
 
-    if shape == "block1":  # Wait blocks' shape
+    if shape == "block1" or shape == "blockVertical":  # Wait blocks' shape REVISAR blockVertical
         resultShape = "\"message0\": \"%{BKY_" + bkyName + "}\", "
-        if block["variables"] != None:
+        if 'variables' in block:
             resultShape += "\"args0\": [" + getParameters(block["variables"])[0] + "], "
         resultShape += "\"previousStatement\": null, \"nextStatement\": null, "
 
@@ -60,6 +60,8 @@ def getColour(category):
     colour = 0
     if category == "control":
         colour = 60
+    if category == "operator":
+        colour = 230
     return colour
 
 def convertBlock(block, shape, alt):
@@ -67,11 +69,11 @@ def convertBlock(block, shape, alt):
     vName = block["name"]
     vCategory = block["category"]
     if vType == "others":
-        vCategory = "f" + vCategory
-    blocklyJson = "{\"type\": \"" + vCategory + "_" + vName.replace(" ", "_") + alt + "\", "
+        vCategory = "f" + vCategory.lower()
+    blocklyJson = "{\"type\": \"" + vCategory.lower() + "_" + vName.replace(" ", "_") + alt + "\", "
     blocklyJson += "\"blocktextname\": \"" + vName + "\", "
     blocklyJson += getNameAndShape(block, vName.replace(" ", "_"), shape)
-    blocklyJson += "\"colour\": 60"
+    blocklyJson += "\"colour\": " + str(getColour(block["category"]))
 
     return blocklyJson
 

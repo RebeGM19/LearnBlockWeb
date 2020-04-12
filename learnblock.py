@@ -27,7 +27,7 @@ def init():
     distances = loadBlocks("blocks/distances.json")
     ground = loadBlocks("blocks/ground.json")
 
-    loadBlocksPrueba("Control.conf")
+    loadBlocksPrueba("Operators.conf")
 
     return render_template('index.html', control=control, operators=operators, values=values, variables=variables, emotions=emotions, speaker=speaker, base=base, motor=motor, camera=camera, distances=distances, ground=ground)
 

@@ -13,9 +13,11 @@ def getParameters(variables):
     resultParameters = ""
     for par in variables:
         if par["type"] == "float" or par["type"] == "int":
-            parType = "field_number"
-            parName = "NUM"
             resultParameters += "{\"type\": \"field_number\", \"name\": \"NUM\", \"value\": 0}, "
+        if par["type"] == "string" or par["type"] == "apriltext":
+            resultParameters += "{\"type\": \"field_input\", \"name\": \"TEXT\", \"text\": \"%{BKY_SAMPLE_TEXT}\"}, "
+        if par["type"] == "boolean":
+            resultParameters += "{\"type\": \"field_dropdown\", \"name\": \"BOOL\", \"options\": [[\"%{BKY_TRUE}\", \"TRUE\"], [\"%{BKY_FALSE}\", \"FALSE\"]]}, "
     resultParameters = resultParameters[:-2]
     return resultParameters, len(variables)
 

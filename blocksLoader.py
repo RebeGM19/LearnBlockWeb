@@ -66,7 +66,15 @@ def getColour(category):
         colour = 230
     return colour
 
+def getLanguages(block, name):
+    languages = block["languages"]
+    # There are only two languages: spanish and english. This procedure must be modified in case others languages are included
+    blockContent = [name.upper(), languages["ES"], languages["EN"]]
+    return blockContent
+
+
 def convertBlock(block, shape, alt):
+    blockContent = []
     vType = block["type"]
     vName = block["name"]
     vCategory = block["category"]
@@ -76,19 +84,26 @@ def convertBlock(block, shape, alt):
     blocklyJson += "\"blocktextname\": \"" + vName + "\", "
     blocklyJson += getNameAndShape(block, vName.replace(" ", "_"), shape)
     blocklyJson += "\"colour\": " + str(getColour(block["category"]))
+    if 'languages' in block:
+        blockContent = getLanguages(block, vName.replace(" ", "_"))
 
-    return blocklyJson
+    return blocklyJson, blockContent
 
 def convertLB2Blockly(lbJson):
     blocklyJson = "["
+    blockContent = []
     for b in lbJson:
         vShape = b["shape"]
         for i in range (0, len(vShape)):
             alt = "_" + str(i)
             if len(vShape) == 1:
                 alt = ""
-            blocklyJson += convertBlock(b, vShape[i], alt)
+            blocklyJson += convertBlock(b, vShape[i], alt)[0]
+            languagesContent = convertBlock(b, vShape[i], alt)[1]
+            if len(languagesContent) != 0:
+                blockContent.append(convertBlock(b, vShape[i], alt)[1])
             blocklyJson += "}, "
     blocklyJson = blocklyJson[:-2]
     blocklyJson += "]"
     print(blocklyJson)
+    print(blockContent)

@@ -7,6 +7,18 @@ var MSG = {
     execute: "Ejecutar"
 };
 
+function loadSpanish(lalal){
+    console.log(lalal);
+    LearnBlock.Msg["MAIN"] = "principal";
+    LearnBlock.Msg["IF"] = "si";
+    LearnBlock.Msg["ELSEIF"] = "sino si";
+    LearnBlock.Msg["ELSE"] = "sino";
+    LearnBlock.Msg["WHILE"] = "mientras";
+    LearnBlock.Msg["FOREVER"] = "por siempre";
+    LearnBlock.Msg["ELAPSED_TIME"] = "tiempo_transcurrido";
+    LearnBlock.Msg["WAIT"] = "esperar";
+}
+
 //Utils
 LearnBlock.Msg["DELETE_ALL_BLOCKS"] = "¿Borrar %1 bloques?";
 LearnBlock.Msg["DELETE_BLOCK"] = "Borrar bloque";
@@ -32,16 +44,14 @@ LearnBlock.Msg["DISTANCES"] = "Distancias";
 LearnBlock.Msg["GROUND"] = "Suelo";
 
 
+//function languagesBlocksES(){
+
+//}
+
 //Bloques
 //Bloques Control
-LearnBlock.Msg["MAIN"] = "principal";
-LearnBlock.Msg["IF"] = "si";
-LearnBlock.Msg["ELSEIF"] = "sino si";
-LearnBlock.Msg["ELSE"] = "sino";
-LearnBlock.Msg["WHILE"] = "mientras";
-LearnBlock.Msg["FOREVER"] = "por siempre";
-LearnBlock.Msg["ELAPSED_TIME"] = "tiempo_transcurrido(%1)";
-LearnBlock.Msg["WAIT"] = "esperar(%1)";
+
+
 
 //Bloques Operadores
 LearnBlock.Msg["TRUE"] = "verdad";

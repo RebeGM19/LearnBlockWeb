@@ -6,8 +6,6 @@ Code.LANGUAGE_NAME = {
     'es': 'Español',
     'en': 'English'
 };
-//List of RTL languages.
-Code.LANGUAGE_RTL = ['ar', 'fa', 'he', 'lki'];
 //Main workspace
 Code.workspace = null;
 //Extracts a parameter from the URL

@@ -7,6 +7,18 @@ var MSG = {
     execute: "Execute"
 };
 
+function loadEnglish(lalal){
+    console.log(lalal);
+    LearnBlock.Msg["MAIN"] = "main";
+    LearnBlock.Msg["IF"] = "if";
+    LearnBlock.Msg["ELSEIF"] = "else if";
+    LearnBlock.Msg["ELSE"] = "else";
+    LearnBlock.Msg["WHILE"] = "while";
+    LearnBlock.Msg["FOREVER"] = "forever";
+    LearnBlock.Msg["ELAPSED_TIME"] = "elapsed_Time";
+    LearnBlock.Msg["WAIT"] = "wait";
+}
+
 //Utils
 LearnBlock.Msg["DELETE_ALL_BLOCKS"] = "Delete all %1 blocks?";
 LearnBlock.Msg["DELETE_BLOCK"] = "Delete Block";
@@ -32,16 +44,12 @@ LearnBlock.Msg["DISTANCES"] = "Distances";
 LearnBlock.Msg["GROUND"] = "Ground";
 
 
+//function languagesBlocksEN(){
+
+//}
+
 //Blocks
 //Control Blocks
-LearnBlock.Msg["MAIN"] = "main";
-LearnBlock.Msg["IF"] = "if";
-LearnBlock.Msg["ELSEIF"] = "else if";
-LearnBlock.Msg["ELSE"] = "else";
-LearnBlock.Msg["WHILE"] = "while";
-LearnBlock.Msg["FOREVER"] = "forever";
-LearnBlock.Msg["ELAPSED_TIME"] = "elapsed_Time(%1)";
-LearnBlock.Msg["WAIT"] = "wait(%1)";
 
 //Operator Blocks
 LearnBlock.Msg["TRUE"] = "true";

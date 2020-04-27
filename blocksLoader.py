@@ -5,9 +5,7 @@ def loadBlocksPrueba(route):
     if f.mode == 'r':
         blocks = f.read()
     result = json.loads(blocks)
-    print(len(result))
-    convertLB2Blockly(result)
-    return result
+    return convertLB2Blockly(result)
 
 def getParameters(variables):
     resultParameters = ""
@@ -20,6 +18,14 @@ def getParameters(variables):
             resultParameters += "{\"type\": \"field_dropdown\", \"name\": \"BOOL\", \"options\": [[\"%{BKY_TRUE}\", \"TRUE\"], [\"%{BKY_FALSE}\", \"FALSE\"]]}, "
     resultParameters = resultParameters[:-2]
     return resultParameters, len(variables)
+
+def returnParameters(inputPos):
+    strParam = "("
+    for i in range (1, inputPos):
+        strParam += "%"+str(i)+", "
+    strParam = strParam[:-2]
+    strParam += ")"
+    return strParam
 
 # Part of the shape is given in the name of the block
 def getNameAndShape(block, name, shape):
@@ -35,15 +41,19 @@ def getNameAndShape(block, name, shape):
         resultShape = "\"message0\": \"%{BKY_" + bkyName + "}\", \"message1\": \"%1\", \"args1\": [{\"type\": \"input_statement\", \"name\": \"DO\"}], \"previousStatement\": null, \"nextStatement\": null, "
 
     if shape == "block4" or shape == "blockLeft":  # ElapsedTime1 blocks' shape REVISAR blockLeft
-        resultShape = "\"message0\": \"%{BKY_" + bkyName + "}\", "
+        resultShape = "\"message0\": \"%{BKY_" + bkyName + "}"
         if 'variables' in block:
+            inputPos = getParameters(block["variables"])[1]+1
+            resultShape += " " + returnParameters(inputPos) + " \", "
             resultShape += "\"args0\": [" + getParameters(block["variables"])[0] + "], "
+        else:
+            resultShape += "\", "
         resultShape += "\"output\": null, "
 
     if shape == "block3" or shape == "blockBoth":  # ElapsedTime2 blocks' shape REVISAR blockBoth
         if 'variables' in block:
             inputPos = getParameters(block["variables"])[1]+1
-            resultShape = "\"message0\": \"%{BKY_" + bkyName + "} %" + str(inputPos) + "\", "
+            resultShape = "\"message0\": \"%{BKY_" + bkyName + "} " + returnParameters(inputPos) + " %" + str(inputPos) + "\", "
             resultShape += "\"args0\": [" + getParameters(block["variables"])[0] + ", {\"type\": \"input_value\", \"name\": \"NUM\", \"check\": null}], "
         else:
             resultShape = "\"message0\": \"%{BKY_" + bkyName + "} %1\", "
@@ -51,9 +61,13 @@ def getNameAndShape(block, name, shape):
         resultShape += "\"output\": null, "
 
     if shape == "block1" or shape == "blockVertical":  # Wait blocks' shape REVISAR blockVertical
-        resultShape = "\"message0\": \"%{BKY_" + bkyName + "}\", "
+        resultShape = "\"message0\": \"%{BKY_" + bkyName + "}"
         if 'variables' in block:
+            inputPos = getParameters(block["variables"])[1]+1
+            resultShape += " " + returnParameters(inputPos) + " \", "
             resultShape += "\"args0\": [" + getParameters(block["variables"])[0] + "], "
+        else:
+            resultShape += "\", "
         resultShape += "\"previousStatement\": null, \"nextStatement\": null, "
 
     return resultShape
@@ -105,5 +119,5 @@ def convertLB2Blockly(lbJson):
             blocklyJson += "}, "
     blocklyJson = blocklyJson[:-2]
     blocklyJson += "]"
-    print(blocklyJson)
-    print(blockContent)
+
+    return blocklyJson, blockContent

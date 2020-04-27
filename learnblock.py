@@ -15,7 +15,7 @@ def loadBlocks(route):
 @app.route("/")
 def init():
     # Loads blocks from json definition in json files
-    control = loadBlocks("blocks/control.json")
+    #control = loadBlocks("blocks/control.json")
     operators = loadBlocks("blocks/operators.json")
     values = loadBlocks("blocks/values.json")
     variables = loadBlocks("blocks/variables.json")
@@ -27,9 +27,11 @@ def init():
     distances = loadBlocks("blocks/distances.json")
     ground = loadBlocks("blocks/ground.json")
 
-    loadBlocksPrueba("Operators.conf")
+    control = loadBlocksPrueba("Control.conf")
 
-    return render_template('index.html', control=control, operators=operators, values=values, variables=variables, emotions=emotions, speaker=speaker, base=base, motor=motor, camera=camera, distances=distances, ground=ground)
+    language = control[1]
+
+    return render_template('index.html', control=control[0], language=language, operators=operators, values=values, variables=variables, emotions=emotions, speaker=speaker, base=base, motor=motor, camera=camera, distances=distances, ground=ground)
 
 # Gets the variables declared by the user
 def getVars(result):

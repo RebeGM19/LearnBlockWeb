@@ -7,16 +7,11 @@ var MSG = {
     execute: "Execute"
 };
 
-function loadEnglish(lalal){
-    console.log(lalal);
-    LearnBlock.Msg["MAIN"] = "main";
-    LearnBlock.Msg["IF"] = "if";
-    LearnBlock.Msg["ELSEIF"] = "else if";
-    LearnBlock.Msg["ELSE"] = "else";
-    LearnBlock.Msg["WHILE"] = "while";
-    LearnBlock.Msg["FOREVER"] = "forever";
-    LearnBlock.Msg["ELAPSED_TIME"] = "elapsed_Time";
-    LearnBlock.Msg["WAIT"] = "wait";
+//Blocks
+function loadEnglish(languagesBlocks){
+    for (var i=0; i<languagesBlocks.length; i++){
+        LearnBlock.Msg[languagesBlocks[i][0]] = languagesBlocks[i][2];
+    }
 }
 
 //Utils
@@ -43,13 +38,6 @@ LearnBlock.Msg["CAMERA"] = "Camera";
 LearnBlock.Msg["DISTANCES"] = "Distances";
 LearnBlock.Msg["GROUND"] = "Ground";
 
-
-//function languagesBlocksEN(){
-
-//}
-
-//Blocks
-//Control Blocks
 
 //Operator Blocks
 LearnBlock.Msg["TRUE"] = "true";

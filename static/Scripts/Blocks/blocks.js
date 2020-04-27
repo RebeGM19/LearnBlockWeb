@@ -1,11 +1,11 @@
 'use strict';
 
-function loadBlocks(blocks){
+function loadBlocks(blocks, idioma){
     if(Code.LANG == "es"){
-        loadSpanish("españolo")
+        loadSpanish(idioma)
     }
     if(Code.LANG == "en"){
-        loadEnglish("ingleso")
+        loadEnglish(idioma)
     }
     LearnBlock.defineBlocksWithJsonArray(JSON.parse(blocks));
 }

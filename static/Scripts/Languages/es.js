@@ -7,16 +7,11 @@ var MSG = {
     execute: "Ejecutar"
 };
 
-function loadSpanish(lalal){
-    console.log(lalal);
-    LearnBlock.Msg["MAIN"] = "principal";
-    LearnBlock.Msg["IF"] = "si";
-    LearnBlock.Msg["ELSEIF"] = "sino si";
-    LearnBlock.Msg["ELSE"] = "sino";
-    LearnBlock.Msg["WHILE"] = "mientras";
-    LearnBlock.Msg["FOREVER"] = "por siempre";
-    LearnBlock.Msg["ELAPSED_TIME"] = "tiempo_transcurrido";
-    LearnBlock.Msg["WAIT"] = "esperar";
+//Bloques
+function loadSpanish(languagesBlocks){
+    for (var i=0; i<languagesBlocks.length; i++){
+        LearnBlock.Msg[languagesBlocks[i][0]] = languagesBlocks[i][1];
+    }
 }
 
 //Utils
@@ -42,16 +37,6 @@ LearnBlock.Msg["MOTOR"] = "Motor";
 LearnBlock.Msg["CAMERA"] = "Cámara";
 LearnBlock.Msg["DISTANCES"] = "Distancias";
 LearnBlock.Msg["GROUND"] = "Suelo";
-
-
-//function languagesBlocksES(){
-
-//}
-
-//Bloques
-//Bloques Control
-
-
 
 //Bloques Operadores
 LearnBlock.Msg["TRUE"] = "verdad";

@@ -66,13 +66,13 @@
                                 <category name="%{BKY_CONTROL}" expanded="true">
                                     <block type="control_main"></block>
                                     <block type="control_if"></block>
-                                    <block type="control_elseif"></block>
+                                    <block type="control_elif"></block>
                                     <block type="control_else"></block>
                                     <block type="control_while"></block>
-                                    <block type="control_forever"></block>
-                                    <block type="control_time1"></block>
-                                    <block type="control_time2"></block>
-                                    <block type="fcontrol_wait"></block>
+                                    <block type="control_while_True"></block>
+                                    <block type="control_elapsedTime_0"></block>
+                                    <block type="control_elapsedTime_1"></block>
+                                    <block type="fcontrol_sleep"></block>
                                 </category>
 
                                 <category name="%{BKY_OPERATORS}">
@@ -274,28 +274,32 @@
 
     <script>
         //Loads blocks from json definition
+        var language = {{language|tojson}};
         var control = {{control|tojson}};
-        loadBlocks(control);
+        loadBlocks(control, language);
         var operators = {{operators|tojson}};
-        loadBlocks(operators);
+        loadBlocks(operators, language);
         var values = {{values|tojson}};
-        loadBlocks(values);
+        loadBlocks(values, language);
         var variables = {{variables|tojson}};
-        loadBlocks(variables);
+        loadBlocks(variables, language);
         var emotions = {{emotions|tojson}};
-        loadBlocks(emotions);
+        loadBlocks(emotions, language);
         var speaker = {{speaker|tojson}};
-        loadBlocks(speaker);
+        loadBlocks(speaker, language);
         var base = {{base|tojson}};
-        loadBlocks(base);
+        loadBlocks(base, language);
         var motor = {{motor|tojson}};
-        loadBlocks(motor);
+        loadBlocks(motor, language);
         var camera = {{camera|tojson}};
-        loadBlocks(camera);
+        loadBlocks(camera, language);
         var distances = {{distances|tojson}};
-        loadBlocks(distances);
+        loadBlocks(distances, language);
         var ground = {{ground|tojson}};
-        loadBlocks(ground);
+
+        //var allBlocks = control.concat(operators.concat(values.concat(variables.concat(emotions.concat(speaker.concat(base.concat(motor.concat(camera.concat(distances.concat(ground))))))))));
+        //console.log(JSON.stringify(allBlocks));
+        //loadBlocks(JSON.stringify(allBlocks, language));
 
         //Creates tbe workspace
         var workspace = LearnBlock.inject('learnblockDiv', {

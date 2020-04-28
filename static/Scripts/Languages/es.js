@@ -9,8 +9,10 @@ var MSG = {
 
 //Bloques
 function loadSpanish(languagesBlocks){
-    for (var i=0; i<languagesBlocks.length; i++){
-        LearnBlock.Msg[languagesBlocks[i][0]] = languagesBlocks[i][1];
+    if (languagesBlocks != null){
+        for (var i=0; i<languagesBlocks.length; i++){
+            LearnBlock.Msg[languagesBlocks[i][0]] = languagesBlocks[i][1];
+        }
     }
 }
 
@@ -38,15 +40,22 @@ LearnBlock.Msg["CAMERA"] = "Cámara";
 LearnBlock.Msg["DISTANCES"] = "Distancias";
 LearnBlock.Msg["GROUND"] = "Suelo";
 
-//Bloques Operadores
-LearnBlock.Msg["TRUE"] = "verdad";
-LearnBlock.Msg["FALSE"] = "falso";
-LearnBlock.Msg["AND"] = "Y";
-LearnBlock.Msg["OR"] = "O";
-LearnBlock.Msg["NOT"] = "No";
+//Operadores
+LearnBlock.Msg["+"] = "+";
+LearnBlock.Msg["-"] = "-";
+LearnBlock.Msg["*"] = "*";
+LearnBlock.Msg["/"] = "/";
+LearnBlock.Msg["="] = "=";
+LearnBlock.Msg["=="] = "==";
+LearnBlock.Msg["+="] = "+=";
+LearnBlock.Msg["-="] = "-=";
+LearnBlock.Msg["*="] = "*=";
+LearnBlock.Msg["/="] = "/=";
+LearnBlock.Msg["<"] = "<";
+LearnBlock.Msg[">"] = ">";
 
-//Bloque Textp
-LearnBlock.Msg["SAMPLE_TEXT"] = "Hola_Mundo";
+//Bloque Texto
+LearnBlock.Msg["SAMPLE_TEXT"] = "Hola_Mundo";  //CAMBIAR XD
 
 //Bloques Variables
 LearnBlock.Msg["VARIABLES_SET"] = "poner %1 a %2";
@@ -56,52 +65,6 @@ LearnBlock.Msg["NEW_STRING_VARIABLE"] = "Crear variable texto...";
 
 //Bloques Funciones
 LearnBlock.Msg["PROCEDURES_DEFNORETURN_PROCEDURE"] = "hacer_algo";
-
-//Bloques Emociones
-LearnBlock.Msg["EXPRESS_NEUTRAL"] = "no_expresar_nada()";
-LearnBlock.Msg["EXPRESS_JOY"] = "expresar_alegria()";
-LearnBlock.Msg["EXPRESS_FEAR"] = "expresar_miedo()";
-LearnBlock.Msg["EXPRESS_SADNESS"] = "expresar_tristeza()";
-LearnBlock.Msg["EXPRESS_ANGER"] = "expresar_ira()";
-LearnBlock.Msg["EXPRESS_DISGUST"] = "expresar_asco()";
-LearnBlock.Msg["EXPRESS_SURPRISE"] = "expresar_sorpresa()";
-LearnBlock.Msg["IS_NEUTRAL"] = "estoy_neutral()";
-LearnBlock.Msg["IS_JOY"] = "estoy_alegre()";
-LearnBlock.Msg["IS_FEAR"] = "estoy_asustado()";
-LearnBlock.Msg["IS_SADNESS"] = "estoy_triste()";
-LearnBlock.Msg["IS_ANGER"] = "estoy_enfadado()";
-LearnBlock.Msg["IS_DISGUST"] = "estoy_disgustado()";
-LearnBlock.Msg["IS_SURPRISE"] = "estoy_sorprendido()";
-
-//Bloque Speaker
-LearnBlock.Msg["SAY_SOMETHING"] = "decir_texto(%1)";
-
-//Bloques Base
-LearnBlock.Msg["SLOW_DOWN"] = "mas_despacio()";
-LearnBlock.Msg["TURN_RIGHT"] = "girar_derecha()";
-LearnBlock.Msg["TURN_LEFT"] = "girar_izquierda()";
-LearnBlock.Msg["TURN_BACK"] = "girar_atras()";
-LearnBlock.Msg["TURN"] = "girar(%1)";
-LearnBlock.Msg["SET_ORIENTATION"] = "pon_orientacion(%1)";
-LearnBlock.Msg["RESET_ORIENTATION"] = "orientacion_a_cero()";
-LearnBlock.Msg["STOP_BOT"] = "parar()";
-LearnBlock.Msg["SET_MOVE"] = "poner_movimiento(%1, %2)";
-LearnBlock.Msg["MOVE_STRAIGHT"] = "mover_recto()";
-LearnBlock.Msg["MOVE_RIGHT"] = "mover_derecha()";
-LearnBlock.Msg["MOVE_LEFT"] = "mover_izquierda()";
-LearnBlock.Msg["IS_MOVING_LEFT"] = "estoy_moviendo_izquierda()";
-LearnBlock.Msg["IS_MOVING_RIGHT"] = "estoy_moviendo_derecha()";
-LearnBlock.Msg["IS_MOVING_STRAIGHT"] = "estoy_moviendo_recto()";
-LearnBlock.Msg["IS_TURNING_LEFT"] = "estoy_girando_izquierda()";
-LearnBlock.Msg["IS_TURNING_RIGHT"] = "estoy_girando_derecha()";
-LearnBlock.Msg["IS_TURNING"] = "estoy_girando()";
-
-//Bloques Motor
-LearnBlock.Msg["LOOK_FLOOR"] = "mirar_suelo()";
-LearnBlock.Msg["LOOK_UP"] = "mirar_arriba()";
-LearnBlock.Msg["LOOK_FRONT"] = "mirar_frente()";
-LearnBlock.Msg["SET_ANGLE_CAMERA"] = "ponerAnguloCamara(%1)";
-LearnBlock.Msg["SET_ANGLE_MOTOR"] = "ponerAnguloMotor(%1, %2)";
 
 //Bloques Camara
 LearnBlock.Msg["IS_CENTER_RED_LINE"] = "linea_roja_centro()";

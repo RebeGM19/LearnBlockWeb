@@ -1,3 +1,4 @@
+import json
 from flask import Flask, render_template, request
 from learnblockCode.guiCreateBlock import *
 from learnblockCode.Parser import __parserFromString, __generatePy, cleanCode, parserLearntBotCodeFromCode
@@ -16,22 +17,28 @@ def loadBlocks(route):
 def init():
     # Loads blocks from json definition in json files
     #control = loadBlocks("blocks/control.json")
-    operators = loadBlocks("blocks/operators.json")
-    values = loadBlocks("blocks/values.json")
-    variables = loadBlocks("blocks/variables.json")
-    emotions = loadBlocks("blocks/emotions.json")
-    speaker = loadBlocks("blocks/speaker.json")
-    base = loadBlocks("blocks/base.json")
-    motor = loadBlocks("blocks/motor.json")
+    #operators = loadBlocks("blocks/operators.json")
+    #emotions = loadBlocks("blocks/emotions.json")
+    #speaker = loadBlocks("blocks/speaker.json")
+    #base = loadBlocks("blocks/base.json")
+    #motor = loadBlocks("blocks/motor.json")
     camera = loadBlocks("blocks/camera.json")
     distances = loadBlocks("blocks/distances.json")
     ground = loadBlocks("blocks/ground.json")
 
     control = loadBlocksPrueba("Control.conf")
+    operators = loadBlocksPrueba("Operators.conf")
+    values = loadBlocks("blocks/values.json")
+    variables = loadBlocks("blocks/variables.json")
+    expressions = loadBlocksPrueba("Expressions.conf")
+    proprioceptive = loadBlocksPrueba("Proprioceptive.conf")
+    motor = loadBlocksPrueba("Motor.conf")
+    perceptual = loadBlocksPrueba("Perceptual.conf")
 
-    language = control[1]
+    language = control[1] + operators[1] + expressions[1] + proprioceptive[1] + motor[1]
+    print(motor[0])
 
-    return render_template('index.html', control=control[0], language=language, operators=operators, values=values, variables=variables, emotions=emotions, speaker=speaker, base=base, motor=motor, camera=camera, distances=distances, ground=ground)
+    return render_template('index.html', language=language, control=control[0], operators=operators[0], values=values, variables=variables, expressions=expressions[0], proprioceptive=proprioceptive[0], motor=motor[0], camera=camera, distances=distances, ground=ground)
 
 # Gets the variables declared by the user
 def getVars(result):

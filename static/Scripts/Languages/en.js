@@ -9,8 +9,10 @@ var MSG = {
 
 //Blocks
 function loadEnglish(languagesBlocks){
-    for (var i=0; i<languagesBlocks.length; i++){
-        LearnBlock.Msg[languagesBlocks[i][0]] = languagesBlocks[i][2];
+    if (languagesBlocks != null){
+        for (var i=0; i<languagesBlocks.length; i++){
+            LearnBlock.Msg[languagesBlocks[i][0]] = languagesBlocks[i][2];
+        }
     }
 }
 
@@ -38,16 +40,22 @@ LearnBlock.Msg["CAMERA"] = "Camera";
 LearnBlock.Msg["DISTANCES"] = "Distances";
 LearnBlock.Msg["GROUND"] = "Ground";
 
-
-//Operator Blocks
-LearnBlock.Msg["TRUE"] = "true";
-LearnBlock.Msg["FALSE"] = "false";
-LearnBlock.Msg["AND"] = "and";
-LearnBlock.Msg["OR"] = "or";
-LearnBlock.Msg["NOT"] = "not";
+//Operators
+LearnBlock.Msg["+"] = "+";
+LearnBlock.Msg["-"] = "-";
+LearnBlock.Msg["*"] = "*";
+LearnBlock.Msg["/"] = "/";
+LearnBlock.Msg["="] = "=";
+LearnBlock.Msg["=="] = "==";
+LearnBlock.Msg["+="] = "+=";
+LearnBlock.Msg["-="] = "-=";
+LearnBlock.Msg["*="] = "*=";
+LearnBlock.Msg["/="] = "/=";
+LearnBlock.Msg["<"] = "<";
+LearnBlock.Msg[">"] = ">";
 
 //Text Block
-LearnBlock.Msg["SAMPLE_TEXT"] = "Hello_World";
+LearnBlock.Msg["SAMPLE_TEXT"] = "Hello_World";  //CHANGE XD
 
 //Variables Block
 LearnBlock.Msg["VARIABLES_SET"] = "set %1 to %2";
@@ -57,52 +65,6 @@ LearnBlock.Msg["NEW_STRING_VARIABLE"] = "Create string variable...";
 
 //Functions Blocks
 LearnBlock.Msg["PROCEDURES_DEFNORETURN_PROCEDURE"] = "do_something";
-
-//Emotions Blocks
-LearnBlock.Msg["EXPRESS_NEUTRAL"] = "express_Neutral()";
-LearnBlock.Msg["EXPRESS_JOY"] = "express_Joy()";
-LearnBlock.Msg["EXPRESS_FEAR"] = "express_Fear()";
-LearnBlock.Msg["EXPRESS_SADNESS"] = "express_Sadness()";
-LearnBlock.Msg["EXPRESS_ANGER"] = "express_Anger()";
-LearnBlock.Msg["EXPRESS_DISGUST"] = "express_Disgust()";
-LearnBlock.Msg["EXPRESS_SURPRISE"] = "express_Surprise()";
-LearnBlock.Msg["IS_NEUTRAL"] = "is_Neutral()";
-LearnBlock.Msg["IS_JOY"] = "is_Joy()";
-LearnBlock.Msg["IS_FEAR"] = "is_Scared()";
-LearnBlock.Msg["IS_SADNESS"] = "is_Sad()";
-LearnBlock.Msg["IS_ANGER"] = "is_Angry()";
-LearnBlock.Msg["IS_DISGUST"] = "is_Disgust()";
-LearnBlock.Msg["IS_SURPRISE"] = "is_Surprised()";
-
-//Speaker Block
-LearnBlock.Msg["SAY_SOMETHING"] = "say_text(%1)";
-
-//Base Blocks
-LearnBlock.Msg["SLOW_DOWN"] = "slow_down()";
-LearnBlock.Msg["TURN_RIGHT"] = "turn_right()";
-LearnBlock.Msg["TURN_LEFT"] = "turn_left()";
-LearnBlock.Msg["TURN_BACK"] = "turn_back()";
-LearnBlock.Msg["TURN"] = "turn(%1)";
-LearnBlock.Msg["SET_ORIENTATION"] = "set_orientation(%1)";
-LearnBlock.Msg["RESET_ORIENTATION"] = "reset_orientation()";
-LearnBlock.Msg["STOP_BOT"] = "stop_bot()";
-LearnBlock.Msg["SET_MOVE"] = "set_move(%1, %2)";
-LearnBlock.Msg["MOVE_STRAIGHT"] = "move_straight()";
-LearnBlock.Msg["MOVE_RIGHT"] = "move_right()";
-LearnBlock.Msg["MOVE_LEFT"] = "move_left()";
-LearnBlock.Msg["IS_MOVING_LEFT"] = "is_moving_left()";
-LearnBlock.Msg["IS_MOVING_RIGHT"] = "is_moving_right()";
-LearnBlock.Msg["IS_MOVING_STRAIGHT"] = "is_moving_straight()";
-LearnBlock.Msg["IS_TURNING_LEFT"] = "is_turning_left()";
-LearnBlock.Msg["IS_TURNING_RIGHT"] = "is_turning_right()";
-LearnBlock.Msg["IS_TURNING"] = "is_turning()";
-
-//Motor Blocks
-LearnBlock.Msg["LOOK_FLOOR"] = "look_floor()";
-LearnBlock.Msg["LOOK_UP"] = "look_up()";
-LearnBlock.Msg["LOOK_FRONT"] = "look_front()";
-LearnBlock.Msg["SET_ANGLE_CAMERA"] = "setAngleCamera(%1)";
-LearnBlock.Msg["SET_ANGLE_MOTOR"] = "setAngleMotor(%1, %2)";
 
 //Camera Blocks
 LearnBlock.Msg["IS_CENTER_RED_LINE"] = "is_center_red_line()";

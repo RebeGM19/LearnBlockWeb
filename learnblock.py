@@ -1,4 +1,3 @@
-import json
 from flask import Flask, render_template, request
 from learnblockCode.guiCreateBlock import *
 from learnblockCode.Parser import __parserFromString, __generatePy, cleanCode, parserLearntBotCodeFromCode
@@ -16,29 +15,18 @@ def loadBlocks(route):
 @app.route("/")
 def init():
     # Loads blocks from json definition in json files
-    #control = loadBlocks("blocks/control.json")
-    #operators = loadBlocks("blocks/operators.json")
-    #emotions = loadBlocks("blocks/emotions.json")
-    #speaker = loadBlocks("blocks/speaker.json")
-    #base = loadBlocks("blocks/base.json")
-    #motor = loadBlocks("blocks/motor.json")
-    camera = loadBlocks("blocks/camera.json")
-    distances = loadBlocks("blocks/distances.json")
-    ground = loadBlocks("blocks/ground.json")
-
-    control = loadBlocksPrueba("Control.conf")
-    operators = loadBlocksPrueba("Operators.conf")
+    control = loadBlocksPrueba("blocks/Control.conf")
+    operators = loadBlocksPrueba("blocks/Operators.conf")
     values = loadBlocks("blocks/values.json")
     variables = loadBlocks("blocks/variables.json")
-    expressions = loadBlocksPrueba("Expressions.conf")
-    proprioceptive = loadBlocksPrueba("Proprioceptive.conf")
-    motor = loadBlocksPrueba("Motor.conf")
-    perceptual = loadBlocksPrueba("Perceptual.conf")
+    expressions = loadBlocksPrueba("blocks/Expressions.conf")
+    proprioceptive = loadBlocksPrueba("blocks/Proprioceptive.conf")
+    motor = loadBlocksPrueba("blocks/Motor.conf")
+    perceptual = loadBlocksPrueba("blocks/Perceptual.conf")
 
-    language = control[1] + operators[1] + expressions[1] + proprioceptive[1] + motor[1]
-    print(motor[0])
+    language = control[1] + operators[1] + expressions[1] + proprioceptive[1] + motor[1] + perceptual[1]
 
-    return render_template('index.html', language=language, control=control[0], operators=operators[0], values=values, variables=variables, expressions=expressions[0], proprioceptive=proprioceptive[0], motor=motor[0], camera=camera, distances=distances, ground=ground)
+    return render_template('index.html', language=language, control=control[0], operators=operators[0], values=values, variables=variables, expressions=expressions[0], proprioceptive=proprioceptive[0], motor=motor[0], perceptual=perceptual[0])
 
 # Gets the variables declared by the user
 def getVars(result):

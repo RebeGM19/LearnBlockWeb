@@ -289,16 +289,8 @@
         loadBlocks(proprioceptive, null);
         var motor = {{motor|tojson}};
         loadBlocks(motor, null);
-
-        var camera = {{camera|tojson}};
-        loadBlocks(camera, null);
-        var distances = {{distances|tojson}};
-        loadBlocks(distances, null);
-        var ground = {{ground|tojson}};
-        loadBlocks(ground, null);
-
-        //var perceptual = {{perceptual|tojson}};
-        //loadBlocks(perceptual, null);
+        var perceptual = {{perceptual|tojson}};
+        loadBlocks(perceptual, null);
 
         //Creates tbe workspace
         var workspace = LearnBlock.inject('learnblockDiv', {

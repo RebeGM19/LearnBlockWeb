@@ -92,8 +92,6 @@ def convertBlock(block, shape, alt):
     vType = block["type"]
     vName = block["name"]
     vCategory = block["category"]
-    if vType == "others":
-        vCategory = "f" + vCategory.lower()
     blocklyJson = "{\"type\": \"" + vCategory.lower() + "_" + vName.replace(" ", "_") + alt + "\", "
     blocklyJson += "\"blocktextname\": \"" + vName + "\", "
     blocklyJson += getNameAndShape(block, vName.replace(" ", "_"), shape)

@@ -4959,7 +4959,9 @@ LearnBlock.MenuItem.prototype.createDom = function () {
     a.appendChild(b);
     var c = this.getCheckboxDom();
     c && b.appendChild(c);
-    b.appendChild(this.getContentDom());
+    if (this.getContentDom() != null){
+        b.appendChild(this.getContentDom());
+    }
     LearnBlock.utils.aria.setRole(a, this.roleName_ || (this.checkable_ ?
         LearnBlock.utils.aria.Role.MENUITEMCHECKBOX : LearnBlock.utils.aria.Role.MENUITEM));
     LearnBlock.utils.aria.setState(a, LearnBlock.utils.aria.State.SELECTED, this.checkable_ && this.checked_ || !1)

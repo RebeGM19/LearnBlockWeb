@@ -17,7 +17,7 @@ function loadEnglish(languagesBlocks){
 }
 
 //Text Block
-LearnBlock.Msg["SAMPLE_TEXT"] = "Hello_World";  //CHANGE XD
+LearnBlock.Msg["SAMPLE_TEXT"] = "text";
 
 //Variables Block
 LearnBlock.Msg["VARIABLES_SET"] = "set %1 to %2";
@@ -59,6 +59,8 @@ LearnBlock.Msg[">"] = ">";
 //Utils
 LearnBlock.Msg["DELETE_ALL_BLOCKS"] = "Delete all %1 blocks?";
 LearnBlock.Msg["DELETE_BLOCK"] = "Delete Block";
+LearnBlock.Msg["RENAME_VARIABLE"] = "Rename variable";
+LearnBlock.Msg["RENAME_VARIABLE_TITLE"] = "Rename variable";
 LearnBlock.Msg["DELETE_VARIABLE"] = "Delete the '%1' variable";
 LearnBlock.Msg["DELETE_VARIABLE_CONFIRMATION"] = "Delete %1 uses of the '%2' variable?";
 LearnBlock.Msg["DELETE_X_BLOCKS"] = "Delete %1 Blocks";

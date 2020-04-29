@@ -64,37 +64,19 @@
                             <div id="toolbox" style="display: none">
 
                                 <category name="%{BKY_CONTROL}" expanded="true">
-                                    <block type="control_main"></block>
-                                    <block type="control_if"></block>
-                                    <block type="control_elif"></block>
-                                    <block type="control_else"></block>
-                                    <block type="control_while"></block>
-                                    <block type="control_while_True"></block>
-                                    <block type="control_elapsedTime_0"></block>
-                                    <block type="control_elapsedTime_1"></block>
-                                    <block type="fcontrol_sleep"></block>
+                                    {% for block in allBlocks %}
+                                        {% if block[1] == 'control' %}
+                                            <block type="{{ block[0] }}"></block>
+                                        {% endif %}
+                                    {% endfor %}
                                 </category>
 
                                 <category name="%{BKY_OPERATORS}">
-                                    <block type="operator_+"></block>
-                                    <block type="operator_-"></block>
-                                    <block type="operator_*"></block>
-                                    <block type="operator_/"></block>
-                                    <block type="operator_="></block>
-                                    <block type="operator_=="></block>
-                                    <block type="operator_+="></block>
-                                    <block type="operator_-="></block>
-                                    <block type="operator_*="></block>
-                                    <block type="operator_/="></block>
-                                    <block type="operator_True"></block>
-                                    <block type="operator_False"></block>
-                                    <block type="operator_<"></block>
-                                    <block type="operator_>"></block>
-                                    <block type="operator_and"></block>
-                                    <block type="operator_or"></block>
-                                    <block type="operator_not"></block>
-                                    <block type="operator_)"></block>
-                                    <block type="operator_("></block>
+                                    {% for block in allBlocks %}
+                                        {% if block[1] == 'operator' %}
+                                            <block type="{{ block[0] }}"></block>
+                                        {% endif %}
+                                    {% endfor %}
                                 </category>
 
                                 <category name="%{BKY_VALUES}">
@@ -109,153 +91,59 @@
                                 <category name="%{BKY_FUNCTIONS}" custom="PROCEDURE"></category>
 
                                 <category name="%{BKY_EMOTIONS}">
-                                    <block type="emotion_expressNeutral"></block>
-                                    <block type="emotion_expressJoy"></block>
-                                    <block type="emotion_expressFear"></block>
-                                    <block type="emotion_expressSadness"></block>
-                                    <block type="emotion_expressAnger"></block>
-                                    <block type="emotion_expressDisgust"></block>
-                                    <block type="emotion_expressSurprise"></block>
-                                    <block type="emotion_is_Neutral_0"></block>
-                                    <block type="emotion_is_Neutral_1"></block>
-                                    <block type="emotion_is_Joy_0"></block>
-                                    <block type="emotion_is_Joy_1"></block>
-                                    <block type="emotion_is_Scared_0"></block>
-                                    <block type="emotion_is_Scared_1"></block>
-                                    <block type="emotion_is_Sadness_0"></block>
-                                    <block type="emotion_is_Sadness_1"></block>
-                                    <block type="emotion_is_Angry_0"></block>
-                                    <block type="emotion_is_Angry_1"></block>
-                                    <block type="emotion_is_Disgust_0"></block>
-                                    <block type="emotion_is_Disgust_1"></block>
-                                    <block type="emotion_is_Surprised_0"></block>
-                                    <block type="emotion_is_Surprised_1"></block>
+                                    {% for block in allBlocks %}
+                                        {% if block[1] == 'emotion' %}
+                                            <block type="{{ block[0] }}"></block>
+                                        {% endif %}
+                                    {% endfor %}
                                 </category>
 
                                 <category name="%{BKY_SPEAKER}">
-                                    <block type="speaker_say_Text"></block>
+                                    {% for block in allBlocks %}
+                                        {% if block[1] == 'speaker' %}
+                                            <block type="{{ block[0] }}"></block>
+                                        {% endif %}
+                                    {% endfor %}
                                 </category>
 
                                 <category name="%{BKY_BASE}">
-                                    <block type="base_slow_down"></block>
-                                    <block type="base_turn_right"></block>
-                                    <block type="base_turn_left"></block>
-                                    <block type="base_turn_back"></block>
-                                    <block type="base_turn"></block>
-                                    <block type="base_set_orientation"></block>
-                                    <block type="base_reset_orientation"></block>
-                                    <block type="base_stop_bot"></block>
-                                    <block type="base_set_move"></block>
-                                    <block type="base_move_straight"></block>
-                                    <block type="base_move_right"></block>
-                                    <block type="base_move_left"></block>
-                                    <block type="base_is_moving_left_0"></block>
-                                    <block type="base_is_moving_left_1"></block>
-                                    <block type="base_is_moving_right_0"></block>
-                                    <block type="base_is_moving_right_1"></block>
-                                    <block type="base_is_moving_straight_0"></block>
-                                    <block type="base_is_moving_straight_1"></block>
-                                    <block type="base_is_turning_left_0"></block>
-                                    <block type="base_is_turning_left_1"></block>
-                                    <block type="base_is_turning_right_0"></block>
-                                    <block type="base_is_turning_right_1"></block>
-                                    <block type="base_is_turning_0"></block>
-                                    <block type="base_is_turning_1"></block>
+                                    {% for block in allBlocks %}
+                                        {% if block[1] == 'base' %}
+                                            <block type="{{ block[0] }}"></block>
+                                        {% endif %}
+                                    {% endfor %}
                                 </category>
 
                                 <category name="%{BKY_MOTOR}">
-                                    <block type="motor_look_floor"></block>
-                                    <block type="motor_look_up"></block>
-                                    <block type="motor_look_front"></block>
-                                    <block type="motor_setAngleCamera"></block>
-                                    <block type="motor_setAngleMotor"></block>
+                                    {% for block in allBlocks %}
+                                        {% if block[1] == 'motor' %}
+                                            <block type="{{ block[0] }}"></block>
+                                        {% endif %}
+                                    {% endfor %}
                                 </category>
 
                                 <category name="%{BKY_CAMERA}">
-                                    <block type="camera_is_center_red_line_0"></block>
-                                    <block type="camera_is_center_red_line_1"></block>
-                                    <block type="camera_is_left_red_line_0"></block>
-                                    <block type="camera_is_left_red_line_1"></block>
-                                    <block type="camera_is_right_red_line_0"></block>
-                                    <block type="camera_is_right_red_line_1"></block>
-                                    <block type="camera_is_there_red_line_0"></block>
-                                    <block type="camera_is_there_red_line_1"></block>
-                                    <block type="camera_is_center_black_line_0"></block>
-                                    <block type="camera_is_center_black_line_1"></block>
-                                    <block type="camera_is_left_black_line_0"></block>
-                                    <block type="camera_is_left_black_line_1"></block>
-                                    <block type="camera_is_right_black_line_0"></block>
-                                    <block type="camera_is_right_black_line_1"></block>
-                                    <block type="camera_is_there_black_line_0"></block>
-                                    <block type="camera_is_there_black_line_1"></block>
-                                    <block type="camera_is_center_blue_line_0"></block>
-                                    <block type="camera_is_center_blue_line_1"></block>
-                                    <block type="camera_is_left_blue_line_0"></block>
-                                    <block type="camera_is_left_blue_line_1"></block>
-                                    <block type="camera_is_right_blue_line_0"></block>
-                                    <block type="camera_is_right_blue_line_1"></block>
-                                    <block type="camera_is_there_blue_line_0"></block>
-                                    <block type="camera_is_there_blue_line_1"></block>
-                                    <block type="camera_is_left_face_0"></block>
-                                    <block type="camera_is_left_face_1"></block>
-                                    <block type="camera_is_right_face_0"></block>
-                                    <block type="camera_is_right_face_1"></block>
-                                    <block type="camera_is_up_face_0"></block>
-                                    <block type="camera_is_up_face_1"></block>
-                                    <block type="camera_is_down_face_0"></block>
-                                    <block type="camera_is_down_face_1"></block>
-                                    <block type="camera_is_center_face_0"></block>
-                                    <block type="camera_is_center_face_1"></block>
-                                    <block type="camera_is_there_face_0"></block>
-                                    <block type="camera_is_there_face_1"></block>
-                                    <block type="camera_is_line_crossing_0"></block>
-                                    <block type="camera_is_line_crossing_1"></block>
-                                    <block type="camera_is_any_face_happy_0"></block>
-                                    <block type="camera_is_any_face_happy_1"></block>
-                                    <block type="camera_is_any_face_angry_0"></block>
-                                    <block type="camera_is_any_face_angry_1"></block>
-                                    <block type="camera_is_any_face_neutral_0"></block>
-                                    <block type="camera_is_any_face_neutral_1"></block>
-                                    <block type="camera_is_any_face_sad_0"></block>
-                                    <block type="camera_is_any_face_sad_1"></block>
-                                    <block type="camera_is_any_face_surprised_0"></block>
-                                    <block type="camera_is_any_face_surprised_1"></block>
-                                    <block type="camera_is_tag_0"></block>
-                                    <block type="camera_is_tag_1"></block>
-                                    <block type="camera_is_any_tag_0"></block>
-                                    <block type="camera_is_any_tag_1"></block>
-                                    <block type="camera_tag_on_the_left_0"></block>
-                                    <block type="camera_tag_on_the_left_1"></block>
-                                    <block type="camera_tag_on_the_right_0"></block>
-                                    <block type="camera_tag_on_the_right_1"></block>
-                                    <block type="camera_tag_on_the_center_0"></block>
-                                    <block type="camera_tag_on_the_center_1"></block>
-                                    <block type="camera_is_image_0"></block>
-                                    <block type="camera_is_image_1"></block>
+                                    {% for block in allBlocks %}
+                                        {% if block[1] == 'camera' %}
+                                            <block type="{{ block[0] }}"></block>
+                                        {% endif %}
+                                    {% endfor %}
                                 </category>
 
                                 <category name="%{BKY_DISTANCES}">
-                                    <block type="distances_is_front_obstacle_0"></block>
-                                    <block type="distances_is_front_obstacle_1"></block>
-                                    <block type="distances_is_left_obstacle_0"></block>
-                                    <block type="distances_is_left_obstacle_1"></block>
-                                    <block type="distances_is_right_obstacle_0"></block>
-                                    <block type="distances_is_right_obstacle_1"></block>
-                                    <block type="distances_is_obstacle_free_0"></block>
-                                    <block type="distances_is_obstacle_free_1"></block>
-                                    <block type="distances_get_min_distance_0"></block>
-                                    <block type="distances_get_min_distance_1"></block>
+                                    {% for block in allBlocks %}
+                                        {% if block[1] == 'distances' %}
+                                            <block type="{{ block[0] }}"></block>
+                                        {% endif %}
+                                    {% endfor %}
                                 </category>
 
                                 <category name="%{BKY_GROUND}">
-                                    <block type="ground_is_there_ground_0"></block>
-                                    <block type="ground_is_there_ground_1"></block>
-                                    <block type="ground_is_center_ground_line_0"></block>
-                                    <block type="ground_is_center_ground_line_1"></block>
-                                    <block type="ground_is_right_ground_line_0"></block>
-                                    <block type="ground_is_right_ground_line_1"></block>
-                                    <block type="ground_is_left_ground_line_0"></block>
-                                    <block type="ground_is_left_ground_line_1"></block>
+                                    {% for block in allBlocks %}
+                                        {% if block[1] == 'ground' %}
+                                            <block type="{{ block[0] }}"></block>
+                                        {% endif %}
+                                    {% endfor %}
                                 </category>
 
                             </div>

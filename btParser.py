@@ -1,6 +1,6 @@
 from learnblockCode.guiCreateBlock import *
 from learnblockCode.VisualBlock import toLBotPy
-from parser import searchName, createBlock, convert
+from parser import createBlock, convert
 
 listVariables = []
 

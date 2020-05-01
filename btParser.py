@@ -19,17 +19,12 @@ def convertVariables():
             text += "\n\n"
     return text
 
-# Gets the user functions definitions and parses them to Block-Text
-def convertUserFunctions(blocks):
+# Gets the user functions definitions and the blocks inside the main block, and parses them to Block-Text
+def convertUserFunctionsAndMain(blocks):
     text = ""
     for b in [block for block in blocks if block[1]["TYPE"] is USERFUNCTION]:
         text += "def " + toLBotPy(b, 1)
         text += "\nend\n\n"
-    return text
-
-# Gets the blocks inside the main block and parses them to Block-Text
-def convertMainFunctions(blocks):
-    text = ""
     for b in [block for block in blocks if "main" == block[0]]:
         text += b[0] + ":\n"
         if b[1]["BOTTOMIN"] is not None:
@@ -39,11 +34,9 @@ def convertMainFunctions(blocks):
         text += "\nend\n\n"
     return text
 
-
 # Returns the complete code in Block-Text according to the blocks in the workspace
 def parserBlockText(blocks):
     result = ""
     result += convertVariables()
-    result += convertUserFunctions(convert(blocks))
-    result += convertMainFunctions(convert(blocks))
+    result += convertUserFunctionsAndMain(convert(blocks))
     return result

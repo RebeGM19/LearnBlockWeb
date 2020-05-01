@@ -68,6 +68,7 @@ def processVariables(variablesBlock, listBlocks):
     return listBlocks
 
 # Returns the parameters into a function, given by the "field" element in xml (Variables)
+# Otherwise, if the block is a variable, returns that variable
 def getVariables(blockTree):
     result = None
     # Blocks with "variables" on their type are variables
@@ -94,15 +95,15 @@ def getValues(valuesTree):
     result = None
     block = valuesTree.find('block')
     if block.find('value') != -1:
-        value = block.find('value')
-        result = value
+        result = block.find('value')
     return result
 
 
+# Inserts in firstBlock all the blocks at its right
 def processValues(firstBlock, value):
     valueBlock = createBlock(value.find('block').get('blocktextname'), getType(value.find('block').get('type')), getVariables(value.find('block')), value.find('block'))
     if valueBlock != None and firstBlock != None:
-        # Done in case a block inside a statement has other(s) block(s) at its right, so they won't be processed next to the first block in the statement
+        # Done in case a block inside a statement has other(s) block(s) at its right, so they won't be processed next to the first block inside the statement
         blockBottom = firstBlock[1]["BOTTOM"]
         if blockBottom != None:
             end = False
@@ -113,6 +114,7 @@ def processValues(firstBlock, value):
                 else:
                     blockBottom = blockBottom[1]["BOTTOM"]
         insertBlock(firstBlock, valueBlock, "RIGHT")
+        # Creates and inserts all the blocks at the right of the given, one by one
         while(value != None):
             value = getValues(value)
             if value != None:
@@ -158,12 +160,15 @@ def getNext(nextTree, firstBlock, insideStatement):
     result = None
     newBlock = None
     block = nextTree.find('block')
+    value = block.find('value')
+    statement = block.find('statement')
+    next_ = block.find('next')
+
     # If there is a block under the given one
     if block != None:
         newBlock = createBlock(block.get('blocktextname'), getType(block.get('type')), getVariables(block), block)
 
         # If the block has other blocks at its right, processes them (Right, getValues)
-        value = block.find('value')
         if value != None:
             # This process returns all the blocks at the right, not only the first one
             if insideStatement:
@@ -171,16 +176,13 @@ def getNext(nextTree, firstBlock, insideStatement):
             processValues(newBlock, value)
 
         # If the block has other blocks inside it, processes them (BottomIn, getStatements)
-        statement = block.find('statement')
         if statement != None:
-            firstStat = statement.find('block')  # Primer bloque del statement
-            statementBlock = createBlock(firstStat.get('blocktextname'), getType(firstStat.get('type')), getVariables(firstStat), firstStat)
+            statementBlock = createBlock(statement.find('block').get('blocktextname'), getType(statement.find('block').get('type')), getVariables(statement.find('block')), statement.find('block'))
             insertBlock(newBlock, statementBlock, "BOTTOMIN")
             while(statement != None):
                 statement = getStatements(statement, statementBlock)
 
         # If the block has other block under it, inserts it at Bottom attribute
-        next_ = block.find('next')
         if next_ != None:
             result = next_
             if result != None and firstBlock != None:
@@ -195,10 +197,11 @@ def convert(blocksString):
     listBlocks = []
     for block in root:
 
+        # First, user variables must be processed
         if block.tag == "variables":
             listBlocks = processVariables(block, listBlocks)
         else:
-            # The first block must be always a main block
+            # The first block must be always a main block or an user function block
             mainBlock = createBlock(block.get('blocktextname'), getType(block.get('type')), getVariables(block), block)
 
             # The next elements to be processed are the blocks inside the first one (statements, BottomIn)
@@ -223,22 +226,23 @@ def convert(blocksString):
                 # If the first element has blocks inside it, processes them (BottomIn)
                 if firstStat.find('statement') != -1 and firstStat.find('statement') != None:
                     insideStatement = firstStat.find('statement')
-                    insideTree = insideStatement
                     newBlock = createBlock(insideStatement.find('block').get('blocktextname'), getType(insideStatement.find('block').get('type')), getVariables(insideStatement.find('block')), insideStatement.find('block'))
                     insertBlock(statementBlock, newBlock, "BOTTOMIN")
-                    while(insideTree != None):
-                        insideTree = getStatements(insideTree, newBlock)
+                    while(insideStatement != None):
+                        insideStatement = getStatements(insideStatement, newBlock)
 
                 # Otherwise, if the first element has blocks under it, processes them (Bottom)
                 nextBlock = firstStat.find('next')
-                nextTree = nextBlock
-                if nextBlock != None:  # Comprueba esto, a ver qué has hecho aquí, melona
-                    lastBlock = createBlock("Last", None, None, nextBlock)
-                    while nextTree != None and lastBlock != None:
-                        nextValue = getNext(nextTree, statementBlock, False)
-                        nextTree = nextValue[0]
+                if nextBlock != None:
+                    lastBlock = createBlock("Last", None, None, nextBlock)  # Aux block
+                    while nextBlock != None and lastBlock != None:
+                        # If nextBlock or lastBlock are None, it means that the current block is the last one
+                        nextValue = getNext(nextBlock, statementBlock, False)
+                        nextBlock = nextValue[0]
                         lastBlock = nextValue[1]
                     insertBlock(statementBlock, lastBlock, "BOTTOM")
+
+                # ListBlocks contains the user variables, the user procedures and the main
                 listBlocks.append(mainBlock)
             print(mainBlock)
     return listBlocks

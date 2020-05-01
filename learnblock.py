@@ -3,30 +3,26 @@ from flask import Flask, render_template, request
 from learnblockCode.guiCreateBlock import *
 from learnblockCode.Parser import __parserFromString, __generatePy, cleanCode, parserLearntBotCodeFromCode
 from btParser import processVars, parserBlockText
-from blocksLoader import loadBlocksPrueba
+from blocksLoader import loadBlocks, loadLBBlocks
 app = Flask(__name__)
 
-# Loads a file
-def loadBlocks(route):
-    f = open(route, "r")
-    if f.mode == 'r':
-        result = f.read()
-    return result
 
 @app.route("/")
 def init():
-    # Loads blocks from json definition in json files
-    control = loadBlocksPrueba("blocks/Control.conf")
-    operators = loadBlocksPrueba("blocks/Operators.conf")
+    # Loads blocks from json definition
+    control = loadLBBlocks("blocks/Control.conf")
+    operators = loadLBBlocks("blocks/Operators.conf")
     values = loadBlocks("blocks/values.json")
     variables = loadBlocks("blocks/variables.json")
-    expressions = loadBlocksPrueba("blocks/Expressions.conf")
-    proprioceptive = loadBlocksPrueba("blocks/Proprioceptive.conf")
-    motor = loadBlocksPrueba("blocks/Motor.conf")
-    perceptual = loadBlocksPrueba("blocks/Perceptual.conf")
+    expressions = loadLBBlocks("blocks/Expressions.conf")
+    proprioceptive = loadLBBlocks("blocks/Proprioceptive.conf")
+    motor = loadLBBlocks("blocks/Motor.conf")
+    perceptual = loadLBBlocks("blocks/Perceptual.conf")
 
+    # Gets the English and Spanish names of the blocks
     language = control[1] + operators[1] + expressions[1] + proprioceptive[1] + motor[1] + perceptual[1]
 
+    # Gets all blocks' type and category, from all files
     allBlocks = getBlocksTypes(control[0]) + getBlocksTypes(operators[0]) + getBlocksTypes(expressions[0]) + getBlocksTypes(proprioceptive[0]) + getBlocksTypes(motor[0]) + getBlocksTypes(perceptual[0])
 
     return render_template('index.html', language=language, control=control[0], operators=operators[0], values=values, variables=variables, expressions=expressions[0], proprioceptive=proprioceptive[0], motor=motor[0], perceptual=perceptual[0], allBlocks=allBlocks)
@@ -37,10 +33,12 @@ def getVars(result):
     variables = result[:finalVars]
     return variables
 
+# Gets the category a block belongs to
 def getCategoryFromBlock(block):
     obtType = block["type"].split("_")
     return obtType[0]
 
+# Gets blocks' type and category
 def getBlocksTypes(blocks):
     allBlocks = []
     jsonBlocks = json.loads(blocks)

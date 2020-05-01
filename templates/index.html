@@ -162,23 +162,14 @@
 
     <script>
         //Loads blocks from json definition
-        var language = {{language|tojson}};
-        var control = {{control|tojson}};
-        loadBlocks(control, language);
-        var operators = {{operators|tojson}};
-        loadBlocks(operators, null);
-        var values = {{values|tojson}};
-        loadBlocks(values, null);
-        var variables = {{variables|tojson}};
-        loadBlocks(variables, null);
-        var expressions = {{expressions|tojson}};
-        loadBlocks(expressions, null);
-        var proprioceptive = {{proprioceptive|tojson}};
-        loadBlocks(proprioceptive, null);
-        var motor = {{motor|tojson}};
-        loadBlocks(motor, null);
-        var perceptual = {{perceptual|tojson}};
-        loadBlocks(perceptual, null);
+        loadBlocks({{control|tojson}}, {{language|tojson}});
+        loadBlocks({{operators|tojson}}, null);
+        loadBlocks({{values|tojson}}, null);
+        loadBlocks({{variables|tojson}}, null);
+        loadBlocks({{expressions|tojson}}, null);
+        loadBlocks({{proprioceptive|tojson}}, null);
+        loadBlocks({{motor|tojson}}, null);
+        loadBlocks({{perceptual|tojson}}, null);
 
         //Creates tbe workspace
         var workspace = LearnBlock.inject('learnblockDiv', {

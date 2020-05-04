@@ -1,12 +1,12 @@
 import json
 from flask import Flask, render_template, request
-from learnblockCode.guiCreateBlock import *
-from learnblockCode.Parser import __parserFromString, __generatePy, cleanCode, parserLearntBotCodeFromCode
+from learnblockCode.Parser import parserLearntBotCodeFromCode
 from btParser import processVars, parserBlockText
 from blocksLoader import loadBlocks, loadLBBlocks
 app = Flask(__name__)
 
 
+# This procedure is executed when the web page is opened
 @app.route("/")
 def init():
     # Loads blocks from json definition
@@ -26,6 +26,7 @@ def init():
     allBlocks = getBlocksTypes(control[0]) + getBlocksTypes(operators[0]) + getBlocksTypes(expressions[0]) + getBlocksTypes(proprioceptive[0]) + getBlocksTypes(motor[0]) + getBlocksTypes(perceptual[0])
 
     return render_template('index.html', language=language, control=control[0], operators=operators[0], values=values, variables=variables, expressions=expressions[0], proprioceptive=proprioceptive[0], motor=motor[0], perceptual=perceptual[0], allBlocks=allBlocks)
+
 
 # Gets the variables declared by the user
 def getVars(result):
@@ -47,24 +48,16 @@ def getBlocksTypes(blocks):
         allBlocks.append(block)
     return allBlocks
 
-# Mirar esto ?????
+# Creates a string with all the XML elements returned by the Blockly library that represents all the blocks in the workspace
+# With that string, the parser from Blockly XML to LearnBlock Blocks structure can be executed
 def formatBlocks(blocks):
     blocksList = blocks.split(">")
-    array = []
-    array.append("<?xml version=\"1.0\"?>")
+    string = "<?xml version=\"1.0\"?>"
     for i in range(1, len(blocksList)-2):
         blocksList[i] = blocksList[i] + ">"
-        array.append(blocksList[i])
-    for block in array:
-        print(block)
-    return array
+        string += blocksList[i]
+    return string
 
-# Mirar esto ?????
-def listToString(s):
-    str1 = ""
-    for ele in s:
-        str1 += ele
-    return str1
 
 # When the button "execute" is clicked, gets the blocks in the workspace, parses them and returns the equivalent Block-Text (and Python) code
 @app.route("/result", methods=['GET', 'POST'])
@@ -72,9 +65,8 @@ def getBlocks():
     if request.method == 'POST':
         blocks = request.get_json()
         processVars(getVars(blocks))
-        blocksList = formatBlocks(blocks)
         print("------------------------------------------")
-        toParser = listToString(blocksList)
+        toParser = formatBlocks(blocks)
         blocktext = parserBlockText(toParser)
         print("------------------------------------------")
         print(blocktext)

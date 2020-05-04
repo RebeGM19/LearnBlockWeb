@@ -1,3 +1,4 @@
+//Gets the names of the user's variables
 function getVarsNames(vars){
     var i;
     var result = "";
@@ -7,6 +8,7 @@ function getVarsNames(vars){
     return result;
 }
 
+//Returns both Block-Text and Python code, each of them in a different position inside an array
 function getBothCodes(fullCode){
     var array = fullCode.split("----------\n\n");
     return array;

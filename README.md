@@ -1,8 +1,8 @@
 External Dependencies:
   - Python3
-        Installation: https://linuxize.com/post/how-to-install-python-3-7-on-ubuntu-18-04/
+        - Installation: https://linuxize.com/post/how-to-install-python-3-7-on-ubuntu-18-04/
   - Flask
-        Installation: https://linuxize.com/post/how-to-install-flask-on-ubuntu-18-04/
+        - Installation: https://linuxize.com/post/how-to-install-flask-on-ubuntu-18-04/
 
 Execution:
   - Download LearnBlockWeb zip, extract the files
@@ -15,9 +15,9 @@ Execution:
 
 Dependencias Externas:
   - Python3
-        Instalación: https://linuxize.com/post/how-to-install-python-3-7-on-ubuntu-18-04/
+        - Instalación: https://linuxize.com/post/how-to-install-python-3-7-on-ubuntu-18-04/
   - Flask
-        Instalación: https://linuxize.com/post/how-to-install-flask-on-ubuntu-18-04/
+        - Instalación: https://linuxize.com/post/how-to-install-flask-on-ubuntu-18-04/
 
 Ejecución:
   - Descargar zip LearnBlockWeb, extraer los archivos

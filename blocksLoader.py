@@ -40,6 +40,7 @@ def returnParameters(inputPos):
     strParam += ")"
     return strParam  # Something like: (%1, %2, %3)
 
+
 # Loads and translates a block's name and shape from LearnBlock to Blockly definition
 def getNameAndShape(block, name, shape):
     resultShape = ""
@@ -85,6 +86,7 @@ def getNameAndShape(block, name, shape):
 
     return resultShape
 
+
 # The block's colour depends on its category
 def getColour(category):
     colour = 0
@@ -92,7 +94,20 @@ def getColour(category):
         colour = 60
     if category == "operator":
         colour = 230
-    # Add colours
+    if category == "Motor":
+        colour = 0
+    if category == "Base":
+        colour = 120
+    if category == "Camera":
+        colour = 280
+    if category == "Distances":
+        colour = 300
+    if category == "Emotion":
+        colour = 90
+    if category == "Ground":
+        colour = 180
+    if category == "Speaker":
+        colour = 30
     return colour
 
 # Gets the function's name both in English and Spanish
@@ -101,6 +116,7 @@ def getLanguages(block, name):
     # This procedure must be modified in case others languages are included
     blockContent = [name.upper(), languages["ES"], languages["EN"]]
     return blockContent
+
 
 # Loads and translates one block from LearnBlock to Blockly definition
 def convertBlock(block, shape, alt):
@@ -116,6 +132,7 @@ def convertBlock(block, shape, alt):
         blockContent = getLanguages(block, vName.replace(" ", "_"))
 
     return blocklyJson, blockContent
+
 
 # Loads and translates all the blocks
 def convertLB2Blockly(lbJson):

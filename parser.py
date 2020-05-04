@@ -1,4 +1,3 @@
-from learnblockCode.Parser import __parserFromString, __generatePy, cleanCode
 from learnblockCode.guiCreateBlock import *
 import xml.etree.ElementTree as ET
 import re
@@ -246,5 +245,3 @@ def convert(blocksString):
                 listBlocks.append(mainBlock)
             print(mainBlock)
     return listBlocks
-
-

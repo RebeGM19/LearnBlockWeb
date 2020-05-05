@@ -8481,6 +8481,7 @@ LearnBlock.onContextMenu_ = function (a) {
 LearnBlock.hideChaff = function (a) {
     LearnBlock.WidgetDiv.hide();
     LearnBlock.DropDownDiv.hideWithoutAnimation()
+    a || (a = LearnBlock.getMainWorkspace(), a.toolbox_.clearSelection())
 };
 //Returns the main workspace
 LearnBlock.getMainWorkspace = function () {
@@ -9793,8 +9794,8 @@ LearnBlock.Flyout = function (a) {
     this.permanentlyDisabled_ = [];
     this.tabWidth_ = this.workspace_.getRenderer().getConstants().TAB_WIDTH
 };
-LearnBlock.Flyout.prototype.autoClose = false;
-LearnBlock.Flyout.prototype.isVisible_ = true;
+LearnBlock.Flyout.prototype.autoClose = true;
+LearnBlock.Flyout.prototype.isVisible_ = false;
 LearnBlock.Flyout.prototype.containerVisible_ = true;
 LearnBlock.Flyout.prototype.CORNER_RADIUS = 8;
 LearnBlock.Flyout.prototype.MARGIN = LearnBlock.Flyout.prototype.CORNER_RADIUS;
@@ -9863,13 +9864,13 @@ LearnBlock.Flyout.prototype.isVisible = function () {
 LearnBlock.Flyout.prototype.setVisible = function (a) {
     var b = a != this.isVisible();
     this.isVisible_ = a;
-    this.updateDisplay_()
+    b && this.updateDisplay_()
 };
 //Sets whether this flyout's container is visible
 LearnBlock.Flyout.prototype.setContainerVisible = function (a) {
     var b = a != this.containerVisible_;
     this.containerVisible_ = a;
-    this.updateDisplay_()
+    b && this.updateDisplay_()
 };
 //Updates the display property of the flyout based whether it thinks it should be visible and whether its containing workspace is visible
 LearnBlock.Flyout.prototype.updateDisplay_ = function () {
@@ -9924,6 +9925,7 @@ LearnBlock.Flyout.prototype.show = function (a) {
                 f = parseInt(f.getAttribute("gap"), 10);
                 !isNaN(f) && 0 < c.length ? c[c.length - 1] = f : c.push(d);
                 break;
+            case "LABEL":
             case "BUTTON":
                 g = "LABEL" == f.tagName.toUpperCase();
                 if (!LearnBlock.FlyoutButton) throw Error("Missing require for LearnBlock.FlyoutButton");
@@ -12023,7 +12025,7 @@ LearnBlock.Toolbox.prototype.handleBeforeTreeSelected_ = function (a) {
 };
 //Handles the after tree item selected action
 LearnBlock.Toolbox.prototype.handleAfterTreeSelected_ = function (a, b) {
-    b && b.blocks && b.blocks.length ? (this.flyout_.show(b.blocks), this.lastCategory_ != b && this.flyout_.scrollToStart(), LearnBlock.keyboardAccessibilityMode && LearnBlock.navigation.setState(LearnBlock.navigation.STATE_TOOLBOX)) : (!LearnBlock.keyboardAccessibilityMode || b instanceof LearnBlock.Toolbox.TreeSeparator || LearnBlock.navigation.setState(LearnBlock.navigation.STATE_WS));
+    b && b.blocks && b.blocks.length ? (this.flyout_.show(b.blocks), this.lastCategory_ != b && this.flyout_.scrollToStart(), LearnBlock.keyboardAccessibilityMode && LearnBlock.navigation.setState(LearnBlock.navigation.STATE_TOOLBOX)) : (this.flyout_.hide(), !LearnBlock.keyboardAccessibilityMode || b instanceof LearnBlock.Toolbox.TreeSeparator || LearnBlock.navigation.setState(LearnBlock.navigation.STATE_WS));
     if (a != b && a != this) {
         var c = new LearnBlock.Events.Ui(null, "category", a && a.getText(),
             b && b.getText());
@@ -12103,7 +12105,10 @@ LearnBlock.Toolbox.prototype.syncTrees_ = function (a, b, c) {
 };
 //Unhighlights any previously specified option
 LearnBlock.Toolbox.prototype.clearSelection = function () {
+    console.log(this.tree_.getSelectedItem())
     this.tree_.setSelectedItem(null)
+    //!!!!!
+    //this.lastCategory_ = null;
 };
 //Adds a style on the toolbox
 LearnBlock.Toolbox.prototype.addStyle = function (a) {
@@ -12123,7 +12128,7 @@ LearnBlock.Toolbox.prototype.getClientRect = function () {
     a = d + a.width;
     return this.toolboxPosition == LearnBlock.TOOLBOX_AT_TOP ? new LearnBlock.utils.Rect(-1E7, c, -1E7, 1E7) : this.toolboxPosition == LearnBlock.TOOLBOX_AT_BOTTOM ? new LearnBlock.utils.Rect(b, 1E7, -1E7, 1E7) : this.toolboxPosition == LearnBlock.TOOLBOX_AT_LEFT ? new LearnBlock.utils.Rect(-1E7, 1E7, -1E7, a) : new LearnBlock.utils.Rect(-1E7, 1E7, d, 1E7)
 };
-//Updates the flyout's contents without closing it !!!!
+//Updates the flyout's contents without closing it
 LearnBlock.Toolbox.prototype.refreshSelection = function () {
     var a = this.tree_.getSelectedItem();
     a && a.blocks && this.flyout_.show(a.blocks)

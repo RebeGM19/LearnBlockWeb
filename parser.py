@@ -7,7 +7,12 @@ def createBlock(name, type_, variables, block):
     # First of all, changes the block name depending on the type
     # String or num value
     if name == "val":
-        name = block.find('field').text
+        # Number
+        if "num" in block.get('type'):
+            name = block.find('field').text
+        # Text
+        elif "text" in block.get('type'):
+            name = "\"" + block.find('field').text + "\""
         variables = None
     # User variable
     if type_ == VARIABLE and name == "undefined":

@@ -74,7 +74,7 @@ LearnBlock.Blocks.procedures_callnoreturn = {
                     b.appendChild(c);
                     a.appendChild(b);
                     LearnBlock.Xml.domToWorkspace(a, this.workspace);
-                    LearnBlock.Events.setGroup(!1)
+                    LearnBlock.Events.setGroup(!1);
                 }
             } else a.type == LearnBlock.Events.BLOCK_DELETE ? (b = this.getProcedureCall(), b = LearnBlock.Procedures.getDefinition(b, this.workspace), b || (LearnBlock.Events.setGroup(a.group),
                 this.dispose(!0, !1), LearnBlock.Events.setGroup(!1))) : a.type == LearnBlock.Events.CHANGE && "disabled" == a.element && (b = this.getProcedureCall(), (b = LearnBlock.Procedures.getDefinition(b, this.workspace)) && b.id == a.blockId && ((b = LearnBlock.Events.getGroup()) && console.log("Saw an existing group while responding to a definition change"), LearnBlock.Events.setGroup(a.group), a.newValue ? (this.previousEnabledState_ = this.isEnabled(), this.setEnabled(!1)) : this.setEnabled(this.previousEnabledState_), LearnBlock.Events.setGroup(b)))

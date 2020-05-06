@@ -8166,7 +8166,7 @@ LearnBlock.Procedures.mutateCallers = function (a) {
         e.domToMutation(d);
         var g = e.mutationToDom();
         g = g && LearnBlock.Xml.domToText(g);
-        f != g && (LearnBlock.Events.recordUndo = !1, LearnBlock.Events.fire(new LearnBlock.Events.BlockChange(e, "mutation", null, f, g)), LearnBlock.Events.recordUndo = b)
+        f != g && (LearnBlock.Events.recordUndo = !1, LearnBlock.Events.fire(new LearnBlock.Events.BlockChange(e, "mutation", null, f, g)), LearnBlock.Events.recordUndo = b);
     }
 };
 //Finds the definition block for the named procedure
@@ -8481,7 +8481,6 @@ LearnBlock.onContextMenu_ = function (a) {
 LearnBlock.hideChaff = function (a) {
     LearnBlock.WidgetDiv.hide();
     LearnBlock.DropDownDiv.hideWithoutAnimation()
-    a || (a = LearnBlock.getMainWorkspace(), a.toolbox_.clearSelection())
 };
 //Returns the main workspace
 LearnBlock.getMainWorkspace = function () {
@@ -9794,8 +9793,8 @@ LearnBlock.Flyout = function (a) {
     this.permanentlyDisabled_ = [];
     this.tabWidth_ = this.workspace_.getRenderer().getConstants().TAB_WIDTH
 };
-LearnBlock.Flyout.prototype.autoClose = true;
-LearnBlock.Flyout.prototype.isVisible_ = false;
+LearnBlock.Flyout.prototype.autoClose = false;
+LearnBlock.Flyout.prototype.isVisible_ = true;
 LearnBlock.Flyout.prototype.containerVisible_ = true;
 LearnBlock.Flyout.prototype.CORNER_RADIUS = 8;
 LearnBlock.Flyout.prototype.MARGIN = LearnBlock.Flyout.prototype.CORNER_RADIUS;
@@ -9864,13 +9863,13 @@ LearnBlock.Flyout.prototype.isVisible = function () {
 LearnBlock.Flyout.prototype.setVisible = function (a) {
     var b = a != this.isVisible();
     this.isVisible_ = a;
-    b && this.updateDisplay_()
+    this.updateDisplay_()
 };
 //Sets whether this flyout's container is visible
 LearnBlock.Flyout.prototype.setContainerVisible = function (a) {
     var b = a != this.containerVisible_;
     this.containerVisible_ = a;
-    b && this.updateDisplay_()
+    this.updateDisplay_()
 };
 //Updates the display property of the flyout based whether it thinks it should be visible and whether its containing workspace is visible
 LearnBlock.Flyout.prototype.updateDisplay_ = function () {
@@ -9990,7 +9989,7 @@ LearnBlock.Flyout.prototype.createBlock = function (a) {
     var c = this.targetWorkspace_.getAllVariables();
     this.targetWorkspace_.setResizesEnabled(!1);
     try {
-        b = this.placeNewBlock_(a), LearnBlock.hideChaff()
+        b = this.placeNewBlock_(a), this.targetWorkspace_.toolbox_.refreshSelection()
     } finally {
         LearnBlock.Events.enable()
     }
@@ -12105,10 +12104,7 @@ LearnBlock.Toolbox.prototype.syncTrees_ = function (a, b, c) {
 };
 //Unhighlights any previously specified option
 LearnBlock.Toolbox.prototype.clearSelection = function () {
-    console.log(this.tree_.getSelectedItem())
     this.tree_.setSelectedItem(null)
-    //!!!!!
-    //this.lastCategory_ = null;
 };
 //Adds a style on the toolbox
 LearnBlock.Toolbox.prototype.addStyle = function (a) {

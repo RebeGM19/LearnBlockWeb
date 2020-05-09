@@ -1942,7 +1942,7 @@ LearnBlock.BlockDragger.prototype.startBlockDrag = function (a, b) {
     this.draggingBlock_.setDragging(!0);
     this.draggingBlock_.moveToDragSurface_();
     if (c = this.workspace_.getToolbox()) {
-        var d = this.draggingBlock_.isDeletable() ? "blocklyToolboxDelete" : "blocklyToolboxGrab";
+        var d = this.draggingBlock_.isDeletable() ? "learnblockToolboxDelete" : "learnblockToolboxGrab";
         c.addStyle(d)
     }
 };
@@ -1969,8 +1969,8 @@ LearnBlock.BlockDragger.prototype.endBlockDrag = function (e, currentDragDeltaXY
     this.workspace_.setResizesEnabled(true);
     var toolbox = this.workspace_.getToolbox();
     if (toolbox) {
-        var style = this.draggingBlock_.isDeletable() ? 'blocklyToolboxDelete' :
-            'blocklyToolboxGrab';
+        var style = this.draggingBlock_.isDeletable() ? 'learnblockToolboxDelete' :
+            'learnblockToolboxGrab';
         toolbox.removeStyle(style);
     }
     LearnBlock.Events.setGroup(false);
@@ -2071,12 +2071,12 @@ LearnBlock.Touch.splitEventByTouches = function (a) {
 //Class for a pair of scrollbars: horizontal and vertical
 LearnBlock.ScrollbarPair = function (a) {
     this.workspace_ = a;
-    this.hScroll = new LearnBlock.Scrollbar(a, !0, !0, "blocklyMainWorkspaceScrollbar");
-    this.vScroll = new LearnBlock.Scrollbar(a, !1, !0, "blocklyMainWorkspaceScrollbar");
+    this.hScroll = new LearnBlock.Scrollbar(a, !0, !0, "learnblockMainWorkspaceScrollbar");
+    this.vScroll = new LearnBlock.Scrollbar(a, !1, !0, "learnblockMainWorkspaceScrollbar");
     this.corner_ = LearnBlock.utils.dom.createSvgElement("rect", {
         height: LearnBlock.Scrollbar.scrollbarThickness,
         width: LearnBlock.Scrollbar.scrollbarThickness,
-        "class": "blocklyScrollbarBackground"
+        "class": "learnblockScrollbarBackground"
     }, null);
 };
 LearnBlock.ScrollbarPair.prototype.oldHostMetrics_ = null;
@@ -2247,11 +2247,11 @@ LearnBlock.Scrollbar.prototype.createDom_ = function (a) {
     }, null);
     this.svgGroup_ = LearnBlock.utils.dom.createSvgElement("g", {}, this.outerSvg_);
     this.svgBackground_ = LearnBlock.utils.dom.createSvgElement("rect", {
-        "class": "blocklyScrollbarBackground"
+        "class": "learnblockScrollbarBackground"
     }, this.svgGroup_);
     a = Math.floor((LearnBlock.Scrollbar.scrollbarThickness - 5) / 2);
     this.svgHandle_ = LearnBlock.utils.dom.createSvgElement("rect", {
-        "class": "blocklyScrollbarHandle",
+        "class": "learnblockScrollbarHandle",
         rx: a,
         ry: a
     }, this.svgGroup_);
@@ -3378,7 +3378,7 @@ LearnBlock.Field.prototype.createBorderRect_ = function () {
 //Creates a field text element
 LearnBlock.Field.prototype.createTextElement_ = function () {
     this.textElement_ = LearnBlock.utils.dom.createSvgElement("text", {
-        "class": "blocklyText",
+        "class": "learnblockText",
         y: LearnBlock.Field.TEXT_DEFAULT_HEIGHT,
         x: this.borderRect_ ? LearnBlock.Field.DEFAULT_TEXT_OFFSET : 0
     }, this.fieldGroup_);
@@ -3413,8 +3413,8 @@ LearnBlock.Field.prototype.updateEditable = function () {
         return;
     }
     if (this.sourceBlock_.isEditable()) {
-        LearnBlock.utils.dom.addClass(group, 'blocklyEditableText');
-        LearnBlock.utils.dom.removeClass(group, 'blocklyNonEditableText');
+        LearnBlock.utils.dom.addClass(group, 'learnblockEditableText');
+        LearnBlock.utils.dom.removeClass(group, 'learnblockNonEditableText');
         group.style.cursor = this.CURSOR;
     }
 };
@@ -4496,7 +4496,7 @@ LearnBlock.BlockDragSurfaceSvg.prototype.createDom = function () {
         "xmlns:html": LearnBlock.utils.dom.HTML_NS,
         "xmlns:xlink": LearnBlock.utils.dom.XLINK_NS,
         version: "1.1",
-        "class": "blocklyBlockDragSurface"
+        "class": "learnblockBlockDragSurface"
     }, this.container_), this.dragGroup_ = LearnBlock.utils.dom.createSvgElement("g", {}, this.SVG_))
 };
 //Sets the SVG blocks on the drag surface's group and shows the surface
@@ -4554,13 +4554,13 @@ LearnBlock.blockRendering.IPathObject = function (a) {};
 LearnBlock.blockRendering.PathObject = function (a) {
     this.svgRoot = a;
     this.svgPath = LearnBlock.utils.dom.createSvgElement("path", {
-        "class": "blocklyPath"
+        "class": "learnblockPath"
     }, this.svgRoot);
     this.svgPathLight = LearnBlock.utils.dom.createSvgElement("path", {
-        "class": "blocklyPathLight"
+        "class": "learnblockPathLight"
     }, this.svgRoot);
     this.svgPathDark = LearnBlock.utils.dom.createSvgElement("path", {
-        "class": "blocklyPathDark",
+        "class": "learnblockPathDark",
         transform: "translate(1,1)"
     }, this.svgRoot)
 };
@@ -5111,7 +5111,7 @@ LearnBlock.ContextMenu.position_ = function (a, b, c) {
 LearnBlock.ContextMenu.createWidget_ = function (a) {
     a.render(LearnBlock.WidgetDiv.DIV);
     var b = a.getElement();
-    LearnBlock.utils.dom.addClass(b, "blocklyContextMenu");
+    LearnBlock.utils.dom.addClass(b, "learnblockContextMenu");
     LearnBlock.bindEventWithChecks_(b, "contextmenu", null, LearnBlock.utils.noEvent);
     a.focus()
 };
@@ -5257,7 +5257,7 @@ LearnBlock.RenderedConnection.prototype.highlight = function () {
     a = this.type == LearnBlock.INPUT_VALUE || this.type == LearnBlock.OUTPUT_VALUE ? LearnBlock.utils.svgPaths.moveBy(0, -5) + LearnBlock.utils.svgPaths.lineOnAxis("v", 5) + a.PUZZLE_TAB.pathDown + LearnBlock.utils.svgPaths.lineOnAxis("v", 5) : LearnBlock.utils.svgPaths.moveBy(-5, 0) + LearnBlock.utils.svgPaths.lineOnAxis("h", 5) + a.NOTCH.pathLeft + LearnBlock.utils.svgPaths.lineOnAxis("h", 5);
     var b = this.sourceBlock_.getRelativeToSurfaceXY();
     LearnBlock.Connection.highlightedPath_ = LearnBlock.utils.dom.createSvgElement("path", {
-        "class": "blocklyHighlightedConnectionPath",
+        "class": "learnblockHighlightedConnectionPath",
         d: a,
         transform: "translate(" + (this.x_ - b.x) + "," + (this.y_ - b.y) + ")" + (this.sourceBlock_.RTL ? " scale(-1 1)" : "")
     }, this.sourceBlock_.getSvgRoot())
@@ -5550,13 +5550,13 @@ LearnBlock.BlockSvg.prototype.setDragging = function (a) {
         b.translate_ = "";
         b.skew_ = "";
         LearnBlock.draggingConnections_ = LearnBlock.draggingConnections_.concat(this.getConnections_(!0));
-        LearnBlock.utils.dom.addClass(this.svgGroup_, "blocklyDragging")
-    } else LearnBlock.draggingConnections_ = [], LearnBlock.utils.dom.removeClass(this.svgGroup_, "blocklyDragging");
+        LearnBlock.utils.dom.addClass(this.svgGroup_, "learnblockDragging")
+    } else LearnBlock.draggingConnections_ = [], LearnBlock.utils.dom.removeClass(this.svgGroup_, "learnblockDragging");
     for (b = 0; b < this.childBlocks_.length; b++) this.childBlocks_[b].setDragging(a)
 };
 //Updates the movility of a block
 LearnBlock.BlockSvg.prototype.updateMovable = function () {
-    this.isMovable() ? LearnBlock.utils.dom.addClass(this.svgGroup_, "blocklyDraggable") : LearnBlock.utils.dom.removeClass(this.svgGroup_, "blocklyDraggable")
+    this.isMovable() ? LearnBlock.utils.dom.addClass(this.svgGroup_, "learnblockDraggable") : LearnBlock.utils.dom.removeClass(this.svgGroup_, "learnblockDraggable")
 };
 //Sets whether the block is movable or not
 LearnBlock.BlockSvg.prototype.setMovable = function (a) {
@@ -5570,7 +5570,7 @@ LearnBlock.BlockSvg.prototype.setEditable = function (a) {
 };
 //Sets whether the block is an insertion marker block or not
 LearnBlock.BlockSvg.prototype.setInsertionMarker = function (a) {
-    this.isInsertionMarker_ != a && (this.isInsertionMarker_ = a) && (this.setColour(LearnBlock.INSERTION_MARKER_COLOUR), LearnBlock.utils.dom.addClass(this.svgGroup_, "blocklyInsertionMarker"))
+    this.isInsertionMarker_ != a && (this.isInsertionMarker_ = a) && (this.setColour(LearnBlock.INSERTION_MARKER_COLOUR), LearnBlock.utils.dom.addClass(this.svgGroup_, "learnblockInsertionMarker"))
 };
 //Returns the root node of the svg
 LearnBlock.BlockSvg.prototype.getSvgRoot = function () {
@@ -5616,11 +5616,11 @@ LearnBlock.BlockSvg.prototype.setHighlighted = function (a) {
 };
 //Selects the block
 LearnBlock.BlockSvg.prototype.addSelect = function () {
-    LearnBlock.utils.dom.addClass(this.svgGroup_, "blocklySelected")
+    LearnBlock.utils.dom.addClass(this.svgGroup_, "learnblockSelected")
 };
 //Unselects the block
 LearnBlock.BlockSvg.prototype.removeSelect = function () {
-    LearnBlock.utils.dom.removeClass(this.svgGroup_, "blocklySelected")
+    LearnBlock.utils.dom.removeClass(this.svgGroup_, "learnblockSelected")
 };
 //Changes the colour
 LearnBlock.BlockSvg.prototype.setColour = function (a) {
@@ -5766,7 +5766,7 @@ LearnBlock.BlockSvg.prototype.positionNewBlock = function (a, b, c) {
 };
 //Visual effect to show that if the dragging block is dropped, this block will be replaced
 LearnBlock.BlockSvg.prototype.highlightForReplacement = function (a) {
-    a ? LearnBlock.utils.dom.addClass(this.svgGroup_, "blocklyReplaceable") : LearnBlock.utils.dom.removeClass(this.svgGroup_, "blocklyReplaceable")
+    a ? LearnBlock.utils.dom.addClass(this.svgGroup_, "learnblockReplaceable") : LearnBlock.utils.dom.removeClass(this.svgGroup_, "learnblockReplaceable")
 };
 
 //CSS Functions
@@ -5817,17 +5817,17 @@ LearnBlock.DropDownDiv.onHide_ = null;
 LearnBlock.DropDownDiv.createDom = function () {
     if (!LearnBlock.DropDownDiv.DIV_) {
         var a = document.createElement("div");
-        a.className = "blocklyDropDownDiv";
+        a.className = "learnblockDropDownDiv";
         a.style.backgroundColor = LearnBlock.DropDownDiv.DEFAULT_DROPDOWN_COLOR;
         a.style.borderColor = LearnBlock.DropDownDiv.DEFAULT_DROPDOWN_BORDER_COLOR;
         document.body.appendChild(a);
         LearnBlock.DropDownDiv.DIV_ = a;
         var b = document.createElement("div");
-        b.className = "blocklyDropDownContent";
+        b.className = "learnblockDropDownContent";
         a.appendChild(b);
         LearnBlock.DropDownDiv.content_ = b;
         b = document.createElement("div");
-        b.className = "blocklyDropDownArrow";
+        b.className = "learnblockDropDownArrow";
         a.appendChild(b);
         LearnBlock.DropDownDiv.arrow_ = b;
         LearnBlock.DropDownDiv.DIV_.style.opacity = 0;
@@ -5894,7 +5894,7 @@ LearnBlock.DropDownDiv.show = function (a, b, c, d, e, f, g) {
     LearnBlock.DropDownDiv.owner_ = a;
     LearnBlock.DropDownDiv.onHide_ = g || null;
     a = LearnBlock.DropDownDiv.getPositionMetrics(c, d, e, f);
-    a.arrowVisible ? (LearnBlock.DropDownDiv.arrow_.style.display = "", LearnBlock.DropDownDiv.arrow_.style.transform = "translate(" + a.arrowX + "px," + a.arrowY + "px) rotate(45deg)", LearnBlock.DropDownDiv.arrow_.setAttribute("class", a.arrowAtTop ? "blocklyDropDownArrow arrowTop" : "blocklyDropDownArrow arrowBottom")) : LearnBlock.DropDownDiv.arrow_.style.display = "none";
+    a.arrowVisible ? (LearnBlock.DropDownDiv.arrow_.style.display = "", LearnBlock.DropDownDiv.arrow_.style.transform = "translate(" + a.arrowX + "px," + a.arrowY + "px) rotate(45deg)", LearnBlock.DropDownDiv.arrow_.setAttribute("class", a.arrowAtTop ? "learnblockDropDownArrow arrowTop" : "learnblockDropDownArrow arrowBottom")) : LearnBlock.DropDownDiv.arrow_.style.display = "none";
     LearnBlock.DropDownDiv.DIV_.style.direction = b ? "rtl" : "ltr";
     LearnBlock.DropDownDiv.positionInternal_(a.initialX, a.initialY, a.finalX, a.finalY);
     return a.arrowAtTop
@@ -6224,7 +6224,7 @@ LearnBlock.WorkspaceDragSurfaceSvg.prototype.createDom = function () {
         "xmlns:html": LearnBlock.utils.dom.HTML_NS,
         "xmlns:xlink": LearnBlock.utils.dom.XLINK_NS,
         version: "1.1",
-        "class": "blocklyWsDragSurface blocklyOverflowVisible"
+        "class": "learnblockWsDragSurface learnblockOverflowVisible"
     }, null), this.container_.appendChild(this.SVG_))
 };
 //Translates the entire drag surface during a drag
@@ -6242,7 +6242,7 @@ LearnBlock.WorkspaceDragSurfaceSvg.prototype.getSurfaceTranslation = function ()
 LearnBlock.WorkspaceDragSurfaceSvg.prototype.clearAndHide = function (a) {
     if (!a) throw Error("Couldn't clear and hide the drag surface: missing new surface.");
     var b = this.SVG_.childNodes[0];
-    if (!(b && LearnBlock.utils.dom.hasClass(b, "blocklyBlockCanvas"))) throw Error("Couldn't clear and hide the drag surface. A node was missing.");
+    if (!(b && LearnBlock.utils.dom.hasClass(b, "learnblockBlockCanvas"))) throw Error("Couldn't clear and hide the drag surface. A node was missing.");
     null != this.previousSibling_ ? LearnBlock.utils.dom.insertAfter(b, this.previousSibling_) : a.insertBefore(b, a.firstChild);
     this.SVG_.style.display = "none";
     if (this.SVG_.childNodes.length) throw Error("Drag surface was not cleared.");
@@ -6568,9 +6568,9 @@ LearnBlock.WorkspaceSvg.prototype.createDom = function (a) {
         height: "100%",
         width: "100%",
         "class": a
-    }, this.svgGroup_), "blocklyMainBackground" == a && this.grid_ ? this.svgBackground_.style.fill = "url(#" + this.grid_.getPatternId() + ")" : this.themeManager_.subscribe(this.svgBackground_, "workspace", "fill"));
+    }, this.svgGroup_), "learnblockMainBackground" == a && this.grid_ ? this.svgBackground_.style.fill = "url(#" + this.grid_.getPatternId() + ")" : this.themeManager_.subscribe(this.svgBackground_, "workspace", "fill"));
     this.svgBlockCanvas_ = LearnBlock.utils.dom.createSvgElement("g", {
-        "class": "blocklyBlockCanvas"
+        "class": "learnblockBlockCanvas"
     }, this.svgGroup_);
     this.isFlyout || (LearnBlock.bindEventWithChecks_(this.svgGroup_, "mousedown", this, this.onMouseDown_, !1, !0), LearnBlock.bindEventWithChecks_(this.svgGroup_, "wheel", this, this.onMouseWheel_));
     if (this.options.hasCategories) {
@@ -6963,11 +6963,11 @@ LearnBlock.WorkspaceSvg.prototype.setBrowserFocus = function () {
 };
 //Adds a transition class to the block canvas to animate any transform changes
 LearnBlock.WorkspaceSvg.prototype.beginCanvasTransition = function () {
-    LearnBlock.utils.dom.addClass(this.svgBlockCanvas_, "blocklyCanvasTransitioning");
+    LearnBlock.utils.dom.addClass(this.svgBlockCanvas_, "learnblockCanvasTransitioning");
 };
 //Removes transition class from the block canvas
 LearnBlock.WorkspaceSvg.prototype.endCanvasTransition = function () {
-    LearnBlock.utils.dom.removeClass(this.svgBlockCanvas_, "blocklyCanvasTransitioning");
+    LearnBlock.utils.dom.removeClass(this.svgBlockCanvas_, "learnblockCanvasTransitioning");
 };
 //Sets the workspace's zoom factor
 LearnBlock.WorkspaceSvg.prototype.setScale = function (a) {
@@ -7191,7 +7191,7 @@ LearnBlock.createDom_ = function (a, b) {
             "xmlns:html": LearnBlock.utils.dom.HTML_NS,
             "xmlns:xlink": LearnBlock.utils.dom.XLINK_NS,
             version: "1.1",
-            "class": "blocklySvg"
+            "class": "learnblockSvg"
         }, a),
         d = LearnBlock.utils.dom.createSvgElement("defs", {}, c),
         e = String(Math.random()).substring(2),
@@ -7257,7 +7257,7 @@ LearnBlock.createMainWorkspace_ = function (a, b, c, d) {
     b.parentWorkspace = null;
     var e = new LearnBlock.WorkspaceSvg(b, c, d);
     e.scale = b.zoomOptions.startScale;
-    a.appendChild(e.createDom("blocklyMainBackground"));
+    a.appendChild(e.createDom("learnblockMainBackground"));
     !b.hasCategories && b.languageTree && (c = e.addFlyout_("svg"), LearnBlock.utils.dom.insertAfter(c, a));
     b.zoomOptions && b.zoomOptions.controls && e.addZoomControls();
     e.getThemeManager().subscribe(a, "workspace", "background-color");
@@ -8344,7 +8344,7 @@ LearnBlock.WidgetDiv.owner_ = null;
 LearnBlock.WidgetDiv.dispose_ = null;
 //Creates the widget div and injects it onto the page
 LearnBlock.WidgetDiv.createDom = function () {
-    LearnBlock.WidgetDiv.DIV || (LearnBlock.WidgetDiv.DIV = document.createElement("div"), LearnBlock.WidgetDiv.DIV.className = "blocklyWidgetDiv", document.body.appendChild(LearnBlock.WidgetDiv.DIV))
+    LearnBlock.WidgetDiv.DIV || (LearnBlock.WidgetDiv.DIV = document.createElement("div"), LearnBlock.WidgetDiv.DIV.className = "learnblockWidgetDiv", document.body.appendChild(LearnBlock.WidgetDiv.DIV))
 };
 //Initializes and displays the widget div
 LearnBlock.WidgetDiv.show = function (a, b, c) {
@@ -9193,7 +9193,7 @@ LearnBlock.FieldTextInput.prototype.doValueUpdate_ = function (a) {
 //Updates the colour of the htmlInput given the current validity of the field's value
 LearnBlock.FieldTextInput.prototype.render_ = function () {
     LearnBlock.FieldTextInput.superClass_.render_.call(this);
-    this.isBeingEdited_ && (this.sourceBlock_.RTL ? setTimeout(this.resizeEditor_.bind(this), 0) : this.resizeEditor_(), this.isTextValid_ ? (LearnBlock.utils.dom.removeClass(this.htmlInput_, "blocklyInvalidInput"), LearnBlock.utils.aria.setState(this.htmlInput_, "invalid", !1)) : (LearnBlock.utils.dom.addClass(this.htmlInput_, "blocklyInvalidInput"), LearnBlock.utils.aria.setState(this.htmlInput_, "invalid", !0)))
+    this.isBeingEdited_ && (this.sourceBlock_.RTL ? setTimeout(this.resizeEditor_.bind(this), 0) : this.resizeEditor_(), this.isTextValid_ ? (LearnBlock.utils.dom.removeClass(this.htmlInput_, "learnblockInvalidInput"), LearnBlock.utils.aria.setState(this.htmlInput_, "invalid", !1)) : (LearnBlock.utils.dom.addClass(this.htmlInput_, "learnblockInvalidInput"), LearnBlock.utils.aria.setState(this.htmlInput_, "invalid", !0)))
 };
 //Sets whether this field is spellchecked by the browser
 LearnBlock.FieldTextInput.prototype.setSpellcheck = function (a) {
@@ -9223,7 +9223,7 @@ LearnBlock.FieldTextInput.prototype.showInlineEditor_ = function (a) {
 LearnBlock.FieldTextInput.prototype.widgetCreate_ = function () {
     var a = LearnBlock.WidgetDiv.DIV,
         b = document.createElement("input");
-    b.className = "blocklyHtmlInput";
+    b.className = "learnblockHtmlInput";
     b.setAttribute("spellcheck", this.spellcheck_);
     var c = LearnBlock.FieldTextInput.FONTSIZE * this.workspace_.scale + "pt";
     a.style.fontSize = c;
@@ -9359,7 +9359,7 @@ LearnBlock.FieldDropdown.prototype.initView = function () {
 LearnBlock.FieldDropdown.prototype.showEditor_ = function () {
     this.menu_ = this.dropdownCreate_();
     this.menu_.render(LearnBlock.DropDownDiv.getContentDiv());
-    LearnBlock.utils.dom.addClass(this.menu_.getElement(), "blocklyDropdownMenu");
+    LearnBlock.utils.dom.addClass(this.menu_.getElement(), "learnblockDropdownMenu");
     LearnBlock.DropDownDiv.showPositionedByField(this, this.dropdownDispose_.bind(this));
     this.menu_.focus();
     this.selectedMenuItem_ && LearnBlock.utils.style.scrollIntoContainerView(this.selectedMenuItem_.getElement(), this.menu_.getElement())
@@ -9807,11 +9807,11 @@ LearnBlock.Flyout.prototype.dragAngleRange_ = 70;
 //Creates the flyout's DOM
 LearnBlock.Flyout.prototype.createDom = function (a) {
     this.svgGroup_ = LearnBlock.utils.dom.createSvgElement(a, {
-        "class": "blocklyFlyout",
+        "class": "learnblockFlyout",
         style: "display: none"
     }, null);
     this.svgBackground_ = LearnBlock.utils.dom.createSvgElement("path", {
-        "class": "blocklyFlyoutBackground"
+        "class": "learnblockFlyoutBackground"
     }, this.svgGroup_);
     this.svgGroup_.appendChild(this.workspace_.createDom());
     this.workspace_.getThemeManager().subscribe(this.svgBackground_, "flyout", "fill");
@@ -9822,7 +9822,7 @@ LearnBlock.Flyout.prototype.createDom = function (a) {
 LearnBlock.Flyout.prototype.init = function (a) {
     this.targetWorkspace_ = a;
     this.workspace_.targetWorkspace = a;
-    this.scrollbar_ = new LearnBlock.Scrollbar(this.workspace_, this.horizontalLayout_, !1, "blocklyFlyoutScrollbar");
+    this.scrollbar_ = new LearnBlock.Scrollbar(this.workspace_, this.horizontalLayout_, !1, "learnblockFlyoutScrollbar");
     this.hide();
     Array.prototype.push.apply(this.eventWrappers_, LearnBlock.bindEventWithChecks_(this.svgGroup_, "wheel", this, this.wheel_));
     this.autoClose || (this.filterWrapper_ = this.filterForCapacity_.bind(this), this.targetWorkspace_.addChangeListener(this.filterWrapper_));
@@ -10081,25 +10081,25 @@ LearnBlock.FlyoutButton.prototype.height = 0;
 LearnBlock.FlyoutButton.prototype.onMouseUpWrapper_ = null;
 //Creates the button elements
 LearnBlock.FlyoutButton.prototype.createDom = function () {
-    var a = this.isLabel_ ? "blocklyFlyoutLabel" : "blocklyFlyoutButton";
+    var a = this.isLabel_ ? "learnblockFlyoutLabel" : "learnblockFlyoutButton";
     this.cssClass_ && (a += " " + this.cssClass_);
     this.svgGroup_ = LearnBlock.utils.dom.createSvgElement("g", {
         "class": a
     }, this.workspace_.getCanvas());
     if (!this.isLabel_) var b = LearnBlock.utils.dom.createSvgElement("rect", {
-        "class": "blocklyFlyoutButtonShadow",
+        "class": "learnblockFlyoutButtonShadow",
         rx: 4,
         ry: 4,
         x: 1,
         y: 1
     }, this.svgGroup_);
     a = LearnBlock.utils.dom.createSvgElement("rect", {
-        "class": this.isLabel_ ? "blocklyFlyoutLabelBackground" : "blocklyFlyoutButtonBackground",
+        "class": this.isLabel_ ? "learnblockFlyoutLabelBackground" : "learnblockFlyoutButtonBackground",
         rx: 4,
         ry: 4
     }, this.svgGroup_);
     var c = LearnBlock.utils.dom.createSvgElement("text", {
-        "class": this.isLabel_ ? "blocklyFlyoutLabelText" : "blocklyText",
+        "class": this.isLabel_ ? "learnblockFlyoutLabelText" : "learnblockText",
         x: 0,
         y: 0,
         "text-anchor": "middle"
@@ -10484,7 +10484,7 @@ LearnBlock.CursorSvg.prototype.createCursorSvg_ = function () {
     }, this.cursorSvg_);
     this.cursorSvgRect_ =
         LearnBlock.utils.dom.createSvgElement("rect", {
-            "class": "blocklyVerticalCursor",
+            "class": "learnblockVerticalCursor",
             x: "0",
             y: "0",
             rx: "10",
@@ -11579,14 +11579,14 @@ LearnBlock.geras.Highlighter.prototype.drawInlineInput = function (a) {
 LearnBlock.geras.PathObject = function (a) {
     this.svgRoot = a;
     this.svgPathDark = LearnBlock.utils.dom.createSvgElement("path", {
-        "class": "blocklyPathDark",
+        "class": "learnblockPathDark",
         transform: "translate(1,1)"
     }, this.svgRoot);
     this.svgPath = LearnBlock.utils.dom.createSvgElement("path", {
-        "class": "blocklyPath"
+        "class": "learnblockPath"
     }, this.svgRoot);
     this.svgPathLight = LearnBlock.utils.dom.createSvgElement("path", {
-        "class": "blocklyPathLight"
+        "class": "learnblockPathLight"
     }, this.svgRoot)
 };
 //Sets each of the paths generated by the renderer onto the respective SVG element
@@ -11934,19 +11934,19 @@ LearnBlock.Toolbox = function (a) {
     this.toolboxPosition = a.options.toolboxPosition;
     this.config_ = {
         indentWidth: 19,
-        cssRoot: "blocklyTreeRoot",
-        cssHideRoot: "blocklyHidden",
-        cssTreeRow: "blocklyTreeRow",
-        cssItemLabel: "blocklyTreeLabel",
-        cssTreeIcon: "blocklyTreeIcon",
-        cssExpandedFolderIcon: "blocklyTreeIconOpen",
-        cssFileIcon: "blocklyTreeIconNone",
-        cssSelectedRow: "blocklyTreeSelected"
+        cssRoot: "learnblockTreeRoot",
+        cssHideRoot: "learnblockHidden",
+        cssTreeRow: "learnblockTreeRow",
+        cssItemLabel: "learnblockTreeLabel",
+        cssTreeIcon: "learnblockTreeIcon",
+        cssExpandedFolderIcon: "learnblockTreeIconOpen",
+        cssFileIcon: "learnblockTreeIconNone",
+        cssSelectedRow: "learnblockTreeSelected"
     };
     this.treeSeparatorConfig_ = {
-        cssTreeRow: "blocklyTreeSeparator"
+        cssTreeRow: "learnblockTreeSeparator"
     };
-    this.horizontalLayout_ && (this.config_.cssTreeRow += a.RTL ? " blocklyHorizontalTreeRtl" : " blocklyHorizontalTree", this.treeSeparatorConfig_.cssTreeRow = "blocklyTreeSeparatorHorizontal " + (a.RTL ? "blocklyHorizontalTreeRtl" : "blocklyHorizontalTree"), this.config_.cssTreeIcon = "")
+    this.horizontalLayout_ && (this.config_.cssTreeRow += a.RTL ? " learnblockHorizontalTreeRtl" : " learnblockHorizontalTree", this.treeSeparatorConfig_.cssTreeRow = "learnblockTreeSeparatorHorizontal " + (a.RTL ? "learnblockHorizontalTreeRtl" : "learnblockHorizontalTree"), this.config_.cssTreeIcon = "")
 };
 LearnBlock.Toolbox.prototype.width = 0;
 LearnBlock.Toolbox.prototype.height = 0;
@@ -11957,7 +11957,7 @@ LearnBlock.Toolbox.prototype.init = function () {
     var a = this.workspace_,
         b = this.workspace_.getParentSvg();
     this.HtmlDiv = document.createElement("div");
-    this.HtmlDiv.className = "blocklyToolboxDiv blocklyNonSelectable";
+    this.HtmlDiv.className = "learnblockToolboxDiv learnblockNonSelectable";
     this.HtmlDiv.setAttribute("dir", a.RTL ? "RTL" : "LTR");
     b.parentNode.insertBefore(this.HtmlDiv, b);
     b = a.getThemeManager();
@@ -11988,7 +11988,7 @@ LearnBlock.Toolbox.prototype.init = function () {
     LearnBlock.utils.dom.insertAfter(this.flyout_.createDom("svg"), this.workspace_.getParentSvg());
     this.flyout_.init(a);
     this.config_.cleardotPath = a.options.pathToMedia + "1x1.gif";
-    this.config_.cssCollapsedFolderIcon = "blocklyTreeIconClosed" + (a.RTL ? "Rtl" : "Ltr");
+    this.config_.cssCollapsedFolderIcon = "learnblockTreeIconClosed" + (a.RTL ? "Rtl" : "Ltr");
     this.renderTree(a.options.languageTree)
 };
 //Fills the toolbox with categories and blocks

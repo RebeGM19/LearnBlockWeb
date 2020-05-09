@@ -10,7 +10,7 @@ def createBlock(name, type_, variables, block):
         # Number
         if "num" in block.get('type'):
             name = block.find('field').text
-        # Text
+        # Text (name between "")
         elif "text" in block.get('type'):
             name = "\"" + block.find('field').text + "\""
         variables = None

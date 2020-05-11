@@ -22,8 +22,7 @@ LearnBlock.Msg["SAMPLE_TEXT"] = "texto";
 //Bloques Variables
 LearnBlock.Msg["VARIABLES_SET"] = "poner %1 a %2";
 LearnBlock.Msg["VARIABLES_DEFAULT_NAME"] = "item";
-LearnBlock.Msg["NEW_NUMBER_VARIABLE"] = "Crear variable número...";
-LearnBlock.Msg["NEW_STRING_VARIABLE"] = "Crear variable texto...";
+LearnBlock.Msg["NEW_VARIABLE"] = "Crear variable...";
 
 //Bloques Funciones
 LearnBlock.Msg["PROCEDURES_DEFNORETURN_PROCEDURE"] = "hacer_algo";
@@ -59,6 +58,7 @@ LearnBlock.Msg[">"] = ">";
 //Utils
 LearnBlock.Msg["DELETE_ALL_BLOCKS"] = "¿Borrar %1 bloques?";
 LearnBlock.Msg["DELETE_BLOCK"] = "Borrar bloque";
+LearnBlock.Msg["NEW_VARIABLE_TITLE"] = "Nombre de la variable";
 LearnBlock.Msg["RENAME_VARIABLE"] = "Renombrar variable";
 LearnBlock.Msg["RENAME_VARIABLE_TITLE"] = "Renombrar variable";
 LearnBlock.Msg["DELETE_VARIABLE"] = "Borrar variable '%1'";

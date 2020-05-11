@@ -12017,7 +12017,7 @@ LearnBlock.Toolbox.prototype.handleBeforeTreeSelected_ = function (a) {
     if (a == this.tree_) return !1;
     this.lastCategory_ && (this.lastCategory_.getRowElement().style.backgroundColor = "");
     if (a) {
-        var b = a.hexColour || "#57e";
+        var b = a.hexColour || "#cccccc";
         a.getRowElement().style.backgroundColor = b;
     }
     return !0
@@ -12141,27 +12141,18 @@ LearnBlock.utils.object.inherits(LearnBlock.Toolbox.TreeSeparator, LearnBlock.tr
 
 //Dynamic Variables
 LearnBlock.VariablesDynamic = {};
-//Button for String variable
-LearnBlock.VariablesDynamic.onCreateVariableButtonClick_String = function (a) {
-    LearnBlock.Variables.createVariableButtonHandler(a.getTargetWorkspace(), null, "String")
-};
-//Button for Number variable
-LearnBlock.VariablesDynamic.onCreateVariableButtonClick_Number = function (a) {
-    LearnBlock.Variables.createVariableButtonHandler(a.getTargetWorkspace(), null, "Number")
+//Button for variable
+LearnBlock.VariablesDynamic.onCreateVariableButtonClick = function (a) {
+    LearnBlock.Variables.createVariableButtonHandler(a.getTargetWorkspace(), null, "")
 };
 //Constructs the elements (blocks and button) required by the flyout for the variable category
 LearnBlock.VariablesDynamic.flyoutCategory = function (a) {
     var b = [],
         c = document.createElement("button");
-    c.setAttribute("text", LearnBlock.Msg.NEW_STRING_VARIABLE);
-    c.setAttribute("callbackKey", "CREATE_VARIABLE_STRING");
+    c.setAttribute("text", LearnBlock.Msg.NEW_VARIABLE);
+    c.setAttribute("callbackKey", "CREATE_VARIABLE");
     b.push(c);
-    c = document.createElement("button");
-    c.setAttribute("text", LearnBlock.Msg.NEW_NUMBER_VARIABLE);
-    c.setAttribute("callbackKey", "CREATE_VARIABLE_NUMBER");
-    b.push(c);
-    a.registerButtonCallback("CREATE_VARIABLE_STRING", LearnBlock.VariablesDynamic.onCreateVariableButtonClick_String);
-    a.registerButtonCallback("CREATE_VARIABLE_NUMBER", LearnBlock.VariablesDynamic.onCreateVariableButtonClick_Number);
+    a.registerButtonCallback("CREATE_VARIABLE", LearnBlock.VariablesDynamic.onCreateVariableButtonClick);
     a = LearnBlock.VariablesDynamic.flyoutCategoryBlocks(a);
     return b = b.concat(a)
 };

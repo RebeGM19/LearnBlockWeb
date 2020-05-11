@@ -14,21 +14,11 @@
     resize: none;
 }
 
-/* ------------------------------------------------------------------------------------------------ */
-/* ------------------------------------------------------------------------------------------------ */
+/* Gradiente chachi */
+/* fill: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%); */
 
-/* Categories Boxes */
-.learnblockTreeRow {
-    height: 120px;
-    width: 140px;
-    line-height: 22px;
-    margin-bottom: 20px;
-    white-space: nowrap;
-    border-style: solid;
-    border-color: #000;
-    border-width: thin;
-    transform: matrix(0, -1, 1, 0, -10, 0);
-}
+/* ------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------ */
 
 /* Pointer's design when a block is being grabbed */
 .learnblockToolboxGrab {
@@ -39,7 +29,7 @@
 
 /* Left side of the main LearnBlock interface (categories, scrollbar) */
 .learnblockToolboxDiv {
-    background-color: #dbd;
+    background-color: #c0c0c0;
     overflow-x: auto;
     overflow-y: auto;
     position: absolute;
@@ -54,22 +44,35 @@
     outline: none;
 }
 
+/* Categories Boxes */
+.learnblockTreeRow {
+    height: 120px;
+    width: 140px;
+    line-height: 22px;
+    margin-bottom: 20px;
+    background-color: #f2f2f2;
+    white-space: nowrap;
+    border-style: solid;
+    border-color: #000;
+    border-width: thin;
+    transform: matrix(0, -1, 1, 0, -10, 0);
+}
 /* When the pointer is over a non selected category */
 .learnblockTreeRow:not(.learnblockTreeSelected):hover {
-    background-color: #e4e4e4;
+    background-color: #dddddd;
 }
 
 /* Categories */
 .learnblockTreeLabel {
     cursor: default;
     font-family: sans-serif;
-    font-size: 16px;
+    font-size: 18px;
     padding: 0 3px;
     vertical-align: middle;
 }
 /* Categories' Text when selected */
 .learnblockTreeSelected .learnblockTreeLabel {
-    color: #fff;
+    color: #000;
 }
 
 /* Flyout's properties */
@@ -78,19 +81,19 @@
     z-index: 20;
 }
 .learnblockFlyoutBackground {
-    fill: #dbd;
+    fill: #bfbfbf;
     fill-opacity: .8;
 }
 /* Buttons inside the Flyout */
 .learnblockFlyoutButton {
-    fill: #888;
+    fill: #666;
     cursor: default;
 }
 .learnblockFlyoutButtonShadow {
-    fill: #666;
+    fill: #333;
 }
 .learnblockFlyoutButton:hover {
-    fill: #aaa;
+    fill: #737373;
 }
 
 /* Main workspace */
@@ -145,7 +148,7 @@
     transition: transform .5s;
 }
 
-/* When a block is selected, it is highlighted */
+/* Highlight when connection between blocks */
 .learnblockHighlightedConnectionPath {
     fill: none;
     stroke: #fc3;
@@ -156,8 +159,9 @@
     stroke-linecap: round;
     stroke-width: 1;
 }
+/* When a block is selected, it is highlighted */
 .learnblockSelected > .learnblockPath {
-    stroke: #fc3;
+    stroke: #dbd;
     stroke-width: 3px;
 }
 .learnblockSelected > .learnblockPathLight {
@@ -206,7 +210,7 @@
     display: none;
 }
 
-/* Colour for a valid input in mutators */
+/* Colour for an invalid input in mutators */
 .learnblockInvalidInput {
     background: #faa;
 }
@@ -221,17 +225,20 @@
 .learnblockNonEditableText > text {
     pointer-events: none;
 }
+/* Mutator's background */
 .learnblockNonEditableText > rect,
 .learnblockEditableText > rect {
     fill: #fff;
     fill-opacity: .6;
 }
+/* Mutator's text */
 .learnblockNonEditableText > text,
 .learnblockEditableText > text {
     fill: #000;
 }
+/* Mutator's border hover */
 .learnblockEditableText:hover > rect {
-    stroke: #fff;
+    stroke: #dbd;
     stroke-width: 2;
 }
 .learnblockSvg text,
@@ -279,18 +286,10 @@
     opacity: 0;
 }
 .learnblockScrollbarHandle {
-    fill: #ccc;
+    fill: #999999;
 }
-.learnblockScrollbarBackground:hover + .learnblockScrollbarHandle,
 .learnblockScrollbarHandle:hover {
-    fill: #bbb;
-}
-.learnblockFlyout .learnblockScrollbarHandle {
-    fill: #bbb;
-}
-.learnblockFlyout .learnblockScrollbarBackground:hover + .learnblockScrollbarHandle,
-.learnblockFlyout .learnblockScrollbarHandle:hover {
-    fill: #aaa;
+    fill: #808080;
 }
 
 /* Widget's properties */

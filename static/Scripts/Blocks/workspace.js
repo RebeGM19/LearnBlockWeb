@@ -12017,7 +12017,7 @@ LearnBlock.Toolbox.prototype.handleBeforeTreeSelected_ = function (a) {
     if (a == this.tree_) return !1;
     this.lastCategory_ && (this.lastCategory_.getRowElement().style.backgroundColor = "");
     if (a) {
-        var b = a.hexColour || "#cccccc";
+        var b = a.hexColour || "#f2f2f2";
         a.getRowElement().style.backgroundColor = b;
     }
     return !0

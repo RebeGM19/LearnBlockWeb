@@ -15,7 +15,7 @@ LearnBlock.Blocks.procedures = {};
 LearnBlock.Blocks.procedures_defnoreturn = {
     init: function () {
         var a = new LearnBlock.FieldTextInput("", LearnBlock.Procedures.rename);
-        this.appendDummyInput().appendField("Function").appendField(a, "NAME").appendField("", "PARAMS");
+        this.appendDummyInput().appendField(LearnBlock.Msg.PROCEDURES_FUNCTION).appendField(a, "NAME").appendField("", "PARAMS");
         this.setStyle("procedure_blocks");
         this.setStatements_(!0);
         this.statementConnection_ = null;

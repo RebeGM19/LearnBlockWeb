@@ -41,8 +41,8 @@ function execute() {
         dataType: "text",
         success: function(data) { //The code is shown in an html element
             codes = getBothCodes(data);
-            document.getElementById("resultblocktext").innerHTML = codes[0];
-            document.getElementById("resultpython").innerHTML = codes[1];
+            document.getElementById("resultblocktext").innerHTML = "\n" + codes[0];
+            document.getElementById("resultpython").innerHTML = "\n" + codes[1];
         }
     });
 }

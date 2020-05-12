@@ -2,9 +2,9 @@
 
 //Messages
 var MSG = {
-    sup: "Upper Zone",
-    newblock: "Create New Block",
-    execute: "Execute"
+    sup: "LearnBlockWeb",
+    execute: "Execute",
+    introParagraph: "Welcome to LearnBlockWeb!"
 };
 
 //Blocks
@@ -25,6 +25,7 @@ LearnBlock.Msg["VARIABLES_DEFAULT_NAME"] = "item";
 LearnBlock.Msg["NEW_VARIABLE"] = "Create variable...";
 
 //Functions Blocks
+LearnBlock.Msg["PROCEDURES_FUNCTION"] = "Function";
 LearnBlock.Msg["PROCEDURES_DEFNORETURN_PROCEDURE"] = "do_something";
 
 //Categories

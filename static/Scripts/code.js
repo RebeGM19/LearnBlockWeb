@@ -99,8 +99,8 @@ Code.initLanguage = function () {
     }
     languageMenu.addEventListener('change', Code.changeLanguage, true);
     document.getElementById('sup').textContent = MSG['sup'];
-    document.getElementById('newblock').textContent = MSG['newblock'];
     document.getElementById('execute').textContent = MSG['execute'];
+    document.getElementById('introParagraph').textContent = MSG['introParagraph'];
 };
 document.write('<script src="static/Scripts/Languages/' + Code.LANG + '.js"></script>\n');
 window.addEventListener('load', Code.init);

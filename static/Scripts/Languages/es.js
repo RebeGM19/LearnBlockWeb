@@ -4,7 +4,12 @@
 var MSG = {
     sup: "LearnBlockWeb",
     execute: "Ejecutar",
-    introParagraph: "¡Bienvenido a LearnBlockWeb!"
+    introParagraph: "¡Bienvenido a LearnBlockWeb!",
+    home: "Página principal",
+    guide: "Guía de uso",
+    whatLB: "¿Qué es LearnBlock?",
+    whatLBW: "¿Qué es LearnBlockWeb?",
+    details: "Detalles"
 };
 
 //Bloques

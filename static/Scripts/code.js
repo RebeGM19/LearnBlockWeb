@@ -101,6 +101,11 @@ Code.initLanguage = function () {
     document.getElementById('sup').textContent = MSG['sup'];
     document.getElementById('execute').textContent = MSG['execute'];
     document.getElementById('introParagraph').textContent = MSG['introParagraph'];
+    document.getElementById('bHome').textContent = MSG['home'];
+    document.getElementById('bGuide').textContent = MSG['guide'];
+    document.getElementById('bWhatLB').textContent = MSG['whatLB'];
+    document.getElementById('bWhatLBW').textContent = MSG['whatLBW'];
+    document.getElementById('bDetails').textContent = MSG['details'];
 };
 document.write('<script src="static/Scripts/Languages/' + Code.LANG + '.js"></script>\n');
 window.addEventListener('load', Code.init);

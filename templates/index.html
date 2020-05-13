@@ -19,49 +19,48 @@
 
 <body>
 
-    <table class="table" id="mainstructure">
-        <tr>
+           <table class="table" id="upmenu">
+               <tr>
+                   <td>
+                       <ul class="nav nav-pills">
+                           <li><button type="button" href="#home" data-toggle="tab" id="bHome"></button></li>
+                           <li><button type="button" href="#tab2" data-toggle="tab" id="bGuide"></button></li>
+                           <li><button type="button" href="#tab3" data-toggle="tab" id="bWhatLB"></button></li>
+                           <li><button type="button" href="#tab4" data-toggle="tab" id="bWhatLBW"></button></li>
+                           <li><button type="button" href="#tab5" data-toggle="tab" id="bDetails"></button></li>
+                       </ul>
+                   </td>
+                   <td>
+                       <div>
+                           <select id="languageMenu"></select>
+                       </div>
+                   </td>
+               </tr>
+           </table>
 
-            <!-- Para hacer las distintas páginas sin salir de index. Colocar la que ya hay dentro de la selección del primer botón -->
-            <ul class="nav nav-tabs">
-                <li><button type="button" href="#a" data-toggle="tab">AAAA</button></li>
-                <li><button type="button" href="#b" data-toggle="tab">BBBB</button></li>
-                <li><button type="button" href="#c" data-toggle="tab">CCCC</button></li>
-            </ul>
-            <h1 id="sup"></h1>
-            <p id="introParagraph"></p>
-            <div class="row mb-5">
-                <select id="languageMenu"></select>
-            </div>
+            <div class="tab-content">
+                <div class="tab-pane active" id="home">
+                    <!-- Content for tab HOME -->
+                    <h1 id="sup"></h1>
+                    <p id="introParagraph"></p>
 
-
-
-
-            <table class="table table-bordered" id="innertable">
-
-                <tr>
-                    <ul class="nav nav-tabs">
-                        <li><button type="button" href="#python" data-toggle="tab">Python</button></li>
-                        <li><button type="button" href="#blocktext" data-toggle="tab">Block-Text</button></li>
-                        <li><button type="button" href="#learnblock" data-toggle="tab">LearnBlock</button></li>
+                    <ul class="nav nav-pills">
+                        <li><button type="button" href="#tab-python" data-toggle="tab">Python</button></li>
+                        <li><button type="button" href="#tab-blocktext" data-toggle="tab">Block-Text</button></li>
+                        <li><button type="button" href="#tab-learnblock" data-toggle="tab">LearnBlock</button></li>
                         <li id="sepButtons"></li>
                         <li><button type="button" onclick="execute()" id="execute"></button></li>
                     </ul>
-                </tr>
 
-
-                <tr>
-                    <div class="tab-content" id="content_area">
-
-                        <div class="tab-pane" id="python">
+                    <div class="tab-content" style="margin-bottom:50px">
+                        <div class="tab-pane" id="tab-python">
                             <textarea readonly id="resultpython"></textarea>
                         </div>
-
-                        <div class="tab-pane" id="blocktext">
+                        <div class="tab-pane" id="tab-blocktext">
                             <textarea readonly id="resultblocktext"></textarea>
                         </div>
 
-                        <div class="tab-pane active" id="learnblock">
+                        <div class="tab-pane active" id="tab-learnblock">
                             <div id="learnblockDiv"></div>
                             <div id="toolbox" style="display: none">
 
@@ -149,18 +148,54 @@
                                 </category>
 
                             </div>
-                        </div>
 
+                        </div>
                     </div>
 
+                </div>
 
-                </tr>
-            </table>
+                <div class="tab-pane fade" id="tab2">
+                    <p>Cómo usar la página web</p>
+                    <ul>
+                        <li>De primeras no sabe qué es</li>
+                        <li>Decir que se puede mover el workspace</li>
+                        <li>Decir cómo se eliminan (no con supr) y duplican los bloques</li>
+                        <li>Explicar que en las ventanas de Block-Text y Python sale el código correspondiente a los bloques, pero sólo cuando tiene una estructura correcta</li>
+                        <li>Explicar cómo encajar los bloques según su forma</li>
+                        <li>Explicar que los bloques son estructuras de código o funciones</li>
+                        <li>Explicar manejo de variables</li>
+                        <li>No sabe por qué falla cuando falla (relacionado con la generación de los códigos)</li>
+                        <li>NECESITA UN MAIN</li>
+                    </ul>
+                </div>
 
+                <div class="tab-pane fade" id="tab3">
+                    <p>Qué es LearnBlock (proyecto original)</p>
+                    <p>LearnBlock is an educational programming tool for learning programming. It has been designed to facilitate the learning process starting with a visual programming language and progressing towards a professional programming language.</p>
 
+                    <p>LearnBlock is robot-agnostic, i.e. the same program can be executed in several robots. Clients for new robots can be easily created adding device interfaces and implementing hardware access methods for those interfaces.</p>
 
-        </tr>
-    </table>
+                    <p>Among other features, LearnBlock includes the following:</p>
+                    <ul>
+                        <li>Available for different physical robots (EBO, Cozmo, Thymio and EV3) and simulated ones (EBO under RCIS and EV3 under V-REP).</li>
+                        <li>Robots can be programmed using different languages: visual language, Block-Text (textual representation of the visual language) and Python.</li>
+                        <li>New blocks can be created from code (Python) using the tool itself or external tools.</li>
+                        <li>A program can be run and stopped at any moment. When a program is interrupted the robot is properly stopped and disconnected.</li>
+                    </ul>
+                    <a href="https://github.com/robocomp/LearnBlock" target="_blank">LearnBlock Git Repository</a>
+                </div>
+
+                <div class="tab-pane fade" id="tab4">
+                    <p>Qué es LearnBlockWeb (proyecto web a partir de LearnBlock)</p>
+
+                    <a href="https://github.com/RebeGM19/LearnBlockWeb" target="_blank">LearnBlockWeb Git Repository</a>
+                </div>
+
+                <div class="tab-pane fade" id="tab5">
+                    <p>Info sobre el desarrollo. Blockly, Bootstrap, Flask, Licencia CC, cositas interesantes.</p>
+                </div>
+                </div>
+
 
 
 

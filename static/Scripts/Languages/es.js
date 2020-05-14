@@ -4,12 +4,15 @@
 var MSG = {
     sup: "LearnBlockWeb",
     execute: "Ejecutar",
-    introParagraph: "¡Bienvenido a LearnBlockWeb!",
+    introParagraph: "¡Bienvenido a LearnBlockWeb! Comienza a arrastrar y encajar bloques entre sí y empieza a programar.",
     home: "Página principal",
     guide: "Guía de uso",
     whatLB: "¿Qué es LearnBlock?",
     whatLBW: "¿Qué es LearnBlockWeb?",
-    details: "Detalles"
+    details: "Detalles",
+    codeGenerated: "¡Código generado!",
+    codePyNotGenerated: "No se pudo generar el código Python",
+    codeBTNotGenerated: "No se pudo generar el código Block-Text"
 };
 
 //Bloques

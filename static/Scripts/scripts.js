@@ -1,15 +1,15 @@
 //Gets the names of the user's variables
-function getVarsNames(vars){
+function getVarsNames(vars) {
     var i;
     var result = "";
-    for(i=0; i<vars.length; i++){
+    for (i = 0; i < vars.length; i++) {
         result = result + vars[i].name + ",";
     }
     return result;
 }
 
 //Returns both Block-Text and Python code, each of them in a different position inside an array
-function getBothCodes(fullCode){
+function getBothCodes(fullCode) {
     var array = fullCode.split("----------\n\n");
     return array;
 }
@@ -39,12 +39,21 @@ function execute() {
         traditional: "true",
         data: JSON.stringify(result),
         dataType: "text",
-        success: function(data) { //The code is shown in an html element
+        success: function (data) { //The code is shown in an html element
             codes = getBothCodes(data);
-            document.getElementById("resultblocktext").innerHTML = "\n" + codes[0];
-            document.getElementById("resultpython").innerHTML = "\n" + codes[1];
+            if (codes[0] != ""){
+                document.getElementById("resultblocktext").innerHTML = "\n" + codes[0];
+                if (codes[1] != ""){
+                    document.getElementById("resultCode").innerHTML = MSG['codeGenerated'];
+                    document.getElementById("resultpython").innerHTML = "\n" + codes[1];
+                }else{
+                    document.getElementById("resultCode").innerHTML = MSG['codePyNotGenerated'];
+                    document.getElementById("resultpython").innerHTML = "";
+                }
+            }else{
+                document.getElementById("resultCode").innerHTML = MSG['codeBTNotGenerated'];
+                document.getElementById("resultblocktext").innerHTML = "";
+            }
         }
     });
 }
-
-

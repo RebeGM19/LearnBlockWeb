@@ -17,6 +17,22 @@
     font-family: Consolas,monaco,monospace;
 }
 
+devsite-content{
+    align-self: start;
+    grid-column: 2;
+    grid-row: 1;
+    margin: 24px 0;
+    max-width: 936px;
+    min-width: 0;
+}
+
+article{
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+    border-radius: 2px;
+    background-color: #fff;
+    padding: 40px;
+}
+
 /* Gradiente chachi */
 /* fill: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%); */
 

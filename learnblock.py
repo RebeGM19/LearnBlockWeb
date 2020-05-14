@@ -72,6 +72,8 @@ def getBlocks():
         print(blocktext)
 
         text = parserLearntBotCodeFromCode(blocktext, 'LearnBotClient')
+        if text == False:
+            text = "\n"
         print("--------Clean code--------\n\n", text)
 
         result = blocktext + "----------\n" + text

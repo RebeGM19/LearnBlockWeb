@@ -21,9 +21,11 @@
 
            <table class="table" id="upmenu">
                <tr>
+                   <h1 id="sup"></h1> <!-- Aquí un logo chachi -->
+               </tr>
+               <tr id="upMenu">
                    <td>
-                      <h1 id="sup"></h1> <!-- Aquí un logo chachi -->
-                       <ul class="nav nav-pills">
+                       <ul class="nav nav-pills" id="menuButtons">
                            <li><button type="button" href="#home" data-toggle="tab" id="bHome"></button></li>
                            <li><button type="button" href="#tab2" data-toggle="tab" id="bGuide"></button></li>
                            <li><button type="button" href="#tab3" data-toggle="tab" id="bWhatLB"></button></li>
@@ -39,216 +41,214 @@
                </tr>
            </table>
 
-            <div class="tab-content">
-                <div class="tab-pane active" id="home">
-                    <!-- Content for tab HOME -->
-                    <h2>Prueba LearnBlockWeb</h2>
-                    <p id="introParagraph"></p>
+           <div class="tab-content">
+               <div class="tab-pane active" id="home">
+                   <!-- Content for tab HOME -->
+                   <p id="introParagraph"></p>
 
-                    <ul class="nav nav-pills">
-                        <li><button type="button" href="#tab-python" data-toggle="tab">Python</button></li>
-                        <li><button type="button" href="#tab-blocktext" data-toggle="tab">Block-Text</button></li>
-                        <li><button type="button" href="#tab-learnblock" data-toggle="tab">LearnBlock</button></li>
-                        <li id="sepButtons"></li>
-                        <li><button type="button" onclick="execute()" id="execute"></button></li>
-                        <li id="sepButtons"></li>
-                        <li id="resultCode"></li>
-                    </ul>
+                   <ul class="nav nav-pills">
+                       <li><button type="button" href="#tab-python" data-toggle="tab">Python</button></li>
+                       <li><button type="button" href="#tab-blocktext" data-toggle="tab">Block-Text</button></li>
+                       <li><button type="button" href="#tab-learnblock" data-toggle="tab">LearnBlock</button></li>
+                       <li id="sepButtons"></li>
+                       <li><button type="button" onclick="execute()" id="execute"></button></li>
+                       <li id="sepButtons"></li>
+                       <li id="resultCode"></li>
+                   </ul>
 
-                    <div class="tab-content" style="margin-bottom:50px">
-                        <div class="tab-pane" id="tab-python">
-                            <textarea readonly id="resultpython"></textarea>
-                        </div>
-                        <div class="tab-pane" id="tab-blocktext">
-                            <textarea readonly id="resultblocktext"></textarea>
-                        </div>
+                   <div class="tab-content" style="margin-bottom:50px">
+                       <div class="tab-pane" id="tab-python">
+                           <textarea readonly id="resultpython"></textarea>
+                       </div>
+                       <div class="tab-pane" id="tab-blocktext">
+                           <textarea readonly id="resultblocktext"></textarea>
+                       </div>
 
-                        <div class="tab-pane active" id="tab-learnblock">
-                            <div id="learnblockDiv"></div>
-                            <div id="toolbox" style="display: none">
+                       <div class="tab-pane active" id="tab-learnblock">
+                           <div id="learnblockDiv"></div>
+                           <div id="toolbox" style="display: none">
 
-                                <category name="%{BKY_CONTROL}" expanded="true">
-                                    {% for block in allBlocks %}
-                                    {% if block[1] == 'control' or block[1] == 'fcontrol' %}
-                                    <block type="{{ block[0] }}"></block>
-                                    {% endif %}
-                                    {% endfor %}
-                                </category>
+                               <category name="%{BKY_CONTROL}" expanded="true">
+                                   {% for block in allBlocks %}
+                                   {% if block[1] == 'control' or block[1] == 'fcontrol' %}
+                                   <block type="{{ block[0] }}"></block>
+                                   {% endif %}
+                                   {% endfor %}
+                               </category>
 
-                                <category name="%{BKY_OPERATORS}">
-                                    {% for block in allBlocks %}
-                                    {% if block[1] == 'operator' %}
-                                    <block type="{{ block[0] }}"></block>
-                                    {% endif %}
-                                    {% endfor %}
-                                </category>
+                               <category name="%{BKY_OPERATORS}">
+                                   {% for block in allBlocks %}
+                                   {% if block[1] == 'operator' %}
+                                   <block type="{{ block[0] }}"></block>
+                                   {% endif %}
+                                   {% endfor %}
+                               </category>
 
-                                <category name="%{BKY_VALUES}">
-                                    <block type="val_num1"></block>
-                                    <block type="val_num2"></block>
-                                    <block type="val_text1"></block>
-                                    <block type="val_text2"></block>
-                                </category>
+                               <category name="%{BKY_VALUES}">
+                                   <block type="val_num1"></block>
+                                   <block type="val_num2"></block>
+                                   <block type="val_text1"></block>
+                                   <block type="val_text2"></block>
+                               </category>
 
-                                <category name="%{BKY_VARIABLES}" custom="VARIABLE_DYNAMIC"></category>
+                               <category name="%{BKY_VARIABLES}" custom="VARIABLE_DYNAMIC"></category>
 
-                                <category name="%{BKY_FUNCTIONS}" custom="PROCEDURE"></category>
+                               <category name="%{BKY_FUNCTIONS}" custom="PROCEDURE"></category>
 
-                                <category name="%{BKY_EMOTIONS}">
-                                    {% for block in allBlocks %}
-                                    {% if block[1] == 'emotion' %}
-                                    <block type="{{ block[0] }}"></block>
-                                    {% endif %}
-                                    {% endfor %}
-                                </category>
+                               <category name="%{BKY_EMOTIONS}">
+                                   {% for block in allBlocks %}
+                                   {% if block[1] == 'emotion' %}
+                                   <block type="{{ block[0] }}"></block>
+                                   {% endif %}
+                                   {% endfor %}
+                               </category>
 
-                                <category name="%{BKY_SPEAKER}">
-                                    {% for block in allBlocks %}
-                                    {% if block[1] == 'speaker' %}
-                                    <block type="{{ block[0] }}"></block>
-                                    {% endif %}
-                                    {% endfor %}
-                                </category>
+                               <category name="%{BKY_SPEAKER}">
+                                   {% for block in allBlocks %}
+                                   {% if block[1] == 'speaker' %}
+                                   <block type="{{ block[0] }}"></block>
+                                   {% endif %}
+                                   {% endfor %}
+                               </category>
 
-                                <category name="%{BKY_BASE}">
-                                    {% for block in allBlocks %}
-                                    {% if block[1] == 'base' %}
-                                    <block type="{{ block[0] }}"></block>
-                                    {% endif %}
-                                    {% endfor %}
-                                </category>
+                               <category name="%{BKY_BASE}">
+                                   {% for block in allBlocks %}
+                                   {% if block[1] == 'base' %}
+                                   <block type="{{ block[0] }}"></block>
+                                   {% endif %}
+                                   {% endfor %}
+                               </category>
 
-                                <category name="%{BKY_MOTOR}">
-                                    {% for block in allBlocks %}
-                                    {% if block[1] == 'motor' %}
-                                    <block type="{{ block[0] }}"></block>
-                                    {% endif %}
-                                    {% endfor %}
-                                </category>
+                               <category name="%{BKY_MOTOR}">
+                                   {% for block in allBlocks %}
+                                   {% if block[1] == 'motor' %}
+                                   <block type="{{ block[0] }}"></block>
+                                   {% endif %}
+                                   {% endfor %}
+                               </category>
 
-                                <category name="%{BKY_CAMERA}">
-                                    {% for block in allBlocks %}
-                                    {% if block[1] == 'camera' %}
-                                    <block type="{{ block[0] }}"></block>
-                                    {% endif %}
-                                    {% endfor %}
-                                </category>
+                               <category name="%{BKY_CAMERA}">
+                                   {% for block in allBlocks %}
+                                   {% if block[1] == 'camera' %}
+                                   <block type="{{ block[0] }}"></block>
+                                   {% endif %}
+                                   {% endfor %}
+                               </category>
 
-                                <category name="%{BKY_DISTANCES}">
-                                    {% for block in allBlocks %}
-                                    {% if block[1] == 'distances' %}
-                                    <block type="{{ block[0] }}"></block>
-                                    {% endif %}
-                                    {% endfor %}
-                                </category>
+                               <category name="%{BKY_DISTANCES}">
+                                   {% for block in allBlocks %}
+                                   {% if block[1] == 'distances' %}
+                                   <block type="{{ block[0] }}"></block>
+                                   {% endif %}
+                                   {% endfor %}
+                               </category>
 
-                                <category name="%{BKY_GROUND}">
-                                    {% for block in allBlocks %}
-                                    {% if block[1] == 'ground' %}
-                                    <block type="{{ block[0] }}"></block>
-                                    {% endif %}
-                                    {% endfor %}
-                                </category>
+                               <category name="%{BKY_GROUND}">
+                                   {% for block in allBlocks %}
+                                   {% if block[1] == 'ground' %}
+                                   <block type="{{ block[0] }}"></block>
+                                   {% endif %}
+                                   {% endfor %}
+                               </category>
 
-                            </div>
+                           </div>
 
-                        </div>
-                    </div>
+                       </div>
+                   </div>
 
-                </div>
+               </div>
 
-                <div class="tab-pane fade" id="tab2">
-                    <h2>Cómo usar la página web</h2>
-
-                    <devsite-content>
-                        <article>
-                            <p>Comienza cogiendo los bloques de la parte izquierda de la página y arrástralos hacia la zona gris. Verás que algunos bloques encajan con otros como si fueran un puzzle. Cada bloque equivale a una estructura o una función de los lenguajes de programación profesionales, y están divididos en diferentes categorías según lo que representan.</p>
-
-                            <p>¡Prueba a unir los bloques según las formas que tengan y construye un programa tú mismo!</p>
-
-                            <p>Cuando tengas tu programa terminado, haz click en el botón "Ejecutar" para generar el código equivalente. Si haces click en las pestañas "Block-Text" y "Python" verás el código generado, y si haces click en "LearnBlock" volverás a la interfaz de los bloques.</p>
-
-                            <p>Si alguno de los dos códigos no se genera, es porque hay algún fallo en tu programa. ¡Dale una vuelta! Cambia bloques de sitio, borra algunos o añade otros nuevos. Pista: Todos los programas deben tener un único bloque principal (main).</p>
-
-                            <p>Si quieres borrar un bloque, haz click derecho encima de él y podrás hacerlo. De la misma manera, al hacer click derecho se te dará también la opción de duplicarlo. Si por el contrario quieres borrar todos los bloques que tienes, puedes ir uno por uno o hacer click derecho en alguna zona gris que no esté cubierta y seleccionar la opción de borrar todos los bloques. También puedes deshacer una acción ya hecha, o rehacerla si la has deshecho.</p>
-
-                            <p>Aunque parezca lo contrario, la zona gris dispone de un espacio ilimitado, así que puedes crear tantos bloques como desees. Si quieres desplazarte, puedes hacerlo con las barras de desplazamiento horizontal y vertical, o haciendo click en una zona gris no cubierta y arrastrando el ratón.</p>
-
-                        </article>
-                    </devsite-content>
-
-
-
-                </div>
-
-                <div class="tab-pane fade" id="tab3">
-                    <h2>Qué es LearnBlock (proyecto original)</h2>
-
-                    <devsite-content>
-                        <article>
-                            <p>LearnBlock es una herramienta educacional que tiene como objetivo que el usuario aprenda a programar de forma progresiva: primero de manera intuitiva y visual mediante el uso de bloques, hasta llegar finalmente a su equivalencia en un lenguaje de programación profesional como es Python.</p>
-
-                            <p>LearnBlock permite que un mismo programa pueda ser ejecutado en varios robots. Desde el proyecto LearnBlock se pueden añadir clientes para nuevos robots añadiendo interfaces de dispositivos e implementando métodos de acceso a hardware para esas interfaces.</p>
-
-                            <p>Entre otras características, LearnBlock incluye lo siguiente:</p>
-                            <ul>
-                                <li>Disponible para distintos robots físicos (EBO, Cozmo, Thymio y EV3) y simulados (EBO bajo RCIS y EV3 bajo V-REP).</li>
-                                <li>Los robots pueden ser programados usando diferentes lenguajes: lenguaje visual, Block-Text (representación textual del lenguaje visual) y Python.</li>
-                                <li>Se pueden crear nuevos bloques a partir de código (Python) usando la propia herramienta o herramientas externas.</li>
-                                <li>Un programa puede ser ejecutado y detenido en cualquier momento. Cuando el programa es interrumpido, el robot se detiene y se desconecta.</li>
-                            </ul>
-
-                            ------------------------------------------------------
-
-                            <p>LearnBlock is an educational programming tool for learning programming. It has been designed to facilitate the learning process starting with a visual programming language and progressing towards a professional programming language.</p>
-
-                            <p>LearnBlock is robot-agnostic, i.e. the same program can be executed in several robots. Clients for new robots can be easily created adding device interfaces and implementing hardware access methods for those interfaces.</p>
-
-                            <p>Among other features, LearnBlock includes the following:</p>
-                            <ul>
-                                <li>Available for different physical robots (EBO, Cozmo, Thymio and EV3) and simulated ones (EBO under RCIS and EV3 under V-REP).</li>
-                                <li>Robots can be programmed using different languages: visual language, Block-Text (textual representation of the visual language) and Python.</li>
-                                <li>New blocks can be created from code (Python) using the tool itself or external tools.</li>
-                                <li>A program can be run and stopped at any moment. When a program is interrupted the robot is properly stopped and disconnected.</li>
-                            </ul>
-
-                            ------------------------------------------------------
-
-                            <a href="https://github.com/robocomp/LearnBlock" target="_blank">LearnBlock Git Repository</a>
-
-                        </article>
-                    </devsite-content>
-                </div>
-
-                <div class="tab-pane fade" id="tab4">
-                    <h2>Qué es LearnBlockWeb (proyecto web a partir de LearnBlock)</h2>
-
-                    <devsite-content>
-                        <article>
-                            <p>LearnBlockWeb es una versión online del proyecto LearnBlock. Esta web ha sido diseñada para que LearnBlock tenga un mayor alcance y pueda ser utilizado por todo usuario que tenga acceso a internet.</p>
-
-                            <p>De entre todas las características y funcionalidades que tiene el proyecto LearnBlock, en esta web se presenta la que corresponde al aprendizaje de programación progresivo que va desde una representación visual (bloques), pasando por la representación textual de la misma (Block-Text), hasta llegar a un lenguaje de programación comunmente utilizado hoy en día (Python).</p>
-
-                            <p>LearnBlockWeb está en desarrollo.</p>
-
-                            <a href="https://github.com/RebeGM19/LearnBlockWeb" target="_blank">LearnBlockWeb Git Repository</a>
-
-                        </article>
-                    </devsite-content>
-                </div>
-
-                <div class="tab-pane fade" id="tab5">
-                  <h2>Detalles de la página</h2>
-
+               <div class="tab-pane fade" id="tab2">
                    <devsite-content>
                        <article>
+                           <h2>Cómo usar la página web</h2>
+
+                           <p>Comienza cogiendo los bloques de la parte izquierda de la página y arrástralos hacia la zona gris. Verás que algunos bloques encajan con otros como si fueran un puzzle. Cada bloque equivale a una estructura o una función de los lenguajes de programación profesionales, y están divididos en diferentes categorías según lo que representan.</p>
+
+                           <p>¡Prueba a unir los bloques según las formas que tengan y construye un programa tú mismo!</p>
+
+                           <p>Cuando tengas tu programa terminado, haz click en el botón "Ejecutar" para generar el código equivalente. Si haces click en las pestañas "Block-Text" y "Python" verás el código generado, y si haces click en "LearnBlock" volverás a la interfaz de los bloques.</p>
+
+                           <p>Si alguno de los dos códigos no se genera, es porque hay algún fallo en tu programa. ¡Dale una vuelta! Cambia bloques de sitio, borra algunos o añade otros nuevos. Pista: Todos los programas deben tener un único bloque principal (main).</p>
+
+                           <p>Si quieres borrar un bloque, haz click derecho encima de él y podrás hacerlo. De la misma manera, al hacer click derecho se te dará también la opción de duplicarlo. Si por el contrario quieres borrar todos los bloques que tienes, puedes ir uno por uno o hacer click derecho en alguna zona gris que no esté cubierta y seleccionar la opción de borrar todos los bloques. También puedes deshacer una acción ya hecha, o rehacerla si la has deshecho.</p>
+
+                           <p>Aunque parezca lo contrario, la zona gris dispone de un espacio ilimitado, así que puedes crear tantos bloques como desees. Si quieres desplazarte, puedes hacerlo con las barras de desplazamiento horizontal y vertical, o haciendo click en una zona gris no cubierta y arrastrando el ratón.</p>
+
+                       </article>
+                   </devsite-content>
+
+
+
+               </div>
+
+               <div class="tab-pane fade" id="tab3">
+                   <devsite-content>
+                       <article>
+                           <h2>Qué es LearnBlock (proyecto original)</h2>
+
+                           <p>LearnBlock es una herramienta educacional que tiene como objetivo que el usuario aprenda a programar de forma progresiva: primero de manera intuitiva y visual mediante el uso de bloques, hasta llegar finalmente a su equivalencia en un lenguaje de programación profesional como es Python.</p>
+
+                           <p>LearnBlock permite que un mismo programa pueda ser ejecutado en varios robots. Desde el proyecto LearnBlock se pueden añadir clientes para nuevos robots añadiendo interfaces de dispositivos e implementando métodos de acceso a hardware para esas interfaces.</p>
+
+                           <p>Entre otras características, LearnBlock incluye lo siguiente:</p>
+                           <ul>
+                               <li>Disponible para distintos robots físicos (EBO, Cozmo, Thymio y EV3) y simulados (EBO bajo RCIS y EV3 bajo V-REP).</li>
+                               <li>Los robots pueden ser programados usando diferentes lenguajes: lenguaje visual, Block-Text (representación textual del lenguaje visual) y Python.</li>
+                               <li>Se pueden crear nuevos bloques a partir de código (Python) usando la propia herramienta o herramientas externas.</li>
+                               <li>Un programa puede ser ejecutado y detenido en cualquier momento. Cuando el programa es interrumpido, el robot se detiene y se desconecta.</li>
+                           </ul>
+
+                           ------------------------------------------------------
+
+                           <p>LearnBlock is an educational programming tool for learning programming. It has been designed to facilitate the learning process starting with a visual programming language and progressing towards a professional programming language.</p>
+
+                           <p>LearnBlock is robot-agnostic, i.e. the same program can be executed in several robots. Clients for new robots can be easily created adding device interfaces and implementing hardware access methods for those interfaces.</p>
+
+                           <p>Among other features, LearnBlock includes the following:</p>
+                           <ul>
+                               <li>Available for different physical robots (EBO, Cozmo, Thymio and EV3) and simulated ones (EBO under RCIS and EV3 under V-REP).</li>
+                               <li>Robots can be programmed using different languages: visual language, Block-Text (textual representation of the visual language) and Python.</li>
+                               <li>New blocks can be created from code (Python) using the tool itself or external tools.</li>
+                               <li>A program can be run and stopped at any moment. When a program is interrupted the robot is properly stopped and disconnected.</li>
+                           </ul>
+
+                           ------------------------------------------------------
+
+                           <a href="https://github.com/robocomp/LearnBlock" target="_blank">LearnBlock Git Repository</a>
+
+                       </article>
+                   </devsite-content>
+               </div>
+
+               <div class="tab-pane fade" id="tab4">
+                   <devsite-content>
+                       <article>
+                           <h2>Qué es LearnBlockWeb (proyecto web a partir de LearnBlock)</h2>
+
+                           <p>LearnBlockWeb es una versión online del proyecto LearnBlock. Esta web ha sido diseñada para que LearnBlock tenga un mayor alcance y pueda ser utilizado por todo usuario que tenga acceso a internet.</p>
+
+                           <p>De entre todas las características y funcionalidades que tiene el proyecto LearnBlock, en esta web se presenta la que corresponde al aprendizaje de programación progresivo que va desde una representación visual (bloques), pasando por la representación textual de la misma (Block-Text), hasta llegar a un lenguaje de programación comunmente utilizado hoy en día (Python).</p>
+
+                           <p>LearnBlockWeb está en desarrollo.</p>
+
+                           <a href="https://github.com/RebeGM19/LearnBlockWeb" target="_blank">LearnBlockWeb Git Repository</a>
+
+                       </article>
+                   </devsite-content>
+               </div>
+
+               <div class="tab-pane fade" id="tab5">
+                   <devsite-content>
+                       <article>
+                           <h2>Detalles de la página</h2>
+
                            <p>Info sobre el desarrollo. Blockly, Bootstrap, Flask, Licencia CC, cositas interesantes.</p>
                        </article>
                    </devsite-content>
-                   </div>
-                </div>
+               </div>
 
-
+           </div>
 
 
 

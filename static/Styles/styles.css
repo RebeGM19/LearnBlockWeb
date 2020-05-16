@@ -1,29 +1,10 @@
-/* Separation between Python/BlockText/LearnBlock and Execute buttons */
-#sepButtons{
-    width: 300px;
-}
-
-/* Python/BlockText/LearnBlock interface's size and properties */
-#home{
-    margin-left: 0.5%;
-    margin-right: 0.5%;
-}
-#learnblockDiv {
-    height: 680px;
-    width: 100%;
-}
-#resultblocktext, #resultpython{
-    width: 100%;
-    height: 680px;
-    resize: none;
-    background-color: #404040;
-    color: #fff;
-    font-family: Consolas,monaco,monospace;
+/* Background style */
+body{
+    background-color: rgb(240, 248, 255, 0.4);
 }
 
 /* Top zone properties and design (I'll do it loOOogooOOoOoo~) */
-#sup{
-    font-size: 50px;
+#topZone{
     color: white;
     background: linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
     margin-bottom: 0px;
@@ -40,6 +21,7 @@
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2), 0 3px 5px 0 rgba(0,0,0,0.19);
 }
 #bHome, #bGuide, #bWhatLB, #bWhatLBW, #bDetails{
+    font-size: 20px;
     display: inline-block;
     background-color: aliceblue;
     border-color: aliceblue;
@@ -63,21 +45,94 @@
     transform: translateY(1.5px);
 }
 
+/* Language selector style */
+#languageMenu {
+    border-style: solid;
+    border-width: 2.5px;
+    border-color: deepskyblue;
+    border-radius: 10px;
+    width: 125px;
+    color: #000;
+    font-size: 20px;
+    padding: 5px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: white url(img/down-arrow.png) no-repeat 90% center;
+    transition-duration: 0.4s;
+}
+#languageMenu:hover{
+    box-shadow: inset 0 0 5px rgba(000, 000, 000, 0.5);
+}
+#languageMenu:focus{
+    box-shadow: inset 0 0 5px rgba(000, 000, 000, 0.5);
+    background: white url(img/up-arrow.png) no-repeat 90% center;
+}
+
+/* Separation between Python/BlockText/LearnBlock and Execute buttons */
+#sepButtons{
+    width: 300px;
+}
+
+/* Python/BlockText/LearnBlock interface's size and properties */
+#home{
+    margin-left: 0.5%;
+    margin-right: 0.5%;
+}
+#learnblockDiv {
+    height: 680px;
+    width: 100%;
+}
+#resultblocktext, #resultpython{
+    width: 100%;
+    height: 680px;
+    resize: none;
+    background-color: #404040;
+    color: #fff;
+    font-family: Consolas,monaco,monospace;
+}
+
 /* Pages style */
 article{
     box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
     border-radius: 2px;
     background-color: #fff;
-    padding: 40px;
+    padding: 45px;
+    margin-top: 2%;
+    margin-bottom: 2%;
     margin-left: 15%;
     margin-right: 15%;
 }
 
+/* Texts style */
+h2{
+    margin-bottom: 2%;
+    margin-left: -1%;
+    font-weight: bold;
+}
+p{
+    text-align: justify;
+    font-size: 18px;
+}
+li{
+    text-align: justify;
+    font-size: 18px;
+}
+a{
+    text-align: justify;
+    font-size: 18px;
+    color: #8000ff;
+    transition-duration: 0.2s;
+}
+a:hover{
+    color: #4d0099;
+    text-decoration: underline;
+}
 
-/* Gradiente chachi */
-/* fill: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%); */
+
 
 /* ------------------------------------------------------------------------------------------------ */
+/* ------------------------------------LearnBlock Interface---------------------------------------- */
 /* ------------------------------------------------------------------------------------------------ */
 
 /* Pointer's design when a block is being grabbed */
@@ -204,7 +259,7 @@ article{
     right: 0;
     bottom: 0;
     overflow: visible !important;
-    z-index: 50;  /* Display below toolbox, but above everything else. */ç
+    z-index: 50;  /* Display below toolbox, but above everything else. */
 }
 
 /* Canvas' properties */
@@ -215,7 +270,7 @@ article{
 /* Highlight when connection between blocks */
 .learnblockHighlightedConnectionPath {
     fill: none;
-    stroke: #fc3;
+    stroke: #99ddff;
     stroke-width: 4px;
 }
 .learnblockPathLight {
@@ -225,7 +280,7 @@ article{
 }
 /* When a block is selected, it is highlighted */
 .learnblockSelected > .learnblockPath {
-    stroke: #fc3;
+    stroke: #99ddff;
     stroke-width: 3px;
 }
 .learnblockSelected > .learnblockPathLight {
@@ -302,7 +357,7 @@ article{
 }
 /* Mutator's border hover */
 .learnblockEditableText:hover > rect {
-    stroke: #fc3;
+    stroke: #99ddff;
     stroke-width: 2;
 }
 .learnblockSvg text,

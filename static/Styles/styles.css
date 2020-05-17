@@ -69,19 +69,28 @@ body{
     background: white url(img/up-arrow.png) no-repeat 90% center;
 }
 
-/* Separation between Python/BlockText/LearnBlock and Execute buttons */
-#sepButtons{
-    width: 300px;
-}
-
 /* Python/BlockText/LearnBlock interface's size and properties */
 #home{
     margin-left: 0.5%;
     margin-right: 0.5%;
 }
+#tab-learnblock, #tab-blocktext, #tab-python{
+    padding: 5px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-style: solid;
+    border-width: thin;
+    border-color: grey;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2), 0 3px 5px 0 rgba(0,0,0,0.19);
+    background-color: white;
+}
 #learnblockDiv {
     height: 680px;
     width: 100%;
+    border: solid rgba(0, 0, 0, 0.3);
+    border-width: thin;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2), 0 1px 5px 0 rgba(0,0,0,0.19);
 }
 #resultblocktext, #resultpython{
     width: 100%;
@@ -90,6 +99,57 @@ body{
     background-color: #404040;
     color: #fff;
     font-family: Consolas,monaco,monospace;
+}
+
+/* Main Interface buttons style */
+#bPython, #bBT, #bLB{
+    background-image: linear-gradient(#e6e6e6, white, white);
+    border-top-style: groove;
+    border-right-style: groove;
+    border-bottom-style: hidden;
+    border-left-style: hidden;
+    border-color: grey;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2), 0 -3px 5px 0 rgba(0,0,0,0.19);
+    font-family: Consolas,monaco,monospace;
+    font-size: 18px;
+}
+#bPython{
+    border-top-left-radius: 10px;
+    border-left-style: groove;
+    border-color: grey;
+}
+#bLB{
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: -10px;
+}
+#bPython:hover, #bBT:hover, #bLB:hover{
+    background-image: linear-gradient(#d9d9d9, #d9d9d9);
+}
+.execButton{
+    border-style: outset;
+    font-family: Consolas,monaco,monospace;
+    font-size: 16px;
+    text-align: left;
+    /*background-color: #d9f2e6;
+    border-color: #b3e6cc;*/
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.2), 0 1.5px 2.5px 0 rgba(0,0,0,0.19);
+}
+.execButton:active {
+    transform: translateY(1px);
+}
+
+/* Success or Fail generation message */
+#resultCode, #resultCode2{
+    width: 400px;
+}
+
+/* Aux separations and sizes */
+#sepButtons{
+    width: 300px;
+}
+.insideList{
+    width: 250px;
+    height: 35px;
 }
 
 /* Pages style */
@@ -167,7 +227,8 @@ a:hover{
     margin-bottom: 20px;
     background-color: #c0c0c0;
     white-space: nowrap;
-    border-style: solid;
+    border-left-style: solid;
+    border-right-style: solid;
     border-color: #000;
     border-width: thin;
     transform: matrix(0, -1, 1, 0, -10, 0);

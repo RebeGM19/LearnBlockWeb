@@ -42,17 +42,46 @@ function execute() {
         success: function (data) { //The code is shown in an html element
             codes = getBothCodes(data);
             if (codes[0] != ""){
-                document.getElementById("resultblocktext").innerHTML = "\n" + codes[0];
+                document.getElementById("resultblocktext").value = "\n" + codes[0];
                 if (codes[1] != ""){
                     document.getElementById("resultCode").innerHTML = MSG['codeGenerated'];
-                    document.getElementById("resultpython").innerHTML = "\n" + codes[1];
+                    document.getElementById("resultpython").value = "\n" + codes[1];
                 }else{
                     document.getElementById("resultCode").innerHTML = MSG['codePyNotGenerated'];
-                    document.getElementById("resultpython").innerHTML = "";
+                    document.getElementById("resultCode2").innerHTML = "";
+                    document.getElementById("resultpython").value = "";
                 }
             }else{
                 document.getElementById("resultCode").innerHTML = MSG['codeBTNotGenerated'];
-                document.getElementById("resultblocktext").innerHTML = "";
+                document.getElementById("resultCode2").innerHTML = "";
+                document.getElementById("resultblocktext").value = "";
+                document.getElementById("resultpython").value = "";
+            }
+        }
+    });
+}
+
+//Loads the Block-Text code to generate Python code
+function executeBT2Py() {
+    var result;
+    try {
+        result = document.getElementById("resultblocktext").value;
+    } catch (e) {
+        result = "";
+    }
+    $.ajax({
+        type: "POST",
+        contentType: "application/json;charset=utf-8",
+        url: "/resultBT",
+        traditional: "true",
+        data: JSON.stringify(result),
+        dataType: "text",
+        success: function (data) { //The code is shown in an html element
+            if(data != ""){
+                document.getElementById("resultCode2").innerHTML = MSG['codeGenerated'];
+                document.getElementById("resultpython").value = data;
+            }else{
+                document.getElementById("resultCode2").innerHTML = MSG['codePyNotGenerated'];
             }
         }
     });

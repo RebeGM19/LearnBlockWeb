@@ -3,7 +3,8 @@
 //Mensajes
 var MSG = {
     sup: "LearnBlockWeb",
-    execute: "Ejecutar",
+    execute: "Bloques a Texto",
+    executeBT: "Block-Text a Python",
     introParagraph: "¡Bienvenido a LearnBlockWeb! Comienza a arrastrar y encajar bloques entre sí y empieza a programar.",
     home: "Página principal",
     guide: "Guía de uso",

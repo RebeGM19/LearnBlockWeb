@@ -21,7 +21,9 @@
 
            <table class="table" id="upmenu">
                <tr>
-                   <div id="topZone"><h1 id="sup"></h1></div> <!-- Aquí un logo chachi -->
+                   <div id="topZone">
+                       <h1 id="sup"></h1>
+                   </div> <!-- Aquí un logo chachi -->
                </tr>
                <tr id="upMenu">
                    <td>
@@ -46,25 +48,38 @@
                    <!-- Content for tab HOME -->
                    <p id="introParagraph"></p>
 
-                   <ul class="nav nav-pills">
-                       <li><button type="button" href="#tab-python" data-toggle="tab">Python</button></li>
-                       <li><button type="button" href="#tab-blocktext" data-toggle="tab">Block-Text</button></li>
-                       <li><button type="button" href="#tab-learnblock" data-toggle="tab">LearnBlock</button></li>
-                       <li id="sepButtons"></li>
-                       <li><button type="button" onclick="execute()" id="execute"></button></li>
-                       <li id="sepButtons"></li>
-                       <li id="resultCode"></li>
+                   <ul id="listButtons" class="nav nav-pills">
+                       <li><button type="button" href="#tab-python" data-toggle="tab" id="bPython">Python</button></li>
+                       <li><button type="button" href="#tab-blocktext" data-toggle="tab" id="bBT">Block-Text</button></li>
+                       <li><button type="button" href="#tab-learnblock" data-toggle="tab" id="bLB">LearnBlock</button></li>
                    </ul>
 
-                   <div class="tab-content" style="margin-bottom:50px">
+                   <div class="tab-content" style="margin-bottom:10px">
                        <div class="tab-pane" id="tab-python">
+                           <ul class="nav">
+                               <li class="insideList">Programa Python:</li>
+                           </ul>
                            <textarea readonly id="resultpython"></textarea>
                        </div>
                        <div class="tab-pane" id="tab-blocktext">
-                           <textarea readonly id="resultblocktext"></textarea>
+                           <ul class="nav">
+                               <li class="insideList">Programa Block-Text:</li>
+                               <li class="insideList" id="sepButtons"></li>
+                               <li class="insideList"><button class="execButton" type="button" onclick="executeBT2Py()" id="executeBT"></button></li>
+                               <li class="insideList" id="sepButtons"></li>
+                               <li class="insideList" id="resultCode2"></li>
+                           </ul>
+                           <textarea id="resultblocktext"></textarea>
                        </div>
 
                        <div class="tab-pane active" id="tab-learnblock">
+                           <ul class="nav">
+                               <li class="insideList">Programa visual:</li>
+                               <li class="insideList" id="sepButtons"></li>
+                               <li class="insideList"><button class="execButton" type="button" onclick="execute()" id="execute"></button></li>
+                               <li class="insideList" id="sepButtons"></li>
+                               <li class="insideList" id="resultCode"></li>
+                           </ul>
                            <div id="learnblockDiv"></div>
                            <div id="toolbox" style="display: none">
 

@@ -59,7 +59,7 @@ def formatBlocks(blocks):
     return string
 
 
-# When the button "execute" is clicked, gets the blocks in the workspace, parses them and returns the equivalent Block-Text (and Python) code
+# When the button "execute" is clicked, gets the blocks in the workspace, parses them and returns the equivalent Block-Text and Python codes
 @app.route("/result", methods=['GET', 'POST'])
 def getBlocks():
     if request.method == 'POST':
@@ -79,6 +79,22 @@ def getBlocks():
         result = blocktext + "----------\n" + text
 
         return result, 200
+    else:
+        return '', 200
+
+# When the button "lalala" is clicked, gets the Block-Text code (which can be modified), parses it and returns the equivalent Python code
+@app.route("/resultBT", methods=['GET', 'POST'])
+def getPyFromBT():
+    if request.method == "POST":
+        btCode = request.get_json()
+        print(btCode)
+        print("------------------------------------------")
+        result = parserLearntBotCodeFromCode(btCode, 'LearnBotClient')
+        print(result)
+        if result != False:
+            return result, 200
+        else:
+            return '', 200
     else:
         return '', 200
 

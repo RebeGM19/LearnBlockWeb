@@ -41,18 +41,30 @@ function execute() {
         dataType: "text",
         success: function (data) { //The code is shown in an html element
             codes = getBothCodes(data);
-            if (codes[0] != ""){
+            if (codes[0] != "") {
                 document.getElementById("resultblocktext").value = "\n" + codes[0];
-                if (codes[1] != ""){
-                    document.getElementById("resultCode").innerHTML = MSG['codeGenerated'];
+                if (codes[1] != "") {
+                    document.getElementById("resultCode").innerHTML = MSG['codeGenerated'] + " ";
                     document.getElementById("resultpython").value = "\n" + codes[1];
-                }else{
-                    document.getElementById("resultCode").innerHTML = MSG['codePyNotGenerated'];
+                    var x = document.createElement("IMG");
+                    x.setAttribute("src", "./static/Styles/img/up-arrow.png"); //CAMBIAR
+                    document.getElementById("resultCode").appendChild(x);
+                    document.getElementById("resultCode").setAttribute("style", "border-color: rgba(0, 204, 0, 0.8); box-shadow: inset 0 0 5px rgba(0, 77, 0, 0.5);")
+                } else {
+                    document.getElementById("resultCode").innerHTML = MSG['codePyNotGenerated'] + " ";
+                    var x = document.createElement("IMG");
+                    x.setAttribute("src", "./static/Styles/img/down-arrow.png"); //CAMBIAR
+                    document.getElementById("resultCode").appendChild(x);
+                    document.getElementById("resultCode").setAttribute("style", "border-color: rgba(153, 0, 0, 0.8); box-shadow: inset 0 0 5px rgba(77, 0, 0, 0.5);")
                     document.getElementById("resultCode2").innerHTML = "";
                     document.getElementById("resultpython").value = "";
                 }
-            }else{
-                document.getElementById("resultCode").innerHTML = MSG['codeBTNotGenerated'];
+            } else {
+                document.getElementById("resultCode").innerHTML = MSG['codeBTNotGenerated'] + " ";
+                var x = document.createElement("IMG");
+                x.setAttribute("src", "./static/Styles/img/down-arrow.png"); //CAMBIAR
+                document.getElementById("resultCode").appendChild(x);
+                document.getElementById("resultCode").setAttribute("style", "border-color: rgba(153, 0, 0, 0.8); box-shadow: inset 0 0 5px rgba(77, 0, 0, 0.5);")
                 document.getElementById("resultCode2").innerHTML = "";
                 document.getElementById("resultblocktext").value = "";
                 document.getElementById("resultpython").value = "";
@@ -77,11 +89,19 @@ function executeBT2Py() {
         data: JSON.stringify(result),
         dataType: "text",
         success: function (data) { //The code is shown in an html element
-            if(data != ""){
-                document.getElementById("resultCode2").innerHTML = MSG['codeGenerated'];
+            if (data != "") {
+                document.getElementById("resultCode2").innerHTML = MSG['codeGenerated'] + " ";
                 document.getElementById("resultpython").value = data;
-            }else{
-                document.getElementById("resultCode2").innerHTML = MSG['codePyNotGenerated'];
+                var x = document.createElement("IMG");
+                x.setAttribute("src", "./static/Styles/img/up-arrow.png"); //CAMBIAR
+                document.getElementById("resultCode2").appendChild(x);
+                document.getElementById("resultCode2").setAttribute("style", "border-color: rgba(0, 204, 0, 0.8); box-shadow: inset 0 0 5px rgba(0, 77, 0, 0.5);")
+            } else {
+                document.getElementById("resultCode2").innerHTML = MSG['codePyNotGenerated'] + " ";
+                var x = document.createElement("IMG");
+                x.setAttribute("src", "./static/Styles/img/down-arrow.png"); //CAMBIAR
+                document.getElementById("resultCode2").appendChild(x);
+                document.getElementById("resultCode2").setAttribute("style", "border-color: rgba(153, 0, 0, 0.8); box-shadow: inset 0 0 5px rgba(77, 0, 0, 0.5);")
             }
         }
     });

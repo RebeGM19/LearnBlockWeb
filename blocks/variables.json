@@ -11,7 +11,7 @@
     }],
     "previousStatement": null,
     "nextStatement": null,
-    "style": "variable_dynamic_blocks"
+    "colour": "#994d00"
 }, {
     "type": "variables_get_dynamic",
     "message0": "%1 %2",
@@ -25,7 +25,7 @@
         "check": null
     }],
     "output": null,
-    "style": "variable_dynamic_blocks"
+    "colour": "#408000"
 }, {
     "type": "variables_get_dynamic2",
     "message0": "%1",
@@ -35,7 +35,7 @@
         "varable": "%{BKY_VARIABLES_DEFAULT_NAME}"
     }],
     "output": null,
-    "style": "variable_dynamic_blocks"
+    "colour": "#408000"
 }, {
     "type": "variables_get_dynamic3",
     "message0": "%1 %2",
@@ -48,7 +48,7 @@
         "name": "VAR",
         "check": null
     }],
-    "style": "variable_dynamic_blocks",
+    "colour": "#408000",
     "previousStatement": null,
     "nextStatement": null
 }]

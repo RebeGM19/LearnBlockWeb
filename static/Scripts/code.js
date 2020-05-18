@@ -98,7 +98,6 @@ Code.initLanguage = function () {
         languageMenu.options.add(option);
     }
     languageMenu.addEventListener('change', Code.changeLanguage, true);
-    document.getElementById('sup').textContent = MSG['sup'];
     document.getElementById('execute').textContent = MSG['execute'];
     document.getElementById('executeBT').textContent = MSG['executeBT'];
     document.getElementById('introParagraph').textContent = MSG['introParagraph'];

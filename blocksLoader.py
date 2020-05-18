@@ -89,25 +89,25 @@ def getNameAndShape(block, name, shape):
 
 # The block's colour depends on its category
 def getColour(category):
-    colour = 0
+    colour = "\"0\""
     if category == "control":
-        colour = 60
+        colour = "\"#b3b300\""
     if category == "operator":
-        colour = 230
+        colour = "\"#2e5cb8\""
     if category == "Motor":
-        colour = 0
+        colour = "\"#b32d00\""
     if category == "Base":
-        colour = 120
+        colour = "\"#800080\""
     if category == "Camera":
-        colour = 280
+        colour = "\"#009999\""
     if category == "Distances":
-        colour = 300
+        colour = "\"#cc7a00\""
     if category == "Emotion":
-        colour = 90
+        colour = "\"#339966\""
     if category == "Ground":
-        colour = 180
+        colour = "\"#5c5c8a\""
     if category == "Speaker":
-        colour = 30
+        colour = "\"#996633\""
     return colour
 
 # Gets the function's name both in English and Spanish
@@ -129,7 +129,8 @@ def convertBlock(block, shape, alt):
     blocklyJson = "{\"type\": \"" + vCategory.lower() + "_" + vName.replace(" ", "_") + alt + "\", "
     blocklyJson += "\"blocktextname\": \"" + vName + "\", "
     blocklyJson += getNameAndShape(block, vName.replace(" ", "_"), shape)
-    blocklyJson += "\"colour\": " + str(getColour(block["category"]))
+    #blocklyJson += "\"colour\": " + str(getColour(block["category"]))
+    blocklyJson += "\"colour\": " + getColour(block["category"])
     if 'languages' in block:
         blockContent = getLanguages(block, vName.replace(" ", "_"))
 

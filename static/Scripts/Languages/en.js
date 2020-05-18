@@ -2,7 +2,6 @@
 
 //Messages
 var MSG = {
-    sup: "LearnBlockWeb",
     execute: "Blocks to Text",
     executeBT: "Block-Text to Python",
     introParagraph: "Welcome to LearnBlockWeb! Begin to drag and connect the blocks and start programming.",

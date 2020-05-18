@@ -217,6 +217,16 @@ a:hover{
     text-decoration: underline;
 }
 
+/* Details icons' table structure */
+.footerDet{
+    margin-top: 3%;
+    border-collapse: separate;
+    border-spacing: 25px 0px;
+}
+.footerDet td{
+    vertical-align: bottom;
+}
+
 
 
 /* ------------------------------------------------------------------------------------------------ */

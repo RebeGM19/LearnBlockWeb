@@ -262,17 +262,17 @@
                                <li id="det7"></li>
                            </ul>
 
-                           <table>
+                           <table class="footerDet">
                                <tr>
-                                   <!-- Fila 1: Licencia y contacto -->
-                                   <td><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank"><img alt="Licencia de Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png"/></a></td>
-                                   <td id="det8"></td>
-                               </tr>
-                               <tr>
-                                   <!-- Fila 2: Iconitos -->
-                                   <td><img src="./static/Styles/img/flask.png" alt="Logo Flask"/></td>
-                                   <td><img src="./static/Styles/img/blockly.png" alt="Logo Blockly"/></td>
-
+                                   <td><img src="./static/Styles/img/html-css-js.jpg" alt="Logo HTML-CSS-JS" /></td>
+                                   <td><img src="./static/Styles/img/bootstrap.jpg" alt="Logo Bootstrap" /></td>
+                                   <td><img src="./static/Styles/img/blockly.jpg" alt="Logo Blockly" /></td>
+                                   <td><img src="./static/Styles/img/python.jpg" alt="Logo Python" /></td>
+                                   <td><img src="./static/Styles/img/flask.jpg" alt="Logo Flask" /></td>
+                                   <td><img src="./static/Styles/img/uex.jpg" alt="Logo UEx" /></td>
+                                   <td><img src="./static/Styles/img/learnblock.jpg" alt="Logo LearnBlock" /></td>
+                                   <td><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank"><img alt="Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a></td>
+                                   <td id="det8" colspan="3"></td>
                                </tr>
                            </table>
 
@@ -295,7 +295,7 @@
         loadBlocks({{motor | tojson}}, null);
         loadBlocks({{perceptual | tojson}}, null);
 
-        //Creates tbe workspace
+        //Creates the workspace
         var workspace = LearnBlock.inject('learnblockDiv', {
             toolbox: document.getElementById('toolbox'),
             horizontalLayout: false,

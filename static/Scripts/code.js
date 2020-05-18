@@ -100,12 +100,63 @@ Code.initLanguage = function () {
     languageMenu.addEventListener('change', Code.changeLanguage, true);
     document.getElementById('execute').textContent = MSG['execute'];
     document.getElementById('executeBT').textContent = MSG['executeBT'];
-    document.getElementById('introParagraph').textContent = MSG['introParagraph'];
     document.getElementById('bHome').textContent = MSG['home'];
     document.getElementById('bGuide').textContent = MSG['guide'];
     document.getElementById('bWhatLB').textContent = MSG['whatLB'];
     document.getElementById('bWhatLBW').textContent = MSG['whatLBW'];
     document.getElementById('bDetails').textContent = MSG['details'];
+    document.getElementById('bCopyBT').textContent = MSG['copyCodeBT'];
+    document.getElementById('bCopyPY').textContent = MSG['copyCodePY'];
+    document.getElementById('programPY').textContent = MSG['programPY'];
+    document.getElementById('programBT').textContent = MSG['programBT'];
+    document.getElementById('programLB').textContent = MSG['programLB'];
+
+
+    document.getElementById('titleHowTo').textContent = MSG['titleHowTo'];
+    document.getElementById('titleAboutLB').textContent = MSG['titleAboutLB'];
+    document.getElementById('titleAboutLBW').textContent = MSG['titleAboutLBW'];
+    document.getElementById('titleDetails').textContent = MSG['titleDetails'];
+
+    document.getElementById('HT1').textContent = MSG['HT1'];
+    document.getElementById('HT2').textContent = MSG['HT2'];
+    document.getElementById('HT3').textContent = MSG['HT3'];
+    document.getElementById('HT4').textContent = MSG['HT4'];
+    document.getElementById('HT5').textContent = MSG['HT5'];
+    document.getElementById('HT6').textContent = MSG['HT6'];
+    document.getElementById('HT7').textContent = MSG['HT7'];
+    document.getElementById('HT8').textContent = MSG['HT8'];
+    document.getElementById('HT9').textContent = MSG['HT9'];
+    document.getElementById('HT10').textContent = MSG['HT10'];
+    document.getElementById('HT11').textContent = MSG['HT11'];
+
+    document.getElementById('aLB1').textContent = MSG['aLB1'];
+    document.getElementById('aLB2').textContent = MSG['aLB2'];
+    document.getElementById('aLB3').textContent = MSG['aLB3'];
+    document.getElementById('aLB4').textContent = MSG['aLB4'];
+    document.getElementById('aLB5').textContent = MSG['aLB5'];
+    document.getElementById('aLB6').textContent = MSG['aLB6'];
+    document.getElementById('aLB7').textContent = MSG['aLB7'];
+    document.getElementById('aLB8').textContent = MSG['aLB8'];
+    document.getElementById('aLB9').textContent = MSG['aLB9'];
+    document.getElementById('aLB10').textContent = MSG['aLB10'];
+    document.getElementById('aLB11').textContent = MSG['aLB11'];
+    document.getElementById('aLB12').textContent = MSG['aLB12'];
+
+    document.getElementById('aLBW1').textContent = MSG['aLBW1'];
+    document.getElementById('aLBW2').textContent = MSG['aLBW2'];
+    document.getElementById('aLBW3').textContent = MSG['aLBW3'];
+    document.getElementById('aLBW4').textContent = MSG['aLBW4'];
+    document.getElementById('aLBW5').textContent = MSG['aLBW5'];
+
+    document.getElementById('det1').textContent = MSG['det1'];
+    document.getElementById('det2').textContent = MSG['det2'];
+    document.getElementById('det3').textContent = MSG['det3'];
+    document.getElementById('det4').textContent = MSG['det4'];
+    document.getElementById('det5').textContent = MSG['det5'];
+    document.getElementById('det6').textContent = MSG['det6'];
+    document.getElementById('det7').textContent = MSG['det7'];
+    document.getElementById('det8').textContent = MSG['det8'];
+
 };
 document.write('<script src="static/Scripts/Languages/' + Code.LANG + '.js"></script>\n');
 window.addEventListener('load', Code.init);

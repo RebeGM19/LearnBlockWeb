@@ -43,29 +43,24 @@ function execute() {
             codes = getBothCodes(data);
             if (codes[0] != "") {
                 document.getElementById("resultblocktext").value = "\n" + codes[0];
+                document.getElementById("resultCode2").innerHTML = "";
+                document.getElementById("resultCode2").setAttribute("style", "border-style: hidden; box-shadow: 0 0 0px rgba(000, 000, 000, 0);")
                 if (codes[1] != "") {
-                    document.getElementById("resultCode").innerHTML = MSG['codeGenerated'] + " ";
+                    document.getElementById("resultCode").innerHTML = MSG['codeGenerated'];
                     document.getElementById("resultpython").value = "\n" + codes[1];
-                    var x = document.createElement("IMG");
-                    x.setAttribute("src", "./static/Styles/img/up-arrow.png"); //CAMBIAR
-                    document.getElementById("resultCode").appendChild(x);
-                    document.getElementById("resultCode").setAttribute("style", "border-color: rgba(0, 204, 0, 0.8); box-shadow: inset 0 0 5px rgba(0, 77, 0, 0.5);")
+                    document.getElementById("resultCode").setAttribute("style", "border-style: inset; border-color: rgba(0, 204, 0, 0.8); background-color: rgba(230, 255, 230, 0.2); box-shadow: inset 0 0 3px rgba(0, 77, 0, 0.5);")
                 } else {
-                    document.getElementById("resultCode").innerHTML = MSG['codePyNotGenerated'] + " ";
-                    var x = document.createElement("IMG");
-                    x.setAttribute("src", "./static/Styles/img/down-arrow.png"); //CAMBIAR
-                    document.getElementById("resultCode").appendChild(x);
-                    document.getElementById("resultCode").setAttribute("style", "border-color: rgba(153, 0, 0, 0.8); box-shadow: inset 0 0 5px rgba(77, 0, 0, 0.5);")
+                    document.getElementById("resultCode").innerHTML = MSG['codePyNotGenerated'];
+                    document.getElementById("resultCode").setAttribute("style", "border-style: inset; border-color: rgba(153, 0, 0, 0.8); background-color: rgba(255, 230, 230, 0.2); box-shadow: inset 0 0 3px rgba(77, 0, 0, 0.5);")
                     document.getElementById("resultCode2").innerHTML = "";
+                    document.getElementById("resultCode2").setAttribute("style", "border-style: hidden; box-shadow: 0 0 0px rgba(000, 000, 000, 0);")
                     document.getElementById("resultpython").value = "";
                 }
             } else {
-                document.getElementById("resultCode").innerHTML = MSG['codeBTNotGenerated'] + " ";
-                var x = document.createElement("IMG");
-                x.setAttribute("src", "./static/Styles/img/down-arrow.png"); //CAMBIAR
-                document.getElementById("resultCode").appendChild(x);
-                document.getElementById("resultCode").setAttribute("style", "border-color: rgba(153, 0, 0, 0.8); box-shadow: inset 0 0 5px rgba(77, 0, 0, 0.5);")
+                document.getElementById("resultCode").innerHTML = MSG['codeBTNotGenerated'];
+                document.getElementById("resultCode").setAttribute("style", "border-style: inset; border-color: rgba(153, 0, 0, 0.8); background-color: rgba(255, 230, 230, 0.2); box-shadow: inset 0 0 3px rgba(77, 0, 0, 0.5);")
                 document.getElementById("resultCode2").innerHTML = "";
+                document.getElementById("resultCode2").setAttribute("style", "border-style: hidden; box-shadow: 0 0 0px rgba(000, 000, 000, 0);")
                 document.getElementById("resultblocktext").value = "";
                 document.getElementById("resultpython").value = "";
             }
@@ -90,19 +85,28 @@ function executeBT2Py() {
         dataType: "text",
         success: function (data) { //The code is shown in an html element
             if (data != "") {
-                document.getElementById("resultCode2").innerHTML = MSG['codeGenerated'] + " ";
+                document.getElementById("resultCode2").innerHTML = MSG['codeGenerated'];
                 document.getElementById("resultpython").value = data;
-                var x = document.createElement("IMG");
-                x.setAttribute("src", "./static/Styles/img/up-arrow.png"); //CAMBIAR
-                document.getElementById("resultCode2").appendChild(x);
-                document.getElementById("resultCode2").setAttribute("style", "border-color: rgba(0, 204, 0, 0.8); box-shadow: inset 0 0 5px rgba(0, 77, 0, 0.5);")
+                document.getElementById("resultCode2").setAttribute("style", "border-style: inset; border-color: rgba(0, 204, 0, 0.8); background-color: rgba(230, 255, 230, 0.2); box-shadow: inset 0 0 3px rgba(0, 77, 0, 0.5);")
             } else {
-                document.getElementById("resultCode2").innerHTML = MSG['codePyNotGenerated'] + " ";
-                var x = document.createElement("IMG");
-                x.setAttribute("src", "./static/Styles/img/down-arrow.png"); //CAMBIAR
-                document.getElementById("resultCode2").appendChild(x);
-                document.getElementById("resultCode2").setAttribute("style", "border-color: rgba(153, 0, 0, 0.8); box-shadow: inset 0 0 5px rgba(77, 0, 0, 0.5);")
+                document.getElementById("resultpython").value = "";
+                document.getElementById("resultCode2").innerHTML = MSG['codePyNotGenerated'];
+                document.getElementById("resultCode2").setAttribute("style", "border-style: inset; border-color: rgba(153, 0, 0, 0.8); background-color: rgba(255, 230, 230, 0.2); box-shadow: inset 0 0 3px rgba(77, 0, 0, 0.5);")
             }
         }
     });
+}
+
+//Copies the Block-Text code
+function copyBT() {
+    var copyText = document.getElementById("resultblocktext");
+    copyText.select();
+    document.execCommand("copy");
+}
+
+//Copies the Python code
+function copyPython() {
+    var copyText = document.getElementById("resultpython");
+    copyText.select();
+    document.execCommand("copy");
 }

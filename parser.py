@@ -1,4 +1,4 @@
-from learnblockCode.guiCreateBlock import *
+from learnblockCode.Block import *
 import xml.etree.ElementTree as ET
 import re
 

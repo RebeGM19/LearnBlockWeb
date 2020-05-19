@@ -65,16 +65,12 @@ def getBlocks():
     if request.method == 'POST':
         blocks = request.get_json()
         processVars(getVars(blocks))
-        print("------------------------------------------")
         toParser = formatBlocks(blocks)
         blocktext = parserBlockText(toParser)
-        print("------------------------------------------")
-        print(blocktext)
 
         text = parserLearntBotCodeFromCode(blocktext, 'LearnBotClient')
         if text == False:
             text = "\n"
-        print("--------Clean code--------\n\n", text)
 
         result = blocktext + "----------\n" + text
 
@@ -87,10 +83,7 @@ def getBlocks():
 def getPyFromBT():
     if request.method == "POST":
         btCode = request.get_json()
-        print(btCode)
-        print("------------------------------------------")
         result = parserLearntBotCodeFromCode(btCode, 'LearnBotClient')
-        print(result)
         if result != False:
             return result, 200
         else:

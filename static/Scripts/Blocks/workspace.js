@@ -10574,25 +10574,25 @@ LearnBlock.utils.svgPaths.arc = function (a, b, c, d) {
 
 //An object that provides constants for rendering blocks
 LearnBlock.blockRendering.ConstantProvider = function () {
+    this.TAB_WIDTH = 6;
+    this.TAB_HEIGHT = 14;
+    this.NOTCH_WIDTH = 15;
+    this.NOTCH_HEIGHT = 4;
+    this.CORNER_RADIUS = 6;
+
     this.NO_PADDING = 0;
     this.SMALL_PADDING = 3;
     this.MEDIUM_PADDING = 5;
     this.MEDIUM_LARGE_PADDING = 8;
     this.LARGE_PADDING = 10;
     this.TALL_INPUT_FIELD_OFFSET_Y = this.MEDIUM_PADDING;
-    this.TAB_HEIGHT = 15;
     this.TAB_OFFSET_FROM_TOP = 5;
     this.TAB_VERTICAL_OVERLAP = 2.5;
-    this.TAB_WIDTH = 8;
-    this.NOTCH_WIDTH = 15;
-    this.NOTCH_HEIGHT = 4;
     this.MIN_BLOCK_WIDTH = 12;
     this.EMPTY_BLOCK_SPACER_HEIGHT = 16;
     this.DUMMY_INPUT_MIN_HEIGHT = this.TAB_HEIGHT;
-    this.CORNER_RADIUS = 8;
     this.NOTCH_OFFSET_LEFT = 15;
-    this.STATEMENT_BOTTOM_SPACER =
-        0;
+    this.STATEMENT_BOTTOM_SPACER =0;
     this.STATEMENT_INPUT_PADDING_LEFT = 20;
     this.BETWEEN_STATEMENT_PADDING_Y = 4;
     this.MAX_BOTTOM_WIDTH = 66.5;
@@ -10614,7 +10614,8 @@ LearnBlock.blockRendering.ConstantProvider.prototype.init = function () {
     this.START_HAT = this.makeStartHat();
     this.PUZZLE_TAB = this.makePuzzleTab();
     this.INSIDE_CORNERS = this.makeInsideCorners();
-    this.OUTSIDE_CORNERS = this.makeOutsideCorners()
+    this.OUTSIDE_CORNERS = this.makeOutsideCorners();
+    this.RECT_INPUT_OUTPUT = this.makeRectangularInputConn();
 };
 //An object containing sizing and path information about start hats
 LearnBlock.blockRendering.ConstantProvider.prototype.makeStartHat = function () {
@@ -10626,6 +10627,27 @@ LearnBlock.blockRendering.ConstantProvider.prototype.makeStartHat = function () 
         width: b,
         path: c
     }
+};
+ //An object containing sizing and path information about rectangular tabs
+LearnBlock.blockRendering.ConstantProvider.prototype.makeRectangularInputConn = function() {
+  var width = this.TAB_WIDTH;
+  var height = this.TAB_HEIGHT;
+  function makeMainPath(up) {
+    return LearnBlock.utils.svgPaths.line(
+        [
+          LearnBlock.utils.svgPaths.point(-width, 0),
+          LearnBlock.utils.svgPaths.point(0, -1 * up * height),
+          LearnBlock.utils.svgPaths.point(width, 0)
+        ]);
+  }
+  var pathUp = makeMainPath(1);
+  var pathDown = makeMainPath(-1);
+  return {
+    width: width,
+    height: height,
+    pathDown: pathDown,
+    pathUp: pathUp
+  };
 };
 //An object containing sizing and path information about puzzle tabs
 LearnBlock.blockRendering.ConstantProvider.prototype.makePuzzleTab = function () {
@@ -10694,10 +10716,10 @@ LearnBlock.blockRendering.ConstantProvider.prototype.shapeFor = function (a) {
     switch (a.type) {
         case LearnBlock.INPUT_VALUE:
         case LearnBlock.OUTPUT_VALUE:
-            return this.PUZZLE_TAB;
+            return this.RECT_INPUT_OUTPUT;  //Input-Output connection shape (rectangle)
         case LearnBlock.PREVIOUS_STATEMENT:
         case LearnBlock.NEXT_STATEMENT:
-            return this.NOTCH;
+            return this.NOTCH;  //Previous-Next connection shape (notch)
         default:
             throw Error("Unknown connection type");
     }

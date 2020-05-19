@@ -34,7 +34,8 @@ body{
     margin-right: 10px;
     margin-top: 0px;
 }
-#bHome:hover, #bGuide:hover, #bWhatLB:hover, #bWhatLBW:hover, #bDetails:hover{
+#bHome:hover, #bGuide:hover, #bWhatLB:hover, #bWhatLBW:hover, #bDetails:hover,
+#bHome:focus, #bGuide:focus, #bWhatLB:focus, #bWhatLBW:focus, #bDetails:focus{
     border-style: solid;
     border-width: 1px;
     border-color: deepskyblue;
@@ -101,6 +102,9 @@ body{
     color: #fff;
     font-family: Consolas,monaco,monospace;
 }
+#resultblocktext:focus, #resultpython:focus{
+    border-style: solid;
+}
 
 .textarea-container {
     position: relative;
@@ -150,7 +154,8 @@ body{
     border-top-right-radius: 10px;
     border-bottom-right-radius: -10px;
 }
-#bPython:hover, #bBT:hover, #bLB:hover{
+#bPython:hover, #bBT:hover, #bLB:hover,
+#bPython:focus, #bBT:focus, #bLB:focus{
     background-image: linear-gradient(#d9d9d9, #d9d9d9);
 }
 .execButton{
@@ -215,6 +220,10 @@ a{
 a:hover{
     color: #4d0099;
     text-decoration: underline;
+}
+label{
+    font-size: 18px;
+    font-family: 'Roboto', sans-serif;
 }
 
 /* Details icons' table structure */

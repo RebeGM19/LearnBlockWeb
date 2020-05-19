@@ -15,28 +15,30 @@
     <script src="{{ url_for('static', filename='Scripts/Blocks/blocks.js') }}"></script>
     <script src="{{ url_for('static', filename='Scripts/code.js') }}"></script>
 
+    <title>LearnBlockWeb</title>
+
 </head>
 
 <body>
-
            <table class="table" id="up">
                <tr>
-                   <div id="topZone">
+                   <div id="topZone">  <!-- LearnBlockWeb Logo -->
                        <img src="./static/Styles/img/LogoLearnBlockWeb.png" alt="Logo LearnBlockWeb"/>
                    </div>
                </tr>
-               <tr id="upMenu">
+               <tr id="upMenu">  <!-- Superior (tabs) menu -->
                    <td>
                        <ul class="nav nav-pills" id="menuButtons">
                            <li><button type="button" href="#home" data-toggle="tab" id="bHome"></button></li>
-                           <li><button type="button" href="#tab2" data-toggle="tab" id="bGuide"></button></li>
-                           <li><button type="button" href="#tab3" data-toggle="tab" id="bWhatLB"></button></li>
-                           <li><button type="button" href="#tab4" data-toggle="tab" id="bWhatLBW"></button></li>
-                           <li><button type="button" href="#tab5" data-toggle="tab" id="bDetails"></button></li>
+                           <li><button type="button" href="#guide" data-toggle="tab" id="bGuide"></button></li>
+                           <li><button type="button" href="#abLB" data-toggle="tab" id="bWhatLB"></button></li>
+                           <li><button type="button" href="#abLBW" data-toggle="tab" id="bWhatLBW"></button></li>
+                           <li><button type="button" href="#det" data-toggle="tab" id="bDetails"></button></li>
                        </ul>
                    </td>
                    <td>
-                       <div>
+                       <div>  <!-- Language selector -->
+                           <label for="languageMenu" id="tSelectLang"></label>
                            <select id="languageMenu"></select>
                        </div>
                    </td>
@@ -44,8 +46,7 @@
            </table>
 
            <div class="tab-content">
-               <div class="tab-pane active" id="home">
-                   <!-- Content for tab HOME -->
+               <div class="tab-pane active" id="home">  <!-- Content for tab HOME PAGE -->
                    <ul id="listButtons" class="nav nav-pills">
                        <li><button type="button" href="#tab-python" data-toggle="tab" id="bPython">Python</button></li>
                        <li><button type="button" href="#tab-blocktext" data-toggle="tab" id="bBT">Block-Text</button></li>
@@ -53,18 +54,18 @@
                    </ul>
 
                    <div class="tab-content" style="margin-bottom:10px">
-                       <div class="tab-pane" id="tab-python">
+                       <div class="tab-pane" id="tab-python">  <!-- Content for tab Python -->
                            <ul class="nav">
-                               <li class="insideList" id="programPY"></li>
+                               <li class="insideList"><label for="resultpython" id="programPY"></label></li>
                            </ul>
                            <div class="textarea-container">
                                <textarea readonly id="resultpython"></textarea>
                                <button onclick="copyPython()" id="bCopyPY"></button>
                            </div>
                        </div>
-                       <div class="tab-pane" id="tab-blocktext">
+                       <div class="tab-pane" id="tab-blocktext">  <!-- Content for tab Block-Text -->
                            <ul class="nav">
-                               <li class="insideList" id="programBT"></li>
+                               <li class="insideList"><label for="resultblocktext" id="programBT"></label></li>
                                <li class="insideList" id="sepButtons"></li>
                                <li class="insideList"><button class="execButton" type="button" onclick="executeBT2Py()" id="executeBT"></button></li>
                                <li class="insideList" id="sepButtons"></li>
@@ -76,7 +77,7 @@
                            </div>
                        </div>
 
-                       <div class="tab-pane active" id="tab-learnblock">
+                       <div class="tab-pane active" id="tab-learnblock">  <!-- Content for tab LearnBlock -->
                            <ul class="nav">
                                <li class="insideList" id="programLB"></li>
                                <li class="insideList" id="sepButtons"></li>
@@ -177,7 +178,7 @@
 
                </div>
 
-               <div class="tab-pane fade" id="tab2">
+               <div class="tab-pane fade" id="guide">  <!-- Content for tab HOW TO USE -->
                    <devsite-content>
                        <article>
                            <h2 id="titleHowTo"></h2>
@@ -203,7 +204,7 @@
 
                </div>
 
-               <div class="tab-pane fade" id="tab3">
+               <div class="tab-pane fade" id="abLB">  <!-- Content for tab ABOUT LEARNBLOCK -->
                    <devsite-content>
                        <article>
                            <h2 id="titleAboutLB"></h2>
@@ -220,14 +221,14 @@
                                <li id="aLB9"></li>
                                <li id="aLB10"></li>
                            </ul>
-                           <p><a href="https://www.researchgate.net/publication/339115204_LearnBlock_A_Robot-Agnostic_Educational_Programming_Tool" target="_blank" id="aLB11"></a></p>
-                           <p><a href="https://github.com/robocomp/LearnBlock" target="_blank" id="aLB12"></a></p>
+                           <p><a title="LearnBlock Research" href="https://www.researchgate.net/publication/339115204_LearnBlock_A_Robot-Agnostic_Educational_Programming_Tool" target="_blank" id="aLB11"></a></p>
+                           <p><a title="LearnBlock Git" href="https://github.com/robocomp/LearnBlock" target="_blank" id="aLB12"></a></p>
 
                        </article>
                    </devsite-content>
                </div>
 
-               <div class="tab-pane fade" id="tab4">
+               <div class="tab-pane fade" id="abLBW">  <!-- Content for tab ABOUT LEARNBLOCKWEB -->
                    <devsite-content>
                        <article>
                            <h2 id="titleAboutLBW"></h2>
@@ -236,13 +237,13 @@
                            <p id="aLBW2"></p>
                            <p id="aLBW3"></p>
                            <p id="aLBW4"></p>
-                           <p><a href="https://github.com/RebeGM19/LearnBlockWeb" target="_blank" id="aLBW5"></a></p>
+                           <p><a title="LearnBlockWeb Git" href="https://github.com/RebeGM19/LearnBlockWeb" target="_blank" id="aLBW5"></a></p>
 
                        </article>
                    </devsite-content>
                </div>
 
-               <div class="tab-pane fade" id="tab5">
+               <div class="tab-pane fade" id="det">  <!-- Content for tab DETAILS -->
                    <devsite-content>
                        <article>
                            <h2 id="titleDetails"></h2>

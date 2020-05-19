@@ -2,6 +2,7 @@
 
 //Mensajes
 var MSG = {
+    tSelectLang: "Idioma: ",
     execute: "Bloques a Texto",
     executeBT: "Block-Text a Python",
     home: "Página principal",

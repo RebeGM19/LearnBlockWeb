@@ -255,5 +255,4 @@ def convert(blocksString):
 
             # ListBlocks contains the user variables, the user procedures and the main
             listBlocks.append(mainBlock)
-            print(mainBlock)
     return listBlocks

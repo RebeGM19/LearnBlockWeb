@@ -219,9 +219,10 @@ a:hover{
 
 /* Details icons' table structure */
 .footerDet{
-    margin-top: 3%;
+    margin-top: 5%;
     border-collapse: separate;
     border-spacing: 25px 0px;
+    width: 100%;
 }
 .footerDet td{
     vertical-align: bottom;

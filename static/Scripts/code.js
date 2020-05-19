@@ -155,7 +155,6 @@ Code.initLanguage = function () {
     document.getElementById('det5').textContent = MSG['det5'];
     document.getElementById('det6').textContent = MSG['det6'];
     document.getElementById('det7').textContent = MSG['det7'];
-    document.getElementById('det8').textContent = MSG['det8'];
 
 };
 document.write('<script src="static/Scripts/Languages/' + Code.LANG + '.js"></script>\n');

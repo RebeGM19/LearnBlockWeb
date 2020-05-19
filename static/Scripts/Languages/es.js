@@ -60,8 +60,7 @@ var MSG = {
     det4: "Desarrollado en Python 3",
     det5: "Ejecutado con Flask",
     det6: "Uso del propio código de LearnBlock para la generación de código",
-    det7: "Carga de bloques con la sintaxis de LearnBlock",
-    det8: "Contacto: rebegarcia12@hotmail.com"
+    det7: "Carga de bloques con la sintaxis de LearnBlock"
 };
 
 //Bloques

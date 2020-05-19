@@ -60,7 +60,7 @@ def getType(string):
         finalType = USERFUNCTION
     if type_ == "variables":
         finalType = VARIABLE
-    if type_ == "base" or type_ == "cam" or type_ == "dist" or type_ == "emotion" or type_ == "ground" or type_ == "motor" or type_ == "speaker" or type_ == "fcontrol":
+    if type_ == "base" or type_ == "camera" or type_ == "distances" or type_ == "emotion" or type_ == "ground" or type_ == "motor" or type_ == "speaker" or type_ == "fcontrol":
         finalType = FUNTION
     return finalType
 
@@ -83,14 +83,21 @@ def getVariables(blockTree):
                 if result == None:
                     result = []
                 # Only the first value at the right of the setter will be assigned
-                result.append(blockTree.find('value').find('block').find('field').text)
+                rightBlock = blockTree.find('value').find('block')
+                value = rightBlock.find('field').text
+                if "text" in rightBlock.get('type'):
+                    value = "\"" + rightBlock.find('field').text + "\""
+                result.append(value)
     # Are not variables, but parameters
     elif blockTree != None:
         if blockTree.find('field') != -1:
             for field in blockTree.findall('field'):
                 if result == None:
                     result = []
-                result.append(field.text)
+                param = field.text
+                if field.get('name') == "TEXT":
+                    param = "\"" + field.text + "\""
+                result.append(param)
     return result
 
 
@@ -246,7 +253,7 @@ def convert(blocksString):
                         lastBlock = nextValue[1]
                     insertBlock(statementBlock, lastBlock, "BOTTOM")
 
-                # ListBlocks contains the user variables, the user procedures and the main
-                listBlocks.append(mainBlock)
+            # ListBlocks contains the user variables, the user procedures and the main
+            listBlocks.append(mainBlock)
             print(mainBlock)
     return listBlocks

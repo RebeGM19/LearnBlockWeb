@@ -2475,11 +2475,11 @@ LearnBlock.Theme.prototype.getCategoryStyle = function (a) {
 LearnBlock.Theme.prototype.setCategoryStyle = function (a, b) {
     this.categoryStyles_[a] = b
 };
-//Gets the style for a given Blockly UI component
+//Gets the style for a given UI component
 LearnBlock.Theme.prototype.getComponentStyle = function (a) {
     return (a = this.componentStyles_[a]) && "string" == typeof propertyValue && this.getComponentStyle(a) ? this.getComponentStyle(a) : a ? String(a) : null
 };
-//Configures a specific Blockly UI component with a style value
+//Configures a specific UI component with a style value
 LearnBlock.Theme.prototype.setComponentStyle = function (a, b) {
     this.componentStyles_[a] = b
 };
@@ -8106,6 +8106,7 @@ LearnBlock.Procedures.isNameUsed = function (a, b, c) {
 //Renames the procedure
 LearnBlock.Procedures.rename = function (a) {
     a = a.trim();
+    a = a.replace(/ /g, "_");
     var b = LearnBlock.Procedures.findLegalName(a, this.getSourceBlock()),
         c = this.getValue();
     if (c != a && c != b) {
@@ -8182,7 +8183,7 @@ LearnBlock.Procedures.getDefinition = function (a, b) {
 //Info for the variable: name, id, type
 LearnBlock.VariableModel = function (a, b, c, d) {
     this.workspace = a;
-    this.name = b;
+    this.name = b.replace(/ /g, "_");
     this.type = c || "";
     this.id_ = d || LearnBlock.utils.genUid();
     LearnBlock.Events.fire(new LearnBlock.Events.VarCreate(this))
@@ -8257,10 +8258,11 @@ LearnBlock.Variables.renameVariable = function (a, b, c) {
         var f = LearnBlock.Msg.RENAME_VARIABLE_TITLE.replace("%1", b.name);
         LearnBlock.Variables.promptName(f, e, function (e) {
             if (e) {
+                e = e.replace(/ /g, "_");
                 var f = LearnBlock.Variables.nameUsedWithOtherType_(e, b.type, a);
                 f ? (f = LearnBlock.Msg.VARIABLE_ALREADY_EXISTS_FOR_ANOTHER_TYPE.replace("%1", e.toLowerCase()).replace("%2", f.type), LearnBlock.alert(f, function () {
                     d(e)
-                })) : (a.renameVariableById(b.getId(), e), c && c(e))
+                })) : (e = e.replace(/ /g, "_"), a.renameVariableById(b.getId(), e), c && c(e))
             } else c && c(null)
         })
     };
@@ -12033,7 +12035,7 @@ LearnBlock.Toolbox.prototype.handleAfterTreeSelected_ = function (a, b) {
     }
     b && (this.lastCategory_ = b)
 };
-//Handles the given Blockly action on a toolbox
+//Handles the given action on a toolbox
 LearnBlock.Toolbox.prototype.onBlocklyAction = function (a) {
     var b = this.tree_.getSelectedItem();
     if (!b) return !1;

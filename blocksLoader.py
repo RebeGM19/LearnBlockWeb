@@ -27,7 +27,7 @@ def getParameters(variables):
             resultParameters += "{\"type\": \"field_input\", \"name\": \"TEXT\", \"text\": \"%{BKY_SAMPLE_TEXT}\"}, "
         # Definition for Boolean parameters
         if par["type"] == "boolean":
-            resultParameters += "{\"type\": \"field_dropdown\", \"name\": \"BOOL\", \"options\": [[\"%{BKY_TRUE}\", \"TRUE\"], [\"%{BKY_FALSE}\", \"FALSE\"]]}, "
+            resultParameters += "{\"type\": \"field_dropdown\", \"name\": \"BOOL\", \"options\": [[\"%{BKY_TRUE}\", \"True\"], [\"%{BKY_FALSE}\", \"False\"]]}, "
     resultParameters = resultParameters[:-2]
     return resultParameters, len(variables)
 
@@ -129,7 +129,6 @@ def convertBlock(block, shape, alt):
     blocklyJson = "{\"type\": \"" + vCategory.lower() + "_" + vName.replace(" ", "_") + alt + "\", "
     blocklyJson += "\"blocktextname\": \"" + vName + "\", "
     blocklyJson += getNameAndShape(block, vName.replace(" ", "_"), shape)
-    #blocklyJson += "\"colour\": " + str(getColour(block["category"]))
     blocklyJson += "\"colour\": " + getColour(block["category"])
     if 'languages' in block:
         blockContent = getLanguages(block, vName.replace(" ", "_"))

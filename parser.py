@@ -77,7 +77,7 @@ def processVariables(variablesBlock, listBlocks):
 def getVariables(blockTree):
     result = None
     if blockTree.get('blocktextname') != None:
-        # Blocks with "variables" on their type are variables
+    # Blocks with "variables" on their type are variables
         if "variables" in blockTree.get('type'):
             blockTree.set('blocktextname', blockTree.find('field').text)
             if blockTree.get('type') == "variables_set_dynamic":  # Variable's setter
@@ -136,9 +136,11 @@ def processValues(firstBlock, value):
 
 # Returns the element inside a block (BottomIn)
 def getStatements(statTree, firstBlock):
+    print("Entra statements")
     result = None
     newBlock = None
     block = statTree.find('block')
+    print(block.get('blocktextname'))
     next_ = block.find('next')
     value = block.find('value')
     statement = block.find('statement')
@@ -152,8 +154,9 @@ def getStatements(statTree, firstBlock):
     # If the first block has other blocks inside it, processes those blocks (BottomIn, getStatements)
     if statement != None:
         # Recursion to get the elements inside the block
-        insertBlock(firstBlock, createBlock(statement.find('block').get('blocktextname'), getType(statement.find('block').get('type')), getVariables(statement.find('block')), statement.find('block')), "BOTTOMIN")
-        result = getStatements(statement, firstBlock)
+        statBlock = createBlock(statement.find('block').get('blocktextname'), getType(statement.find('block').get('type')), getVariables(statement.find('block')), statement.find('block'))
+        result = getStatements(statement, statBlock)
+        insertBlock(firstBlock, statBlock, "BOTTOMIN")
 
     # If the first block has other blocks under it, processes those blocks (Bottom, getNext)
     if next_ != None:

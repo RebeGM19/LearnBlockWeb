@@ -37,7 +37,6 @@ def createBlock(name, type_, variables, block):
     if name == "while True":
         name = "while"
         dic["RIGHT"] = createBlock("True", None, None, None)
-    print("Create block " + name)
 
     return name, dic
 
@@ -140,6 +139,26 @@ def processValues(firstBlock, value):
             if value != None:
                 insertBlock(firstBlock, createBlock(value.find('block').get('blocktextname'), getType(value.find('block').get('type')), getVariables(value.find('block')), value.find('block')), "RIGHT")
 
+def getCurrentControlBlock(firstBlock):
+    blockAux = firstBlock
+    freeBIN = False
+    while freeBIN == False:
+        if blockAux[1]["BOTTOMIN"] != None:
+            if blockAux[1]["BOTTOMIN"][1]["TYPE"] == 1:
+                blockAux = blockAux[1]["BOTTOMIN"]
+            else:
+                freeBIN = True
+                freeB = False
+                while freeB == False:
+                    if blockAux[1]["BOTTOM"] != None:
+                        blockAux = blockAux[1]["BOTTOM"]
+                    else:
+                        freeB = True
+                        firstBlock = blockAux
+        else:
+            freeBIN = True
+    return firstBlock
+
 
 # Returns the element inside a block (BottomIn)
 def getStatements(statTree, firstBlock):
@@ -153,6 +172,7 @@ def getStatements(statTree, firstBlock):
     # If the first block has other blocks at the right, processes those blocks (Right, getValues)
     if value != None:
         # This process returns all the blocks at the right, not only the first one
+        firstBlock = getCurrentControlBlock(firstBlock)
         result = getValues(value)
         processValues(firstBlock, value)
 
@@ -162,23 +182,7 @@ def getStatements(statTree, firstBlock):
         statBlock = createBlock(statement.find('block').get('blocktextname'), getType(statement.find('block').get('type')), getVariables(statement.find('block')), statement.find('block'))
         resultStats = getStatements(statement, statBlock)
         result = resultStats[0]
-        freeBIN = False
-        blockAux = firstBlock
-        while freeBIN == False:
-            if blockAux[1]["BOTTOMIN"] != None:
-                if blockAux[1]["BOTTOMIN"][1]["TYPE"] == 1:
-                    blockAux = blockAux[1]["BOTTOMIN"]
-                else:
-                    freeBIN = True
-                    freeB = False
-                    while freeB == False:
-                        if blockAux[1]["BOTTOM"] != None:
-                            blockAux = blockAux[1]["BOTTOM"]
-                        else:
-                            freeB = True
-                            firstBlock = blockAux
-            else:
-                freeBIN = True
+        firstBlock = getCurrentControlBlock(firstBlock)
         insertBlock(firstBlock, statBlock, "BOTTOMIN")
 
     # If the first block has other blocks under it, processes those blocks (Bottom, getNext)
@@ -190,6 +194,11 @@ def getStatements(statTree, firstBlock):
             if result != None:
                 # If the block has other blocks under it, processes them
                 newBlock = createBlock(result.find('block').get('blocktextname'), getType(result.find('block').get('type')), getVariables(result.find('block')), result.find('block'))
+                hasNext = result.find('block').find('next')
+                while hasNext != None and newBlock[1]["TYPE"] != 1:
+                    nextBlock = createBlock(hasNext.find('block').get('blocktextname'), getType(hasNext.find('block').get('type')), getVariables(hasNext.find('block')), hasNext.find('block'))
+                    insertBlock(newBlock, nextBlock, "BOTTOM")
+                    hasNext = hasNext.find('block').find('next')
             else:
                 # If the block does not have other blocks under it, creates it as if it was the last one
                 newBlock = resultBlock
@@ -229,6 +238,7 @@ def getNext(nextTree, firstBlock, insideStatement):
             result = next_
             if result != None and firstBlock != None:
                 insertBlock(firstBlock, newBlock, "BOTTOM")
+
     return result, newBlock
 
 

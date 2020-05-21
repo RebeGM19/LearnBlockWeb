@@ -55,6 +55,7 @@ def formatBlocks(blocks):
     string = "<?xml version=\"1.0\"?>"
     for i in range(1, len(blocksList)-2):
         blocksList[i] = blocksList[i] + ">"
+        print(blocksList[i])
         string += blocksList[i]
     return string
 

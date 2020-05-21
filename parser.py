@@ -32,6 +32,13 @@ def createBlock(name, type_, variables, block):
     dic["BOTTOM"] = None
     dic["VARIABLES"] = variables
     dic["TYPE"] = type_
+
+    # If the block is "while True", it must be created a "while" block with a "true" block at its right
+    if name == "while True":
+        name = "while"
+        dic["RIGHT"] = createBlock("True", None, None, None)
+    print("Create block " + name)
+
     return name, dic
 
 # Inserts a block into another block, on the pertinent dic attribute
@@ -136,11 +143,9 @@ def processValues(firstBlock, value):
 
 # Returns the element inside a block (BottomIn)
 def getStatements(statTree, firstBlock):
-    print("Entra statements")
     result = None
     newBlock = None
     block = statTree.find('block')
-    print(block.get('blocktextname'))
     next_ = block.find('next')
     value = block.find('value')
     statement = block.find('statement')
@@ -155,21 +160,41 @@ def getStatements(statTree, firstBlock):
     if statement != None:
         # Recursion to get the elements inside the block
         statBlock = createBlock(statement.find('block').get('blocktextname'), getType(statement.find('block').get('type')), getVariables(statement.find('block')), statement.find('block'))
-        result = getStatements(statement, statBlock)
+        resultStats = getStatements(statement, statBlock)
+        result = resultStats[0]
+        freeBIN = False
+        blockAux = firstBlock
+        while freeBIN == False:
+            if blockAux[1]["BOTTOMIN"] != None:
+                if blockAux[1]["BOTTOMIN"][1]["TYPE"] == 1:
+                    blockAux = blockAux[1]["BOTTOMIN"]
+                else:
+                    freeBIN = True
+                    freeB = False
+                    while freeB == False:
+                        if blockAux[1]["BOTTOM"] != None:
+                            blockAux = blockAux[1]["BOTTOM"]
+                        else:
+                            freeB = True
+                            firstBlock = blockAux
+            else:
+                freeBIN = True
         insertBlock(firstBlock, statBlock, "BOTTOMIN")
 
     # If the first block has other blocks under it, processes those blocks (Bottom, getNext)
     if next_ != None:
-        result = getNext(next_, firstBlock, True)[0]  # The first block under the given one
+        resultNext = getNext(next_, firstBlock, True)
+        result = resultNext[0]  # The first block under the given one
+        resultBlock = resultNext[1]
         if firstBlock != None:
             if result != None:
                 # If the block has other blocks under it, processes them
                 newBlock = createBlock(result.find('block').get('blocktextname'), getType(result.find('block').get('type')), getVariables(result.find('block')), result.find('block'))
             else:
                 # If the block does not have other blocks under it, creates it as if it was the last one
-                newBlock = createBlock(next_.find('block').get('blocktextname'), getType(next_.find('block').get('type')), getVariables(next_.find('block')), next_.find('block'))
+                newBlock = resultBlock
             insertBlock(firstBlock, newBlock, "BOTTOM")
-    return result
+    return result, newBlock
 
 
 # Returns the element under a block (Bottom)
@@ -197,7 +222,7 @@ def getNext(nextTree, firstBlock, insideStatement):
             statementBlock = createBlock(statement.find('block').get('blocktextname'), getType(statement.find('block').get('type')), getVariables(statement.find('block')), statement.find('block'))
             insertBlock(newBlock, statementBlock, "BOTTOMIN")
             while(statement != None):
-                statement = getStatements(statement, statementBlock)
+                statement = getStatements(statement, statementBlock)[0]
 
         # If the block has other block under it, inserts it at Bottom attribute
         if next_ != None:
@@ -246,7 +271,7 @@ def convert(blocksString):
                     newBlock = createBlock(insideStatement.find('block').get('blocktextname'), getType(insideStatement.find('block').get('type')), getVariables(insideStatement.find('block')), insideStatement.find('block'))
                     insertBlock(statementBlock, newBlock, "BOTTOMIN")
                     while(insideStatement != None):
-                        insideStatement = getStatements(insideStatement, newBlock)
+                        insideStatement = getStatements(insideStatement, newBlock)[0]
 
                 # Otherwise, if the first element has blocks under it, processes them (Bottom)
                 nextBlock = firstStat.find('next')

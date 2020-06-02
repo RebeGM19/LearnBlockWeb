@@ -2,11 +2,14 @@
 <html lang="es">
 
 <head>
+    <title>LearnBlockWeb</title>
+
     <meta charset="utf-8">
+    <meta name="title" content="LearnBlockWeb">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='Styles/styles.css') }}">
 
@@ -14,8 +17,6 @@
     <script src="{{ url_for('static', filename='Scripts/Blocks/workspace.js') }}"></script>
     <script src="{{ url_for('static', filename='Scripts/Blocks/blocks.js') }}"></script>
     <script src="{{ url_for('static', filename='Scripts/code.js') }}"></script>
-
-    <title>LearnBlockWeb</title>
 
 </head>
 
@@ -59,7 +60,7 @@
                                <li class="insideList"><label for="resultpython" id="programPY"></label></li>
                            </ul>
                            <div class="textarea-container">
-                               <textarea readonly id="resultpython"></textarea>
+                               <textarea id="resultpython"></textarea>
                                <button onclick="copyPython()" id="bCopyPY"></button>
                            </div>
                        </div>
@@ -221,7 +222,7 @@
                                <li id="aLB9"></li>
                                <li id="aLB10"></li>
                            </ul>
-                           <p><a title="LearnBlock Research" href="https://www.researchgate.net/publication/339115204_LearnBlock_A_Robot-Agnostic_Educational_Programming_Tool" target="_blank" id="aLB11"></a></p>
+                           <p><a title="LearnBlock Research" href="https://ieeexplore.ieee.org/document/8986589" target="_blank" id="aLB11"></a></p>
                            <p><a title="LearnBlock Git" href="https://github.com/robocomp/LearnBlock" target="_blank" id="aLB12"></a></p>
 
                        </article>
@@ -267,11 +268,11 @@
                                <tr>
                                    <td><img src="./static/Styles/img/html-css-js.jpg" alt="Logo HTML-CSS-JS" /></td>
                                    <td><img src="./static/Styles/img/bootstrap.jpg" alt="Logo Bootstrap" /></td>
-                                   <td><img src="./static/Styles/img/blockly.jpg" alt="Logo Blockly" /></td>
                                    <td><img src="./static/Styles/img/python.jpg" alt="Logo Python" /></td>
                                    <td><img src="./static/Styles/img/flask.jpg" alt="Logo Flask" /></td>
                                    <td><img src="./static/Styles/img/uex.jpg" alt="Logo UEx" /></td>
                                    <td><img src="./static/Styles/img/learnblock.jpg" alt="Logo LearnBlock" /></td>
+                                   <td><img src="./static/Styles/img/blockly.jpg" alt="Logo Blockly" /></td>
                                </tr>
                            </table>
 

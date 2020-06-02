@@ -146,10 +146,11 @@ def convertLB2Blockly(lbJson):
             alt = "_" + str(i)
             if len(vShape) == 1:
                 alt = ""
-            blocklyJson += convertBlock(b, vShape[i], alt)[0]
-            languagesContent = convertBlock(b, vShape[i], alt)[1]
+            result = convertBlock(b, vShape[i], alt)
+            blocklyJson += result[0]
+            languagesContent = result[1]
             if len(languagesContent) != 0:
-                blockContent.append(convertBlock(b, vShape[i], alt)[1])
+                blockContent.append(result[1])
             blocklyJson += "}, "
     blocklyJson = blocklyJson[:-2]
     blocklyJson += "]"

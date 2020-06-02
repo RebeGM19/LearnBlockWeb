@@ -67,6 +67,8 @@ def getType(string):
             finalType = USERFUNCTION
         if type_ == "variables":
             finalType = VARIABLE
+        if type_ == "operator":
+            finalType = OPERATOR
         if type_ == "base" or type_ == "camera" or type_ == "distances" or type_ == "emotion" or type_ == "ground" or type_ == "motor" or type_ == "speaker" or type_ == "fcontrol":
             finalType = FUNTION
     return finalType
@@ -83,7 +85,7 @@ def processVariables(variablesBlock, listBlocks):
 def getVariables(blockTree):
     result = None
     if blockTree.get('blocktextname') != None:
-    # Blocks with "variables" on their type are variables
+        # Blocks with "variables" on their type are variables
         if "variables" in blockTree.get('type'):
             blockTree.set('blocktextname', blockTree.find('field').text)
             if blockTree.get('type') == "variables_set_dynamic":  # Variable's setter
@@ -108,24 +110,25 @@ def getVariables(blockTree):
                     result.append(param)
     return result
 
-
-def processBlock(currentData, prevBlock):
+# Processes the current block, searching for any block at its right, inside or under it
+def processBlock(currentData):
     currentBlock = createBlock(currentData.get('blocktextname'), getType(currentData.get('type')), getVariables(currentData), currentData)
     if currentData.find('value') != None:
-        # Processes values: Block at the right of the given one
-        valBlock = processBlock(currentData.find('value').find('block'), currentBlock)
+        # Processes value: Block at the right of the given one
+        valBlock = processBlock(currentData.find('value').find('block'))
         insertBlock(currentBlock, valBlock, "RIGHT")
     if currentData.find('statement') != None:
-        # Processes values: Block inside the given one
-        statBlock = processBlock(currentData.find('statement').find('block'), currentBlock)
+        # Processes statement: Block inside the given one
+        statBlock = processBlock(currentData.find('statement').find('block'))
         insertBlock(currentBlock, statBlock, "BOTTOMIN")
     if currentData.find('next') != None:
         # Processes next: Block under the given one
-        nextBlock = processBlock(currentData.find('next').find('block'), currentBlock)
+        nextBlock = processBlock(currentData.find('next').find('block'))
         insertBlock(currentBlock, nextBlock, "BOTTOM")
 
     return currentBlock
 
+# Given the XML definitions of the blocks in the workspace, gets the firsts blocks and starts processing them
 def convert(blocksString):
     root = ET.fromstring(re.sub(r"(<\?xml[^>]+\?>)", r"\1<root>", blocksString) + "</root>")
     listBlocks = []
@@ -137,11 +140,12 @@ def convert(blocksString):
             # The first block must be always a main block or an user function block
             mainBlock = createBlock(block.get('blocktextname'), getType(block.get('type')), getVariables(block), block)
 
-            # The next element to be processed is the first block inside the main or the user function
-            statement = block.find('statement').find('block')
+            # The next element to be processed is the first block inside the main or the user function, if there's one
+            if block.find('statement') != None:
+                statement = block.find('statement').find('block')
 
-            resultBlock = processBlock(statement, mainBlock)
-            insertBlock(mainBlock, resultBlock, "BOTTOMIN")
+                resultBlock = processBlock(statement)
+                insertBlock(mainBlock, resultBlock, "BOTTOMIN")
 
             # ListBlocks contains the user variables, the user procedures and the main
             listBlocks.append(mainBlock)

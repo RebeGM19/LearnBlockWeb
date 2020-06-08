@@ -21,13 +21,13 @@ def getParameters(variables):
     for par in variables:
         # Definition for Float and Int parameters
         if par["type"] == "float" or par["type"] == "int":
-            resultParameters += "{\"type\": \"field_number\", \"name\": \"NUM\", \"value\": 0}, "
+            resultParameters += "{\"type\": \"input_value\", \"name\": \"PARAM\", \"check\": [\"Number\", \"var\"]}, "
         # Definition for String parameters
         if par["type"] == "string" or par["type"] == "apriltext":
-            resultParameters += "{\"type\": \"field_input\", \"name\": \"TEXT\", \"text\": \"%{BKY_SAMPLE_TEXT}\"}, "
+            resultParameters += "{\"type\": \"input_value\", \"name\": \"PARAM\", \"check\": [\"Text\", \"var\"]}, "
         # Definition for Boolean parameters
         if par["type"] == "boolean":
-            resultParameters += "{\"type\": \"field_dropdown\", \"name\": \"BOOL\", \"options\": [[\"%{BKY_TRUE}\", \"True\"], [\"%{BKY_FALSE}\", \"False\"]]}, "
+            resultParameters += "{\"type\": \"input_value\", \"name\": \"PARAM\", \"check\": [\"Bool\", \"var\"]}, "
     resultParameters = resultParameters[:-2]
     return resultParameters, len(variables)
 
@@ -59,27 +59,33 @@ def getNameAndShape(block, name, shape):
         if 'variables' in block:
             inputPos = getParameters(block["variables"])[1]+1
             resultShape += " " + returnParameters(inputPos) + " \", "
-            resultShape += "\"args0\": [" + getParameters(block["variables"])[0] + "], "
+            resultShape += "\"args0\": [" + getParameters(block["variables"])[0] + "], \"inputsInline\": true, "
         else:
             resultShape += "\", "
-        resultShape += "\"output\": null, "
+        if bkyName == "TRUE" or bkyName == "FALSE":
+            resultShape += "\"output\": \"Bool\", "
+        else:
+            resultShape += "\"output\": null, "
 
     if shape == "block3" or shape == "blockBoth":  # BlockBoth blocks' shape
         if 'variables' in block:
             inputPos = getParameters(block["variables"])[1]+1
             resultShape = "\"message0\": \"%{BKY_" + bkyName + "} " + returnParameters(inputPos) + " %" + str(inputPos) + "\", "
-            resultShape += "\"args0\": [" + getParameters(block["variables"])[0] + ", {\"type\": \"input_value\", \"name\": \"NUM\", \"check\": null}], "
+            resultShape += "\"args0\": [" + getParameters(block["variables"])[0] + ", {\"type\": \"input_value\", \"name\": \"NUM\", \"check\": null}], \"inputsInline\": true, "
         else:
             resultShape = "\"message0\": \"%{BKY_" + bkyName + "} %1\", "
             resultShape += "\"args0\": [{\"type\": \"input_value\", \"name\": \"NUM\", \"check\": null}], "
-        resultShape += "\"output\": null, "
+        if bkyName == "TRUE" or bkyName == "FALSE":
+            resultShape += "\"output\": \"Bool\", "
+        else:
+            resultShape += "\"output\": null, "
 
     if shape == "block1" or shape == "blockVertical":  # BlockVertical blocks' shape
         resultShape = "\"message0\": \"%{BKY_" + bkyName + "}"
         if 'variables' in block:
             inputPos = getParameters(block["variables"])[1]+1
             resultShape += " " + returnParameters(inputPos) + " \", "
-            resultShape += "\"args0\": [" + getParameters(block["variables"])[0] + "], "
+            resultShape += "\"args0\": [" + getParameters(block["variables"])[0] + "], \"inputsInline\": true, "
         else:
             resultShape += "\", "
         resultShape += "\"previousStatement\": null, \"nextStatement\": null, "

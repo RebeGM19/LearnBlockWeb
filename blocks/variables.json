@@ -24,7 +24,7 @@
         "name": "VAR",
         "check": null
     }],
-    "output": null,
+    "output": "var",
     "colour": "#408000"
 }, {
     "type": "variables_get_dynamic2",
@@ -34,7 +34,7 @@
         "name": "VAR",
         "varable": "%{BKY_VARIABLES_DEFAULT_NAME}"
     }],
-    "output": null,
+    "output": "var",
     "colour": "#408000"
 }, {
     "type": "variables_get_dynamic3",

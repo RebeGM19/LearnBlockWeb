@@ -100,23 +100,33 @@ def getVariables(blockTree):
                     result.append(value)
         # Are not variables, but parameters
         elif blockTree != None:
-            if blockTree.find('field') != -1:
-                for field in blockTree.findall('field'):
-                    if result == None:
-                        result = []
-                    param = field.text
-                    if field.get('name') == "TEXT":
-                        param = "\"" + field.text + "\""
-                    result.append(param)
+            if blockTree.find('value') != -1:
+                # The parameters are defined by values with its attr name="PARAM"
+                for p in blockTree.findall('value'):
+                    if p.get('name') == "PARAM":
+                        if result == None:
+                            result = []
+                        if p.find('block').find('field') != None:
+                            # It's a number, text or variable param
+                            field = p.find('block').find('field')
+                            param = field.text
+                            if field.get('name') == "TEXT":
+                                param = "\"" + field.text + "\""
+                        else:
+                            # It's a bool param
+                            param = p.find('block').get('blocktextname')
+                        result.append(param)
     return result
 
 # Processes the current block, searching for any block at its right, inside or under it
 def processBlock(currentData):
     currentBlock = createBlock(currentData.get('blocktextname'), getType(currentData.get('type')), getVariables(currentData), currentData)
     if currentData.find('value') != None:
-        # Processes value: Block at the right of the given one
-        valBlock = processBlock(currentData.find('value').find('block'))
-        insertBlock(currentBlock, valBlock, "RIGHT")
+        for value in currentData.findall('value'):
+            if value.get('name') != "PARAM":
+                # Processes value: Block at the right of the given one
+                valBlock = processBlock(value.find('block'))
+                insertBlock(currentBlock, valBlock, "RIGHT")
     if currentData.find('statement') != None:
         # Processes statement: Block inside the given one
         statBlock = processBlock(currentData.find('statement').find('block'))

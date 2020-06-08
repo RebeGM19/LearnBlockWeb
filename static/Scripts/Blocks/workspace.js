@@ -9740,7 +9740,7 @@ LearnBlock.FieldVariable.prototype.onItemSelected = function (a, b) {
             return
         }
         if (c == LearnBlock.DELETE_VARIABLE_ID) {
-            this.sourceBlock_.workspace.deleteVariableById(this.variable_.getId());
+            this.sourceBlock_.workspace.deleteVariableById(this.variable_.getId());  //!!!!!!!!!!!
             return
         }
     }
@@ -11134,7 +11134,7 @@ LearnBlock.blockRendering.RenderInfo = function (a, b) {
     this.renderer_ = a;
     this.constants_ = this.renderer_.getConstants();
     this.outputConnection = b.outputConnection ? new LearnBlock.blockRendering.OutputConnection(this.constants_, b.outputConnection) : null;
-    this.isInline = b.getInputsInline() && !b.isCollapsed();
+    this.isInline = b.getInputsInline() && true;
     this.isInsertionMarker = b.isInsertionMarker();
     this.RTL = b.RTL;
     this.statementEdge = this.width = this.widthWithChildren = this.height = 0;

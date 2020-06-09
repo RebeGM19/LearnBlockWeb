@@ -4959,7 +4959,7 @@ LearnBlock.MenuItem.prototype.createDom = function () {
     a.appendChild(b);
     var c = this.getCheckboxDom();
     c && b.appendChild(c);
-    if (this.getContentDom() != null){
+    if (this.getContentDom() != null) {
         b.appendChild(this.getContentDom());
     }
     LearnBlock.utils.aria.setRole(a, this.roleName_ || (this.checkable_ ?
@@ -8251,6 +8251,41 @@ LearnBlock.Variables.createVariableButtonHandler = function (a, b, c) {
         };
     e("")
 };
+//Handles "Delete Variable" button
+LearnBlock.Variables.deleteVariableButtonHandler = function (workspace, opt_callback, opt_type) {
+    var type = opt_type || '';
+    var promptAndCheckWithAlert = function (defaultName) {
+        LearnBlock.Variables.promptName(LearnBlock.Msg.NEW_VARIABLE_TITLE, defaultName,
+            function (text) {
+                if (text) {
+                    var existing = LearnBlock.Variables.nameUsedWithAnyType_(text, workspace);
+                    if (existing) {
+                        var id = LearnBlock.Variables.getVarIdByName(text, workspace);
+                        workspace.deleteVariableById(id);
+                        if (opt_callback) {
+                            opt_callback(text);
+                        }
+                    }
+                } else {
+                    if (opt_callback) {
+                        opt_callback(null);
+                    }
+                }
+            });
+    };
+    promptAndCheckWithAlert('');
+};
+//Given a variable name, returns its id
+LearnBlock.Variables.getVarIdByName = function(name, workspace) {
+  var allVariables = workspace.getVariableMap().getAllVariables();
+  name = name.toLowerCase();
+  for (var i = 0, variable; variable = allVariables[i]; i++) {
+    if (variable.name.toLowerCase() == name) {
+      return variable.getId();
+    }
+  }
+  return null;
+};
 LearnBlock.Variables.createVariable = LearnBlock.Variables.createVariableButtonHandler;
 //Renames a variable with the given workspace, variableType, and oldName
 LearnBlock.Variables.renameVariable = function (a, b, c) {
@@ -9728,7 +9763,6 @@ LearnBlock.FieldVariable.dropdownCreate = function () {
     c = [];
     for (d = 0; d < b.length; d++) c[d] = [b[d].name, b[d].getId()];
     c.push([LearnBlock.Msg.RENAME_VARIABLE, LearnBlock.RENAME_VARIABLE_ID]);
-    LearnBlock.Msg.DELETE_VARIABLE && c.push([LearnBlock.Msg.DELETE_VARIABLE.replace("%1", a), LearnBlock.DELETE_VARIABLE_ID]);
     return c
 };
 //Handles the selection of an item in the variable dropdown menu
@@ -9737,10 +9771,6 @@ LearnBlock.FieldVariable.prototype.onItemSelected = function (a, b) {
     if (this.sourceBlock_ && this.sourceBlock_.workspace) {
         if (c == LearnBlock.RENAME_VARIABLE_ID) {
             LearnBlock.Variables.renameVariable(this.sourceBlock_.workspace, this.variable_);
-            return
-        }
-        if (c == LearnBlock.DELETE_VARIABLE_ID) {
-            this.sourceBlock_.workspace.deleteVariableById(this.variable_.getId());  //!!!!!!!!!!!
             return
         }
     }
@@ -10592,7 +10622,7 @@ LearnBlock.blockRendering.ConstantProvider = function () {
     this.EMPTY_BLOCK_SPACER_HEIGHT = 16;
     this.DUMMY_INPUT_MIN_HEIGHT = this.TAB_HEIGHT;
     this.NOTCH_OFFSET_LEFT = 15;
-    this.STATEMENT_BOTTOM_SPACER =0;
+    this.STATEMENT_BOTTOM_SPACER = 0;
     this.STATEMENT_INPUT_PADDING_LEFT = 20;
     this.BETWEEN_STATEMENT_PADDING_Y = 4;
     this.MAX_BOTTOM_WIDTH = 66.5;
@@ -10628,26 +10658,27 @@ LearnBlock.blockRendering.ConstantProvider.prototype.makeStartHat = function () 
         path: c
     }
 };
- //An object containing sizing and path information about rectangular tabs
-LearnBlock.blockRendering.ConstantProvider.prototype.makeRectangularInputConn = function() {
-  var width = this.TAB_WIDTH;
-  var height = this.TAB_HEIGHT;
-  function makeMainPath(up) {
-    return LearnBlock.utils.svgPaths.line(
+//An object containing sizing and path information about rectangular tabs
+LearnBlock.blockRendering.ConstantProvider.prototype.makeRectangularInputConn = function () {
+    var width = this.TAB_WIDTH;
+    var height = this.TAB_HEIGHT;
+
+    function makeMainPath(up) {
+        return LearnBlock.utils.svgPaths.line(
         [
           LearnBlock.utils.svgPaths.point(-width, 0),
           LearnBlock.utils.svgPaths.point(0, -1 * up * height),
           LearnBlock.utils.svgPaths.point(width, 0)
         ]);
-  }
-  var pathUp = makeMainPath(1);
-  var pathDown = makeMainPath(-1);
-  return {
-    width: width,
-    height: height,
-    pathDown: pathDown,
-    pathUp: pathUp
-  };
+    }
+    var pathUp = makeMainPath(1);
+    var pathDown = makeMainPath(-1);
+    return {
+        width: width,
+        height: height,
+        pathDown: pathDown,
+        pathUp: pathUp
+    };
 };
 //An object containing sizing and path information about puzzle tabs
 LearnBlock.blockRendering.ConstantProvider.prototype.makePuzzleTab = function () {
@@ -10716,10 +10747,10 @@ LearnBlock.blockRendering.ConstantProvider.prototype.shapeFor = function (a) {
     switch (a.type) {
         case LearnBlock.INPUT_VALUE:
         case LearnBlock.OUTPUT_VALUE:
-            return this.RECT_INPUT_OUTPUT;  //Input-Output connection shape (rectangle)
+            return this.RECT_INPUT_OUTPUT; //Input-Output connection shape (rectangle)
         case LearnBlock.PREVIOUS_STATEMENT:
         case LearnBlock.NEXT_STATEMENT:
-            return this.NOTCH;  //Previous-Next connection shape (notch)
+            return this.NOTCH; //Previous-Next connection shape (notch)
         default:
             throw Error("Unknown connection type");
     }
@@ -12169,14 +12200,22 @@ LearnBlock.VariablesDynamic = {};
 LearnBlock.VariablesDynamic.onCreateVariableButtonClick = function (a) {
     LearnBlock.Variables.createVariableButtonHandler(a.getTargetWorkspace(), null, "")
 };
+LearnBlock.VariablesDynamic.onDeleteVariableButtonClick = function (a) {
+    LearnBlock.Variables.deleteVariableButtonHandler(a.getTargetWorkspace(), null, "")
+};
 //Constructs the elements (blocks and button) required by the flyout for the variable category
 LearnBlock.VariablesDynamic.flyoutCategory = function (a) {
     var b = [],
-        c = document.createElement("button");
+        c = document.createElement("button"),
+        d = document.createElement("button");
     c.setAttribute("text", LearnBlock.Msg.NEW_VARIABLE);
     c.setAttribute("callbackKey", "CREATE_VARIABLE");
     b.push(c);
     a.registerButtonCallback("CREATE_VARIABLE", LearnBlock.VariablesDynamic.onCreateVariableButtonClick);
+    d.setAttribute("text", LearnBlock.Msg.DELETE_VARIABLE);
+    d.setAttribute("callbackKey", "DELETE_VARIABLE");
+    a.registerButtonCallback("DELETE_VARIABLE", LearnBlock.VariablesDynamic.onDeleteVariableButtonClick);
+    b.push(d);
     a = LearnBlock.VariablesDynamic.flyoutCategoryBlocks(a);
     return b = b.concat(a)
 };

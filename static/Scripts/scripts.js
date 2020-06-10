@@ -119,3 +119,36 @@ function copyPython() {
     copyText.select();
     document.execCommand("copy");
 }
+
+//Saves a Block-Text file with the generated Block-Text code
+function saveBTFile(){
+    var textToSave = document.getElementById("resultblocktext").value;
+    var textToSaveAsBlob = new Blob([textToSave], {type:"text/plain;charset=utf-8"});
+    var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+    var fileNameToSaveAs = "execCode.bt";
+    var downloadLink = document.createElement("a");
+    downloadLink.download = fileNameToSaveAs;
+    downloadLink.innerHTML = "Download File";
+    downloadLink.href = textToSaveAsURL;
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+}
+
+//Saves a Python file with the generated Python code
+function savePYFile(){
+    var textToSave = document.getElementById("resultpython").value;
+    var textToSaveAsBlob = new Blob([textToSave], {type:"text/plain;charset=utf-8"});
+    var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+    var fileNameToSaveAs = "execCode.py";
+    var downloadLink = document.createElement("a");
+    downloadLink.download = fileNameToSaveAs;
+    downloadLink.innerHTML = "Download File";
+    downloadLink.href = textToSaveAsURL;
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+}
+function destroyClickedElement(event){
+    document.body.removeChild(event.target);
+}

@@ -16,6 +16,8 @@ var MSG = {
     codeBTNotGenerated: "Could not generate Block-Text code",
     copyCodeBT: "Copy code",
     copyCodePY: "Copy code",
+    saveCodeBT: "Descargar código",
+    saveCodePY: "Download code",
     programPY: "Program Python",
     programBT: "Program Block-Text",
     programLB: "Program LearnBlock",

@@ -18,6 +18,7 @@ function getBothCodes(fullCode) {
 function execute() {
     var loadBlocks;
     var vars;
+    var robot;
     var result;
     if (window.sessionStorage) {
         var xml = LearnBlock.Xml.workspaceToDom(Code.workspace);
@@ -27,10 +28,14 @@ function execute() {
     try {
         loadBlocks = window.sessionStorage.loadOnceBlocks;
         vars = Code.workspace.getAllVariables();
-        result = getVarsNames(vars) + '\n' + loadBlocks;
+        var element = document.getElementById("robotMenu");
+        var i = element.selectedIndex;
+        robot = element.options[i].text;
+        result = robot + '\n' + getVarsNames(vars) + '\n' + loadBlocks;
     } catch (e) {
         loadBlocks = null;
         vars = null;
+        robot = null;
     }
     $.ajax({ //When blocks are loaded, the parser function is executed and the Block-Text code is returned
         type: "POST",
@@ -70,9 +75,13 @@ function execute() {
 
 //Loads the Block-Text code to generate Python code
 function executeBT2Py() {
+    var robot;
     var result;
     try {
-        result = document.getElementById("resultblocktext").value;
+        var element = document.getElementById("robotMenu");
+        var i = element.selectedIndex;
+        robot = element.options[i].text;
+        result = robot + '\n' + document.getElementById("resultblocktext").value;
     } catch (e) {
         result = "";
     }

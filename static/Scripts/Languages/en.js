@@ -2,6 +2,7 @@
 
 //Messages
 var MSG = {
+    tSelectRobot: "Robot: ",
     tSelectLang: "Language: ",
     execute: "Blocks to Text",
     executeBT: "Block-Text to Python",

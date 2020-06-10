@@ -27,6 +27,11 @@ def init():
 
     return render_template('index.html', language=language, control=control[0], operators=operators[0], values=values, variables=variables, expressions=expressions[0], proprioceptive=proprioceptive[0], motor=motor[0], perceptual=perceptual[0], allBlocks=allBlocks)
 
+def getRobot(result):
+    finalRobot = result.find("\n")
+    robot = result[:finalRobot]
+    result = result[finalRobot+1:]
+    return robot, result
 
 # Gets the variables declared by the user
 def getVars(result):
@@ -64,11 +69,14 @@ def formatBlocks(blocks):
 def getBlocks():
     if request.method == 'POST':
         blocks = request.get_json()
+        robotAndBlocks = getRobot(blocks)
+        robot = robotAndBlocks[0]
+        blocks = robotAndBlocks[1]
         processVars(getVars(blocks))
         toParser = formatBlocks(blocks)
         blocktext = parserBlockText(toParser)
 
-        text = parserLearntBotCodeFromCode(blocktext, 'LearnBotClient')
+        text = parserLearntBotCodeFromCode(blocktext, robot)
         if text == False:
             text = "\n"
 
@@ -83,7 +91,10 @@ def getBlocks():
 def getPyFromBT():
     if request.method == "POST":
         btCode = request.get_json()
-        result = parserLearntBotCodeFromCode(btCode, 'LearnBotClient')
+        robotAndBlocks = getRobot(btCode)
+        robot = robotAndBlocks[0]
+        btCode = robotAndBlocks[1]
+        result = parserLearntBotCodeFromCode(btCode, robot)
         if result != False:
             return result, 200
         else:

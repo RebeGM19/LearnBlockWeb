@@ -33,11 +33,6 @@ def createBlock(name, type_, variables, block):
     dic["VARIABLES"] = variables
     dic["TYPE"] = type_
 
-    # If the block is "while True", it must be created a "while" block with a "true" block at its right
-    if name == "while True":
-        name = "while"
-        dic["RIGHT"] = createBlock("True", None, None, None)
-
     return name, dic
 
 # Inserts a block into another block, on the pertinent dic attribute

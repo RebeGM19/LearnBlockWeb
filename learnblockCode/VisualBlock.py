@@ -32,8 +32,8 @@ def toLBotPy(inst, ntab=1):
         text += " " + toLBotPy(inst[1]["RIGHT"])
     if inst[1]["BOTTOMIN"] is not None:
         text += ":\n" + "\t" * ntab + toLBotPy(inst[1]["BOTTOMIN"], ntab + 1)
-    if inst[0] == "while":
-        text += "\n\t" * (ntab - 1) + "end"
+    if inst[0] in ["while", "while True"]:
+        text += "\n" + "\t" * (ntab - 1) + "end"
     if inst[0] == "else" or (inst[0] in ["if", "elif"] and (inst[1]["BOTTOM"] is None or (
             inst[1]["BOTTOM"] is not None and inst[1]["BOTTOM"][0] not in ["elif", "else"]))):
         text += "\n" + "\t" * (ntab - 1) + "end"

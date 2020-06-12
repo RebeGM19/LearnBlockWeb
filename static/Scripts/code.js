@@ -1,5 +1,11 @@
 'use strict';
 
+var variables;
+
+function getVariablesWorkspace(){
+    variables = Code.workspace.getAllVariables();
+}
+
 var Code = {};
 //Languages
 Code.LANGUAGE_NAME = {
@@ -22,19 +28,38 @@ Code.getLang = function () {
     }
     return lang;
 };
+//Inserts the XML sentences of the variables into the XML sentences of the workspace blocks
+function formatXML(variables, blocks){
+    var vars = variables.replace(' xmlns="https://developers.google.com/blockly/xml"', '');
+    var ini = blocks.indexOf("<variables>");
+    var end = blocks.indexOf("</variables>");
+    var formBlocks = blocks.slice(0, ini) + blocks.slice(end+12);
+    var start = blocks.indexOf("/xml\">");
+    var result = blocks.slice(0, start+6) + variables + blocks.slice(start+6);
+    return result;
+}
 //Loads blocks saved on App Engine Storage or in session/local storage
 Code.loadBlocks = function (defaultXml) {
     try {
         var loadOnce = window.sessionStorage.loadOnceBlocks;
+        var variab = window.sessionStorage.getItem('vars');
+        var btCode = window.sessionStorage.getItem('btCode');
+        var pyCode = window.sessionStorage.getItem('pyCode');
     } catch (e) {
         var loadOnce = null;
+        var variab = null;
+        var btCode = null;
+        var pyCode = null;
     }
     if ('BlocklyStorage' in window && window.location.hash.length > 1) {
         BlocklyStorage.retrieveXml(window.location.hash.substring(1));
     } else if (loadOnce) {
         delete window.sessionStorage.loadOnceBlocks;
-        var xml = LearnBlock.Xml.textToDom(loadOnce);
+        var result = formatXML(variab, loadOnce)
+        var xml = LearnBlock.Xml.textToDom(result);
         LearnBlock.Xml.domToWorkspace(xml, workspace);
+        document.getElementById("resultblocktext").value = btCode;
+        document.getElementById("resultpython").value = pyCode;
     } else if (defaultXml) {
         var xml = LearnBlock.Xml.textToDom(defaultXml);
         LearnBlock.Xml.domToWorkspace(xml, workspace);
@@ -45,9 +70,17 @@ Code.loadBlocks = function (defaultXml) {
 //Saves the blocks and reloads with a different language
 Code.changeLanguage = function () {
     if (window.sessionStorage) {
+        //var variables = Code.workspace.getAllVariables();
         var xml = LearnBlock.Xml.workspaceToDom(Code.workspace);
         var text = LearnBlock.Xml.domToText(xml);
         window.sessionStorage.loadOnceBlocks = text;
+        var variables = LearnBlock.Xml.variablesToDom(Code.workspace.getAllVariables());
+        var vars = LearnBlock.Xml.domToText(variables);
+        window.sessionStorage.setItem('vars', vars);
+        var btCode = document.getElementById("resultblocktext").value
+        var pyCode = document.getElementById("resultpython").value
+        window.sessionStorage.setItem('btCode', btCode);
+        window.sessionStorage.setItem('pyCode', pyCode);
     }
     var languageMenu = document.getElementById('languageMenu');
     var newLang = encodeURIComponent(

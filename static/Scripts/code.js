@@ -29,7 +29,13 @@ function formatXML(variables, blocks){
     var end = blocks.indexOf("</variables>");
     var formBlocks = blocks.slice(0, ini) + blocks.slice(end+12);
     var start = blocks.indexOf("/xml\">");
-    var result = blocks.slice(0, start+6) + variables + blocks.slice(start+6);
+    var result = ""
+    if (start != -1){
+        result = blocks.slice(0, start+6) + variables + blocks.slice(start+6);
+    } else{
+        start = blocks.indexOf("/xml\"/>");
+        result = blocks.slice(0, start+5) + ">" + variables + blocks.slice(start+7) + "</xml>";
+    }
     return result;
 }
 //Loads blocks saved on App Engine Storage or in session/local storage
@@ -52,6 +58,8 @@ Code.loadBlocks = function (defaultXml) {
     } else if (loadOnce) {
         delete window.sessionStorage.loadOnceBlocks;
         workspace.scroll(translateX, translateY);
+        globalTranslateX = translateX;
+        globalTranslateY = translateY;
         var result = formatXML(variab, loadOnce)
         var xml = LearnBlock.Xml.textToDom(result);
         LearnBlock.Xml.domToWorkspace(xml, workspace);
@@ -79,6 +87,8 @@ Code.changeLanguage = function () {
         window.sessionStorage.setItem('pyCode', pyCode);
         window.sessionStorage.setItem('translateX', globalTranslateX);
         window.sessionStorage.setItem('translateY', globalTranslateY);
+        console.log(globalTranslateX);
+        console.log(globalTranslateY);
     }
     var languageMenu = document.getElementById('languageMenu');
     var newLang = encodeURIComponent(

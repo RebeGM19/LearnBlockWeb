@@ -1,5 +1,5 @@
 import json
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_file
 from learnblockCode.Parser import parserLearntBotCodeFromCode
 from btParser import processVars, parserBlockText
 from blocksLoader import loadBlocks, loadLBBlocks
@@ -102,6 +102,9 @@ def getPyFromBT():
     else:
         return '', 200
 
+@app.route("/download")
+def download_file():
+    return send_file('downloads/LearnBlockWeb.zip', as_attachment=True)
 
 if __name__ == '__main__':
     app.run(debug=False)

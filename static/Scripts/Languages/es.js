@@ -38,6 +38,11 @@ var MSG = {
     HT9: "Click izquierdo sobre la zona resaltada de un bloque: Editar parámetros del bloque",
     HT10: "Click derecho sobre un bloque: Borrar bloque, duplicar bloque",
     HT11: "Click derecho sobre la zona gris: Borrar todos los bloques, deshacer acción, rehacer acción",
+    HT12: "Ejecución del código:",
+    HT13: "Desde LearnBlockWeb no se puede ejecutar el código generado en un robot. Para hacerlo, hay que descargarse e instalar el siguiente paquete:",
+    HT14: "Descargar Paquete",
+    HT15: "Para instalarlo, hay que crear en la carpeta personal un directorio llamado \".learnblock\" y dentro de él otro directorio llamado \"clients\". En este último se deben incluir los clientes del robot donde se quiera ejecutar el código.",
+    HT16: "Por otra parte, si se descomprime el .zip descargado, es suficiente con añadir al fichero \".bashrc\" la línea export: PYTHONPATH=${PYTHONPATH}:~/dir (donde \"dir\" es el nombre del directorio en el que se ha descomprimido el archivo).",
 
     aLB1: "LearnBlock es una herramienta educacional de programación que proporciona un lenguaje visual de bloques a través del cual los usuarios pueden programar de forma intuitiva los comportamientos de un robot y trabajar con diferentes plataformas robóticas. Junto a LearnBlock, se ha construido un robot llamado EBO. Ambos, LearnBlock y EBO, son proyectos abiertos.",
     aLB2: "LearnBlock proporciona una interfaz de usuario gráfica con las opciones necesarias para crear un programa utilizando elementos gráficos (bloques). Así, el usuario puede construir un programa seleccionando y conectando diferentes bloques relacionados con el control del programa, acciones e información sensorial, entre otros. Además, el conjunto de bloques a usar puede ser configurado desde la propia herramienta para permitir al usuario seleccionar los tipos de bloques visibles más apropiados para un problema particular. Los bloques también pueden ser creados apartir de otros bloques para encapsular y reutilizar ciertas piezas del código.",

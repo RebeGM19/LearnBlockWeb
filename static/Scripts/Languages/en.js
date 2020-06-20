@@ -38,6 +38,11 @@ var MSG = {
     HT9: "Left click on a highlighted zone in a block: Edit block's parameters",
     HT10: "Right click on a block: Delete block, duplicate block",
     HT11: "Right click on the grey zone: Delete all blocks, undo action, redo action",
+    HT12: "Code execution:",
+    HT13: "From LearnBlockWeb, the code execution in a robot is not available. To do that, it's neccesary to download and install the next package:",
+    HT14: "Download Package",
+    HT15: "To install it, you have to create inside the Home directory a new directory named \".learnblock\" and, into it, other directory named \"clients\". Inside this one you must include the robot clients.",
+    HT16: "On the other hand, if you unzip the downloaded file, you can add the next export line to the \".bashrc\" file: PYTHONPATH=${PYTHONPATH}:~/dir (where \"dir\" is the name of the directory where you unzipped the file)",
 
     aLB1: "LearnBlock is an educational programming tool that provides a block-based language through which users can intuitively program robot behaviours and work with different robotic platforms. Alongside LearnBlock, a robot called EBO has been built. Both, LearnBlock and EBO, are open developments.",
     aLB2: "LearnBlock provides a graphical user interface with the options to create a program using graphical elements (blocks). Thus, the user can build a program by selecting and connecting different blocks related to program control, actions and sensory information, among others. In addition, the set of blocks to be used can be conﬁgured from the tool itself to let the user select the more appropriate types of visible blocks for a particular problem. Blocks can also be created from other blocks to encapsulate and reuse certain pieces of code.",

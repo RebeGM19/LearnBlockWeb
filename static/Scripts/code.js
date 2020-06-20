@@ -1,11 +1,5 @@
 'use strict';
 
-var variables;
-
-function getVariablesWorkspace(){
-    variables = Code.workspace.getAllVariables();
-}
-
 var Code = {};
 //Languages
 Code.LANGUAGE_NAME = {
@@ -45,6 +39,8 @@ Code.loadBlocks = function (defaultXml) {
         var variab = window.sessionStorage.getItem('vars');
         var btCode = window.sessionStorage.getItem('btCode');
         var pyCode = window.sessionStorage.getItem('pyCode');
+        var translateX = window.sessionStorage.getItem('translateX');
+        var translateY = window.sessionStorage.getItem('translateY');
     } catch (e) {
         var loadOnce = null;
         var variab = null;
@@ -55,6 +51,7 @@ Code.loadBlocks = function (defaultXml) {
         BlocklyStorage.retrieveXml(window.location.hash.substring(1));
     } else if (loadOnce) {
         delete window.sessionStorage.loadOnceBlocks;
+        workspace.scroll(translateX, translateY);
         var result = formatXML(variab, loadOnce)
         var xml = LearnBlock.Xml.textToDom(result);
         LearnBlock.Xml.domToWorkspace(xml, workspace);
@@ -70,7 +67,6 @@ Code.loadBlocks = function (defaultXml) {
 //Saves the blocks and reloads with a different language
 Code.changeLanguage = function () {
     if (window.sessionStorage) {
-        //var variables = Code.workspace.getAllVariables();
         var xml = LearnBlock.Xml.workspaceToDom(Code.workspace);
         var text = LearnBlock.Xml.domToText(xml);
         window.sessionStorage.loadOnceBlocks = text;
@@ -81,6 +77,8 @@ Code.changeLanguage = function () {
         var pyCode = document.getElementById("resultpython").value
         window.sessionStorage.setItem('btCode', btCode);
         window.sessionStorage.setItem('pyCode', pyCode);
+        window.sessionStorage.setItem('translateX', globalTranslateX);
+        window.sessionStorage.setItem('translateY', globalTranslateY);
     }
     var languageMenu = document.getElementById('languageMenu');
     var newLang = encodeURIComponent(
@@ -165,6 +163,11 @@ Code.initLanguage = function () {
     document.getElementById('HT9').textContent = MSG['HT9'];
     document.getElementById('HT10').textContent = MSG['HT10'];
     document.getElementById('HT11').textContent = MSG['HT11'];
+    document.getElementById('HT12').textContent = MSG['HT12'];
+    document.getElementById('HT13').textContent = MSG['HT13'];
+    document.getElementById('HT14').textContent = MSG['HT14'];
+    document.getElementById('HT15').textContent = MSG['HT15'];
+    document.getElementById('HT16').textContent = MSG['HT16'];
 
     document.getElementById('aLB1').textContent = MSG['aLB1'];
     document.getElementById('aLB2').textContent = MSG['aLB2'];
